@@ -15,12 +15,12 @@
               <menus>
                 <Menu mnemonicParsing="false" text="%topMenuBar.app">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="%topMenuBar.app.close" />
+                    <MenuItem mnemonicParsing="false" onAction="#closeApp" text="%topMenuBar.app.close" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="%topMenuBar.help">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="%topMenuBar.help.about" />
+                    <MenuItem mnemonicParsing="false" onAction="#showAboutDialog" text="%topMenuBar.help.about" />
                   </items>
                 </Menu>
               </menus>
