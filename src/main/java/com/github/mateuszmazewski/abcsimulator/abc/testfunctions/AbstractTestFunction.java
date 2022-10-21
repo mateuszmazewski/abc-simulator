@@ -13,7 +13,7 @@ public abstract class AbstractTestFunction {
                                 double[] globalMinPos,
                                 double globalMinValue) {
 
-        validateArgs();
+        validateArgs(dim, lowerBoundaries, upperBoundaries, globalMinPos);
 
         this.dim = dim;
         this.lowerBoundaries = lowerBoundaries;
@@ -22,7 +22,10 @@ public abstract class AbstractTestFunction {
         this.globalMinValue = globalMinValue;
     }
 
-    private void validateArgs() throws IllegalArgumentException {
+    private void validateArgs(int dim,
+                              double[] lowerBoundaries,
+                              double[] upperBoundaries,
+                              double[] globalMinPos) throws IllegalArgumentException {
         if (dim <= 0) {
             throw new IllegalArgumentException("dim must be positive");
         }
