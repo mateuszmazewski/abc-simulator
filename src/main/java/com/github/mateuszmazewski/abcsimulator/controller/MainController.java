@@ -1,11 +1,14 @@
 package com.github.mateuszmazewski.abcsimulator.controller;
 
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.BealeFunction;
 import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
+import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 import java.util.Optional;
 
@@ -16,6 +19,12 @@ public class MainController {
 
     public void setCenter(String fxmlPath) {
         borderPane.setCenter(FxmlUtils.loadFxml(fxmlPath));
+    }
+
+    @FXML
+    private void initialize() {
+        Pane functionChart2D = new FunctionChart2D(new BealeFunction());
+        borderPane.setCenter(functionChart2D);
     }
 
     @FXML
