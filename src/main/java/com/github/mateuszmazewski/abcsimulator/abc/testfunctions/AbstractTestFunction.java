@@ -44,7 +44,6 @@ public abstract class AbstractTestFunction {
     }
 
     public abstract double getValue(double[] pos);
-    // TODO Check if x, y are in proper range
 
     protected void validatePos(double[] pos) throws IllegalArgumentException {
         if (pos == null || pos.length != dim) {
