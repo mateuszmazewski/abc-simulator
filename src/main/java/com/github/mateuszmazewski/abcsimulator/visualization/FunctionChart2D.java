@@ -2,20 +2,22 @@ package com.github.mateuszmazewski.abcsimulator.visualization;
 
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AbstractTestFunction;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.PixelWriter;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
-public class FunctionChart2D extends Pane {
+public class FunctionChart2D extends GridPane {
 
     private final AbstractTestFunction testFunction;
-    private final Canvas canvas;
+    private final Canvas chartCanvas, xAxisCanvas, yAxisCanvas;
     private final PixelWriter pixelWriter;
     private double funcMinValue = Double.MAX_VALUE;
     private double funcMaxValue = Double.MIN_VALUE;
     private final double x1, x2, y1, y2; // Function's args range
-    private int canvasWidth, canvasHeight;
+    private int chartCanvasWidth, chartCanvasHeight;
 
     public FunctionChart2D(AbstractTestFunction testFunction) {
         this.testFunction = testFunction;
@@ -29,31 +31,55 @@ public class FunctionChart2D extends Pane {
         this.y1 = testFunction.getLowerBoundaries()[1];
         this.y2 = testFunction.getUpperBoundaries()[1];
 
-        this.canvas = new Canvas();
-        this.pixelWriter = this.canvas.getGraphicsContext2D().getPixelWriter();
-        this.canvas.widthProperty().bind(this.canvas.heightProperty()); // Canvas is square
-        this.canvas.heightProperty().bind(this.heightProperty()); // Canvas fills entire parent pane
-        this.canvasWidth = (int) this.canvas.getWidth();
-        this.canvasHeight = (int) this.canvas.getHeight();
+        this.chartCanvas = new Canvas();
+        this.xAxisCanvas = new Canvas();
+        this.yAxisCanvas = new Canvas();
+        this.pixelWriter = this.chartCanvas.getGraphicsContext2D().getPixelWriter();
+        this.chartCanvas.widthProperty().bind(this.chartCanvas.heightProperty()); // chartCanvas is square
+        this.chartCanvas.heightProperty().bind(this.heightProperty().multiply(0.9));
+        this.chartCanvasWidth = (int) this.chartCanvas.getWidth();
+        this.chartCanvasHeight = (int) this.chartCanvas.getHeight();
+
+        drawAxes();
+
+        this.getChildren().addAll(this.chartCanvas, this.xAxisCanvas, this.yAxisCanvas);
+        GridPane.setHalignment(this.xAxisCanvas, HPos.RIGHT);
+        GridPane.setValignment(this.yAxisCanvas, VPos.TOP);
+        GridPane.setConstraints(this.chartCanvas, 1, 0, 1, 1);
+        GridPane.setConstraints(this.xAxisCanvas, 0, 1, 2, 1);
+        GridPane.setConstraints(this.yAxisCanvas, 0, 0, 1, 2);
 
         updateFuncValuesRange();
         visualizeFunc();
 
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
-            this.canvasWidth = (int) this.canvas.getWidth();
-            this.canvasHeight = (int) this.canvas.getHeight();
+            this.chartCanvasWidth = (int) this.chartCanvas.getWidth();
+            this.chartCanvasHeight = (int) this.chartCanvas.getHeight();
             updateFuncValuesRange();
             visualizeFunc();
+            drawAxes();
         };
 
-        this.getChildren().add(this.canvas);
         this.widthProperty().addListener(paneSizeListener);
         this.heightProperty().addListener(paneSizeListener);
     }
 
+    private void drawAxes() {
+        Color c = Color.BLACK;
+        xAxisCanvas.getGraphicsContext2D().setFill(c);
+        yAxisCanvas.getGraphicsContext2D().setFill(c);
+        xAxisCanvas.widthProperty().bind(chartCanvas.widthProperty());
+        yAxisCanvas.heightProperty().bind(chartCanvas.heightProperty());
+        xAxisCanvas.setHeight(60);
+        yAxisCanvas.setWidth(60);
+
+        xAxisCanvas.getGraphicsContext2D().fillRect(0, 0, xAxisCanvas.getWidth(), xAxisCanvas.getHeight());
+        yAxisCanvas.getGraphicsContext2D().fillRect(0, 0, yAxisCanvas.getWidth(), yAxisCanvas.getHeight());
+    }
+
     private void visualizeFunc() {
-        for (int xCanvas = 0; xCanvas < this.canvasWidth; xCanvas++) {
-            for (int yCanvas = 0; yCanvas < this.canvasHeight; yCanvas++) {
+        for (int xCanvas = 0; xCanvas < this.chartCanvasWidth; xCanvas++) {
+            for (int yCanvas = 0; yCanvas < this.chartCanvasHeight; yCanvas++) {
                 double funcVal = getFuncVal(xCanvas, yCanvas);
 
                 // Scale func. values to [0, 240] ->  HSV color space
@@ -66,8 +92,8 @@ public class FunctionChart2D extends Pane {
     }
 
     private void updateFuncValuesRange() {
-        for (int xCanvas = 0; xCanvas < this.canvasWidth; xCanvas++) {
-            for (int yCanvas = this.canvasHeight - 1; yCanvas >= 0; yCanvas--) {
+        for (int xCanvas = 0; xCanvas < this.chartCanvasWidth; xCanvas++) {
+            for (int yCanvas = this.chartCanvasHeight - 1; yCanvas >= 0; yCanvas--) {
                 double funcVal = getFuncVal(xCanvas, yCanvas);
                 this.funcMinValue = Math.min(this.funcMinValue, funcVal);
                 this.funcMaxValue = Math.max(this.funcMaxValue, funcVal);
@@ -77,8 +103,8 @@ public class FunctionChart2D extends Pane {
 
     private double getFuncVal(int xCanvas, int yCanvas) {
         // Scale canvas' coords to function's coords
-        double funcX = (double) xCanvas / this.canvasWidth * (this.x2 - this.x1) + this.x1;
-        double funcY = (double) yCanvas / this.canvasHeight * (this.y2 - this.y1) + this.y1;
+        double funcX = (double) xCanvas / this.chartCanvasWidth * (this.x2 - this.x1) + this.x1;
+        double funcY = (double) yCanvas / this.chartCanvasHeight * (this.y2 - this.y1) + this.y1;
         return this.testFunction.getValue(new double[]{funcX, funcY});
     }
 }
