@@ -5,6 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -40,8 +41,6 @@ public class FunctionChart2D extends GridPane {
         this.chartCanvasWidth = (int) this.chartCanvas.getWidth();
         this.chartCanvasHeight = (int) this.chartCanvas.getHeight();
 
-        drawAxes();
-
         this.getChildren().addAll(this.chartCanvas, this.xAxisCanvas, this.yAxisCanvas);
         GridPane.setHalignment(this.xAxisCanvas, HPos.RIGHT);
         GridPane.setValignment(this.yAxisCanvas, VPos.TOP);
@@ -51,6 +50,7 @@ public class FunctionChart2D extends GridPane {
 
         updateFuncValuesRange();
         visualizeFunc();
+        drawAxes();
 
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
             this.chartCanvasWidth = (int) this.chartCanvas.getWidth();
@@ -65,9 +65,20 @@ public class FunctionChart2D extends GridPane {
     }
 
     private void drawAxes() {
-        Color c = Color.BLACK;
-        xAxisCanvas.getGraphicsContext2D().setFill(c);
-        yAxisCanvas.getGraphicsContext2D().setFill(c);
+        //TODO - read from TestFunction
+        double xAxisStep = 1.0;
+        double yAxisStep = 1.0;
+        int xStepsCount = (int) ((x2 - x1) / xAxisStep) + 1;
+        int yStepsCount = (int) ((y2 - y1) / yAxisStep) + 1;
+
+        GraphicsContext xAxisGraphics = xAxisCanvas.getGraphicsContext2D();
+        GraphicsContext yAxisGraphics = yAxisCanvas.getGraphicsContext2D();
+        xAxisGraphics.setFill(Color.BLACK);
+        yAxisGraphics.setFill(Color.BLACK);
+
+        xAxisGraphics.clearRect(0, 0, xAxisCanvas.getWidth(), xAxisCanvas.getHeight());
+        yAxisGraphics.clearRect(0, 0, yAxisCanvas.getWidth(), yAxisCanvas.getHeight());
+
         xAxisCanvas.widthProperty().bind(chartCanvas.widthProperty());
         yAxisCanvas.heightProperty().bind(chartCanvas.heightProperty());
         xAxisCanvas.setHeight(60);
