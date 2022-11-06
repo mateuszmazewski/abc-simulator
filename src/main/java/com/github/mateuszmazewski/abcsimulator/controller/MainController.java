@@ -6,6 +6,7 @@ import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -24,6 +25,7 @@ public class MainController {
     @FXML
     private void initialize() {
         Pane functionChart2D = new FunctionChart2D(new BealeFunction());
+        BorderPane.setMargin(functionChart2D, new Insets(10, 10, 10, 10));
         borderPane.setCenter(functionChart2D);
     }
 
