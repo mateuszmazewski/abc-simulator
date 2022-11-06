@@ -6,6 +6,7 @@ public abstract class AbstractTestFunction {
     private final double[] lowerBoundaries, upperBoundaries;
     private final double[] globalMinPos;
     private final double globalMinValue;
+    private String name;
 
     public AbstractTestFunction(int dim,
                                 double[] lowerBoundaries,
@@ -57,6 +58,10 @@ public abstract class AbstractTestFunction {
         }
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 
     public int getDim() {
         return dim;
@@ -76,5 +81,13 @@ public abstract class AbstractTestFunction {
 
     public double getGlobalMinValue() {
         return globalMinValue;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -2,7 +2,6 @@ package com.github.mateuszmazewski.abcsimulator.controller;
 
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.BealeFunction;
 import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
-import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -18,8 +17,12 @@ public class MainController {
     @FXML
     private BorderPane borderPane;
 
-    public void setCenter(String fxmlPath) {
-        borderPane.setCenter(FxmlUtils.loadFxml(fxmlPath));
+    @FXML
+    private ParametersController parametersController;
+
+    public void setCenterChart(FunctionChart2D chart) {
+        BorderPane.setMargin(chart, new Insets(10, 10, 10, 10));
+        borderPane.setCenter(chart);
     }
 
     @FXML
@@ -27,6 +30,7 @@ public class MainController {
         Pane functionChart2D = new FunctionChart2D(new BealeFunction());
         BorderPane.setMargin(functionChart2D, new Insets(10, 10, 10, 10));
         borderPane.setCenter(functionChart2D);
+        parametersController.setMainController(this);
     }
 
     @FXML
