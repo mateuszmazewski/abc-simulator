@@ -2,6 +2,10 @@ package com.github.mateuszmazewski.abcsimulator.abc.testfunctions;
 
 public abstract class AbstractTestFunction {
 
+    public final static double MIN_X = -10000.0;
+    public final static double MIN_Y = -10000.0;
+    public final static double MAX_X = 10000.0;
+    public final static double MAX_Y = 10000.0;
     private final int dim;
     private final double[] lowerBoundaries, upperBoundaries;
     private final double[] globalMinPos;
