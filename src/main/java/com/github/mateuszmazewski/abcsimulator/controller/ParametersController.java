@@ -97,9 +97,6 @@ public class ParametersController {
             } else if (textField == trialsLimitTextField) {
                 textFieldValueInRange(number, ArtificialBeeColony.MIN_TRIALS_LIMIT, ArtificialBeeColony.MAX_TRIALS_LIMIT, textField);
             }
-
-            FunctionChart2D functionChart2D = new FunctionChart2D(func.getValue());
-            mainController.setCenterChart(functionChart2D);
         });
     }
 
