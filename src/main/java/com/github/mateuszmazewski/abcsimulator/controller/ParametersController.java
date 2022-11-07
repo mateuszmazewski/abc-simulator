@@ -212,6 +212,8 @@ public class ParametersController {
         for (int i = 0; i < bestFx.length; i++) {
             System.out.println("x = " + bestFoodSources[i][0] + ", y = " + bestFoodSources[i][1] + ", f(x, y) = " + bestFx[i]);
         }
+        // TODO
+        mainController.getCenterChart().drawBees(allFoodSources[maxIter-1]);
     }
 
     public void setMainController(MainController mainController) {

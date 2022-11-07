@@ -25,6 +25,10 @@ public class MainController {
         borderPane.setCenter(chart);
     }
 
+    public FunctionChart2D getCenterChart() {
+        return (FunctionChart2D) borderPane.getCenter();
+    }
+
     @FXML
     private void initialize() {
         Pane functionChart2D = new FunctionChart2D(new BealeFunction());

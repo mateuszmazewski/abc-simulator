@@ -18,7 +18,7 @@ import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.roundToTwo
 public class FunctionChart2D extends GridPane {
 
     private final AbstractTestFunction testFunction;
-    private final Canvas chartCanvas, xAxisCanvas, yAxisCanvas;
+    private final Canvas chartCanvas, beesCanvas, xAxisCanvas, yAxisCanvas;
     private final PixelWriter pixelWriter;
     private double funcMinValue = Double.MAX_VALUE;
     private double funcMaxValue = Double.MIN_VALUE;
@@ -30,6 +30,9 @@ public class FunctionChart2D extends GridPane {
     private final Font axesFont = new Font(axesFontSize);
     private final double axesMarkerLength = 8.0;
     private final double axesGapBetweenMarkerAndText = 5.0;
+
+    // -------------------------------BEES-------------------------------
+    private double[][] currentBees;
 
     public FunctionChart2D(AbstractTestFunction testFunction) {
         this.testFunction = testFunction;
@@ -44,11 +47,14 @@ public class FunctionChart2D extends GridPane {
         y2 = testFunction.getUpperBoundaries()[1];
 
         chartCanvas = new Canvas();
+        beesCanvas = new Canvas();
         xAxisCanvas = new Canvas();
         yAxisCanvas = new Canvas();
         pixelWriter = chartCanvas.getGraphicsContext2D().getPixelWriter();
         chartCanvas.widthProperty().bind(chartCanvas.heightProperty()); // chartCanvas is square
         chartCanvas.heightProperty().bind(heightProperty().multiply(0.9));
+        beesCanvas.widthProperty().bind(chartCanvas.widthProperty());
+        beesCanvas.heightProperty().bind(chartCanvas.heightProperty());
         chartCanvasWidth = (int) chartCanvas.getWidth();
         chartCanvasHeight = (int) chartCanvas.getHeight();
 
@@ -57,10 +63,11 @@ public class FunctionChart2D extends GridPane {
         xAxisCanvas.setHeight(axesMarkerLength + axesFontSize + axesGapBetweenMarkerAndText);
         yAxisCanvas.setWidth(axesMarkerLength + axesGapBetweenMarkerAndText + getLongestYTextWidth());
 
-        getChildren().addAll(chartCanvas, xAxisCanvas, yAxisCanvas);
+        getChildren().addAll(chartCanvas, beesCanvas, xAxisCanvas, yAxisCanvas);
         GridPane.setHalignment(xAxisCanvas, HPos.RIGHT);
         GridPane.setValignment(yAxisCanvas, VPos.TOP);
         GridPane.setConstraints(chartCanvas, 1, 0, 1, 1);
+        GridPane.setConstraints(beesCanvas, 1, 0, 1, 1);
         GridPane.setConstraints(xAxisCanvas, 0, 1, 2, 1);
         GridPane.setConstraints(yAxisCanvas, 0, 0, 1, 2);
 
@@ -74,6 +81,9 @@ public class FunctionChart2D extends GridPane {
             updateFuncValuesRange();
             visualizeFunc();
             drawAxes();
+            if (currentBees != null) {
+                drawBees(currentBees);
+            }
         };
 
         widthProperty().addListener(paneSizeListener);
@@ -160,6 +170,19 @@ public class FunctionChart2D extends GridPane {
         }
     }
 
+    public void drawBees(double[][] foodSources) {
+        currentBees = foodSources;
+        double[] canvasXY;
+        GraphicsContext beesGraphics = beesCanvas.getGraphicsContext2D();
+        beesGraphics.setFill(Color.WHITE);
+        beesGraphics.clearRect(0, 0, beesCanvas.getWidth(), beesCanvas.getHeight());
+
+        for (double[] foodSource : foodSources) {
+            canvasXY = getCanvasXY(foodSource);
+            beesGraphics.fillOval(canvasXY[0], canvasXY[1], 10, 10);
+        }
+    }
+
     private void updateFuncValuesRange() {
         for (int xCanvas = 0; xCanvas < chartCanvasWidth; xCanvas++) {
             for (int yCanvas = chartCanvasHeight - 1; yCanvas >= 0; yCanvas--) {
@@ -172,9 +195,16 @@ public class FunctionChart2D extends GridPane {
 
     private double getFuncVal(int xCanvas, int yCanvas) {
         // Scale canvas' coords to function's coords
-        double funcX = (double) xCanvas / chartCanvasWidth * (x2 - x1) + x1;
-        double funcY = (double) yCanvas / chartCanvasHeight * (y2 - y1) + y1;
-        return testFunction.getValue(new double[]{funcX, funcY});
+        double xFunc = (double) xCanvas / chartCanvasWidth * (x2 - x1) + x1;
+        double yFunc = (double) yCanvas / chartCanvasHeight * (y2 - y1) + y1;
+        return testFunction.getValue(new double[]{xFunc, yFunc});
+    }
+
+    private double[] getCanvasXY(double[] xyFunc) {
+        // Scale function's coords to canvas' coords
+        double xCanvas = (xyFunc[0] - x1) / (x2 - x1) * chartCanvasWidth;
+        double yCanvas = (xyFunc[1] - y1) / (y2 - y1) * chartCanvasHeight;
+        return new double[]{xCanvas, yCanvas};
     }
 
 }
