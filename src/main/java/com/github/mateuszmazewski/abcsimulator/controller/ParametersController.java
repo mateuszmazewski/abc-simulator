@@ -190,6 +190,28 @@ public class ParametersController {
 
     @FXML
     private void onActionStartButton() {
+        int swarmSize;
+        int maxIter;
+        int trialsLimit;
+
+        try {
+            swarmSize = Integer.parseInt(swarmSizeTextField.getText());
+            maxIter = Integer.parseInt(maxIterTextField.getText());
+            trialsLimit = Integer.parseInt(trialsLimitTextField.getText());
+        } catch (NumberFormatException e) {
+            return;
+        }
+
+        ArtificialBeeColony abc = new ArtificialBeeColony(swarmSize, maxIter, func.getValue(), trialsLimit);
+        abc.run();
+        double[][][] allFoodSources = abc.getAllFoodSources();
+        double[][] allFx = abc.getAllFx();
+        double[][] bestFoodSources = abc.getBestFoodSources();
+        double[] bestFx = abc.getBestFx();
+
+        for (int i = 0; i < bestFx.length; i++) {
+            System.out.println("x = " + bestFoodSources[i][0] + ", y = " + bestFoodSources[i][1] + ", f(x, y) = " + bestFx[i]);
+        }
     }
 
     public void setMainController(MainController mainController) {

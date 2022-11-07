@@ -31,7 +31,9 @@ public class ArtificialBeeColony {
     private double[] fitness;
     private int[] trials;
 
-    // --------------OUTPUT: BEST SOLUTION IN EACH ITERATION--------------
+    // --------------OUTPUT: SOLUTIONS IN EACH ITERATION--------------
+    private double[][][] allFoodSources;
+    private double[][] allFx;
     private double[][] bestFoodSources;
     private double[] bestFx;
     // -------------------------------------------------------------------
@@ -84,6 +86,8 @@ public class ArtificialBeeColony {
         trials = new int[swarmSize];
         Arrays.fill(trials, 0);
 
+        allFoodSources = new double[maxIter][swarmSize][dim];
+        allFx = new double[maxIter][swarmSize];
         bestFoodSources = new double[maxIter][dim];
         bestFx = new double[maxIter];
 
@@ -162,6 +166,9 @@ public class ArtificialBeeColony {
         double bestFitness = Double.MIN_VALUE;
 
         for (int i = 0; i < swarmSize; i++) {
+            allFoodSources[iter][i] = foodSources[i].clone();
+            allFx[iter][i] = fx[i];
+
             if (fitness[i] > bestFitness) {
                 bestFitness = fitness[i];
                 bestFoodSources[iter] = foodSources[i].clone();
@@ -186,6 +193,14 @@ public class ArtificialBeeColony {
         xNew = Math.min(xNew, ub[varToChange]);
         xNew = Math.max(xNew, lb[varToChange]);
         return xNew;
+    }
+
+    public double[][][] getAllFoodSources() {
+        return allFoodSources;
+    }
+
+    public double[][] getAllFx() {
+        return allFx;
     }
 
     public double[][] getBestFoodSources() {
