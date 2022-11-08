@@ -187,14 +187,14 @@ public class FunctionChart2D extends GridPane {
     private double getFuncVal(int xCanvas, int yCanvas) {
         // Scale canvas' coords to function's coords
         double xFunc = (double) xCanvas / chartCanvasWidth * (x2 - x1) + x1;
-        double yFunc = (double) yCanvas / chartCanvasHeight * (y2 - y1) + y1;
+        double yFunc = (double) (chartCanvasHeight - yCanvas) / chartCanvasHeight * (y2 - y1) + y1;
         return testFunction.getValue(new double[]{xFunc, yFunc});
     }
 
     private double[] getCanvasXY(double[] xyFunc) {
         // Scale function's coords to canvas' coords
         double xCanvas = (xyFunc[0] - x1) / (x2 - x1) * chartCanvasWidth;
-        double yCanvas = (xyFunc[1] - y1) / (y2 - y1) * chartCanvasHeight;
+        double yCanvas = chartCanvasHeight - (xyFunc[1] - y1) / (y2 - y1) * chartCanvasHeight;
         return new double[]{xCanvas, yCanvas};
     }
 
