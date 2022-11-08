@@ -66,11 +66,12 @@ public class ArtificialBeeColony {
 
     public void run() {
         init();
+        rememberFoodSources(0); // Remember initial random solutions
 
-        for (int i = 0; i < maxIter; i++) {
+        for (int i = 1; i <= maxIter; i++) {
             employedBeePhase();
             onlookerBeePhase();
-            rememberBestFoodSource(i);
+            rememberFoodSources(i);
             scoutBeePhase();
         }
     }
@@ -86,10 +87,11 @@ public class ArtificialBeeColony {
         trials = new int[swarmSize];
         Arrays.fill(trials, 0);
 
-        allFoodSources = new double[maxIter][swarmSize][dim];
-        allFx = new double[maxIter][swarmSize];
-        bestFoodSources = new double[maxIter][dim];
-        bestFx = new double[maxIter];
+        // maxIter + 1 because we also save initial random solutions
+        allFoodSources = new double[maxIter + 1][swarmSize][dim];
+        allFx = new double[maxIter + 1][swarmSize];
+        bestFoodSources = new double[maxIter + 1][dim];
+        bestFx = new double[maxIter + 1];
 
         for (int i = 0; i < swarmSize; i++) {
             generateRandomFoodSource(i);
@@ -162,7 +164,7 @@ public class ArtificialBeeColony {
         }
     }
 
-    private void rememberBestFoodSource(int iter) {
+    private void rememberFoodSources(int iter) {
         double bestFitness = Double.MIN_VALUE;
 
         for (int i = 0; i < swarmSize; i++) {

@@ -17,12 +17,15 @@ import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.roundToTwo
 
 public class FunctionChart2D extends GridPane {
 
-    private final AbstractTestFunction testFunction;
+    private AbstractTestFunction testFunction;
     private final Canvas chartCanvas, beesCanvas, xAxisCanvas, yAxisCanvas;
     private final PixelWriter pixelWriter;
     private double funcMinValue = Double.MAX_VALUE;
     private double funcMaxValue = Double.MIN_VALUE;
-    private final double x1, x2, y1, y2; // Function's args range
+    private double x1;
+    private double x2;
+    private double y1;
+    private double y2; // Function's args range
     private int chartCanvasWidth, chartCanvasHeight;
 
     // -------------------------AXES' PARAMETERS-------------------------
@@ -32,19 +35,10 @@ public class FunctionChart2D extends GridPane {
     private final double axesGapBetweenMarkerAndText = 5.0;
 
     // -------------------------------BEES-------------------------------
-    private double[][] currentBees;
+    private double[][] currentIterBees;
 
     public FunctionChart2D(AbstractTestFunction testFunction) {
-        this.testFunction = testFunction;
-
-        if (testFunction.getDim() != 2) {
-            throw new IllegalArgumentException("Cannot visualize function with dimension other than 2");
-        }
-
-        x1 = testFunction.getLowerBoundaries()[0];
-        x2 = testFunction.getUpperBoundaries()[0];
-        y1 = testFunction.getLowerBoundaries()[1];
-        y2 = testFunction.getUpperBoundaries()[1];
+        setTestFunction(testFunction);
 
         chartCanvas = new Canvas();
         beesCanvas = new Canvas();
@@ -71,19 +65,13 @@ public class FunctionChart2D extends GridPane {
         GridPane.setConstraints(xAxisCanvas, 0, 1, 2, 1);
         GridPane.setConstraints(yAxisCanvas, 0, 0, 1, 2);
 
-        updateFuncValuesRange();
-        visualizeFunc();
-        drawAxes();
+        drawAll();
 
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
             chartCanvasWidth = (int) chartCanvas.getWidth();
             chartCanvasHeight = (int) chartCanvas.getHeight();
             updateFuncValuesRange();
-            visualizeFunc();
-            drawAxes();
-            if (currentBees != null) {
-                drawBees(currentBees);
-            }
+            drawAll();
         };
 
         widthProperty().addListener(paneSizeListener);
@@ -157,7 +145,7 @@ public class FunctionChart2D extends GridPane {
         }
     }
 
-    private void visualizeFunc() {
+    private void drawFunc() {
         for (int xCanvas = 0; xCanvas < chartCanvasWidth; xCanvas++) {
             for (int yCanvas = 0; yCanvas < chartCanvasHeight; yCanvas++) {
                 double funcVal = getFuncVal(xCanvas, yCanvas);
@@ -171,7 +159,7 @@ public class FunctionChart2D extends GridPane {
     }
 
     public void drawBees(double[][] foodSources) {
-        currentBees = foodSources;
+        currentIterBees = foodSources; // In case user resizes the window, we need to draw bees again
         double[] canvasXY;
         GraphicsContext beesGraphics = beesCanvas.getGraphicsContext2D();
         beesGraphics.setFill(Color.WHITE);
@@ -184,6 +172,9 @@ public class FunctionChart2D extends GridPane {
     }
 
     private void updateFuncValuesRange() {
+        funcMinValue = Double.MAX_VALUE;
+        funcMaxValue = Double.MIN_VALUE;
+
         for (int xCanvas = 0; xCanvas < chartCanvasWidth; xCanvas++) {
             for (int yCanvas = chartCanvasHeight - 1; yCanvas >= 0; yCanvas--) {
                 double funcVal = getFuncVal(xCanvas, yCanvas);
@@ -207,4 +198,24 @@ public class FunctionChart2D extends GridPane {
         return new double[]{xCanvas, yCanvas};
     }
 
+    public void setTestFunction(AbstractTestFunction testFunction) {
+        if (testFunction.getDim() != 2) {
+            throw new IllegalArgumentException("Cannot visualize function with dimension other than 2");
+        }
+
+        this.testFunction = testFunction;
+        x1 = testFunction.getLowerBoundaries()[0];
+        x2 = testFunction.getUpperBoundaries()[0];
+        y1 = testFunction.getLowerBoundaries()[1];
+        y2 = testFunction.getUpperBoundaries()[1];
+        updateFuncValuesRange();
+    }
+
+    public void drawAll() {
+        drawFunc();
+        drawAxes();
+        if (currentIterBees != null) {
+            drawBees(currentIterBees);
+        }
+    }
 }

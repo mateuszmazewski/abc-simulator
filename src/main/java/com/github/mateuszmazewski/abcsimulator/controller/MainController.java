@@ -7,8 +7,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 
 import java.util.Optional;
 
@@ -18,12 +18,10 @@ public class MainController {
     private BorderPane borderPane;
 
     @FXML
-    private ParametersController parametersController;
+    private Slider iterSlider;
 
-    public void setCenterChart(FunctionChart2D chart) {
-        BorderPane.setMargin(chart, new Insets(10, 10, 10, 10));
-        borderPane.setCenter(chart);
-    }
+    @FXML
+    private ParametersController parametersController;
 
     public FunctionChart2D getCenterChart() {
         return (FunctionChart2D) borderPane.getCenter();
@@ -31,10 +29,16 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        Pane functionChart2D = new FunctionChart2D(new BealeFunction());
+        // TODO
+        FunctionChart2D functionChart2D = new FunctionChart2D(new BealeFunction());
         BorderPane.setMargin(functionChart2D, new Insets(10, 10, 10, 10));
         borderPane.setCenter(functionChart2D);
         parametersController.setMainController(this);
+
+        iterSlider.setDisable(true);
+        iterSlider.setShowTickLabels(false);
+        iterSlider.setShowTickMarks(false);
+        parametersController.setIterSlider(iterSlider);
     }
 
     @FXML

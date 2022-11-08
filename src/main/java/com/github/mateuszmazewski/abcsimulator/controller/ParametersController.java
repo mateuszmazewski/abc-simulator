@@ -9,17 +9,22 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 public class ParametersController {
+
+    private static final int SLIDER_MAJOR_TICKS_COUNT = 20;
+    private static final int BY_ONE_TICKS_LIMIT = 30;
 
     @FXML
     private ComboBox<AbstractTestFunction> funcComboBox;
@@ -52,8 +57,14 @@ public class ParametersController {
     private final ObjectProperty<AbstractTestFunction> func = new SimpleObjectProperty<>();
     private final String textFieldDefaultStyle = new TextField().getStyle();
     private final String textFieldErrorStyle = "-fx-background-color: lightcoral;";
-    private MainController mainController;
     private final BooleanProperty wrongParameters = new SimpleBooleanProperty(false);
+
+    // --------------------Injected by MainController--------------------
+    private MainController mainController;
+    private Slider iterSlider;
+
+    //-------------------------------------------------------------------
+    private ChangeListener<Number> sliderValueChangeListener;
 
     @FXML
     private void initialize() {
@@ -67,6 +78,10 @@ public class ParametersController {
 
         startButton.disableProperty().bind(wrongParameters);
 
+        addValueChangeListenerToTextFields();
+    }
+
+    private void addValueChangeListenerToTextFields() {
         addRangeValueChangeListener(xRangeFromTextField);
         addRangeValueChangeListener(xRangeToTextField);
         addRangeValueChangeListener(yRangeFromTextField);
@@ -108,8 +123,9 @@ public class ParametersController {
                 handleYRange(textField);
             }
 
-            FunctionChart2D functionChart2D = new FunctionChart2D(func.getValue());
-            mainController.setCenterChart(functionChart2D);
+            FunctionChart2D chart = mainController.getCenterChart();
+            chart.setTestFunction(func.getValue());
+            chart.drawAll();
         });
     }
 
@@ -205,18 +221,42 @@ public class ParametersController {
         ArtificialBeeColony abc = new ArtificialBeeColony(swarmSize, maxIter, func.getValue(), trialsLimit);
         abc.run();
         double[][][] allFoodSources = abc.getAllFoodSources();
-        double[][] allFx = abc.getAllFx();
-        double[][] bestFoodSources = abc.getBestFoodSources();
-        double[] bestFx = abc.getBestFx();
 
-        for (int i = 0; i < bestFx.length; i++) {
-            System.out.println("x = " + bestFoodSources[i][0] + ", y = " + bestFoodSources[i][1] + ", f(x, y) = " + bestFx[i]);
+        initIterSlider(maxIter, allFoodSources);
+    }
+
+    private void initIterSlider(int maxIter, double[][][] allFoodSources) {
+        iterSlider.setDisable(false);
+        iterSlider.setShowTickMarks(true);
+        iterSlider.setShowTickLabels(true);
+        iterSlider.setMin(0);
+        iterSlider.setMax(maxIter);
+        iterSlider.setBlockIncrement(1);
+
+        if (maxIter < BY_ONE_TICKS_LIMIT) {
+            iterSlider.setMajorTickUnit(1);
+            iterSlider.setMinorTickCount(0);
+        } else {
+            iterSlider.setMajorTickUnit((int) ((double) maxIter / SLIDER_MAJOR_TICKS_COUNT));
+            iterSlider.setMinorTickCount((int) iterSlider.getMajorTickUnit() - 1);
         }
-        // TODO
-        mainController.getCenterChart().drawBees(allFoodSources[maxIter-1]);
+
+        if (sliderValueChangeListener != null) {
+            iterSlider.valueProperty().removeListener(sliderValueChangeListener);
+        }
+        sliderValueChangeListener = (observable, oldValue, newValue) ->
+                mainController.getCenterChart().drawBees(allFoodSources[newValue.intValue()]);
+
+        iterSlider.valueProperty().addListener(sliderValueChangeListener);
+        iterSlider.setValue(maxIter);
+        mainController.getCenterChart().drawBees(allFoodSources[maxIter]);
     }
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    public void setIterSlider(Slider iterSlider) {
+        this.iterSlider = iterSlider;
     }
 }
