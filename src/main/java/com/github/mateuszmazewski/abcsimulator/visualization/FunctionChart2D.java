@@ -209,6 +209,10 @@ public class FunctionChart2D extends GridPane {
         y1 = testFunction.getLowerBoundaries()[1];
         y2 = testFunction.getUpperBoundaries()[1];
         updateFuncValuesRange();
+
+        if (yAxisCanvas != null) {
+            yAxisCanvas.setWidth(axesMarkerLength + axesGapBetweenMarkerAndText + getLongestYTextWidth());
+        }
     }
 
     public void drawAll() {
