@@ -3,6 +3,7 @@ package com.github.mateuszmazewski.abcsimulator.controller;
 import com.github.mateuszmazewski.abcsimulator.abc.ArtificialBeeColony;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AbstractTestFunction;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.BealeFunction;
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.RastriginFunction;
 import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.beans.property.BooleanProperty;
@@ -65,6 +66,7 @@ public class ParametersController {
 
     //-------------------------------------------------------------------
     private ChangeListener<Number> sliderValueChangeListener;
+    private boolean rangeChangeListenersActive = true;
 
     @FXML
     private void initialize() {
@@ -73,8 +75,14 @@ public class ParametersController {
         beale.setName(messagesBundle.getString("bealeFunction.name"));
         funcList.add(beale);
 
+        AbstractTestFunction rastrigin = new RastriginFunction();
+        rastrigin.setName(messagesBundle.getString("rastriginFunction.name"));
+        funcList.add(rastrigin);
+
         funcComboBox.setItems(funcList);
         func.bind(funcComboBox.valueProperty());
+        funcComboBox.getSelectionModel().selectFirst();
+        onActionFuncComboBox();
 
         startButton.disableProperty().bind(wrongParameters);
 
@@ -117,15 +125,17 @@ public class ParametersController {
 
     private void addRangeValueChangeListener(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (textField == xRangeFromTextField || textField == xRangeToTextField) {
-                handleXRange(textField);
-            } else if (textField == yRangeFromTextField || textField == yRangeToTextField) {
-                handleYRange(textField);
-            }
+            if (rangeChangeListenersActive) {
+                if (textField == xRangeFromTextField || textField == xRangeToTextField) {
+                    handleXRange(textField);
+                } else if (textField == yRangeFromTextField || textField == yRangeToTextField) {
+                    handleYRange(textField);
+                }
 
-            FunctionChart2D chart = mainController.getCenterChart();
-            chart.setTestFunction(func.getValue());
-            chart.drawAll();
+                FunctionChart2D chart = mainController.getCenterChart();
+                chart.setTestFunction(func.getValue());
+                chart.drawAll();
+            }
         });
     }
 
@@ -198,9 +208,12 @@ public class ParametersController {
 
     @FXML
     private void onActionFuncComboBox() {
+        func.getValue().restoreDefaultRanges();
+        rangeChangeListenersActive = false;
         xRangeFromTextField.textProperty().setValue(String.valueOf(func.getValue().getLowerBoundaries()[0]));
-        xRangeToTextField.textProperty().setValue(String.valueOf(func.getValue().getUpperBoundaries()[0]));
         yRangeFromTextField.textProperty().setValue(String.valueOf(func.getValue().getLowerBoundaries()[1]));
+        rangeChangeListenersActive = true;
+        xRangeToTextField.textProperty().setValue(String.valueOf(func.getValue().getUpperBoundaries()[0]));
         yRangeToTextField.textProperty().setValue(String.valueOf(func.getValue().getUpperBoundaries()[1]));
     }
 

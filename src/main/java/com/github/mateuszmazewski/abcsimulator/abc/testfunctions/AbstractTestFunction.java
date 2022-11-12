@@ -8,21 +8,24 @@ public abstract class AbstractTestFunction {
     public final static double MAX_Y = 10000.0;
     private final int dim;
     private final double[] lowerBoundaries, upperBoundaries;
+    private final double[] defaultLowerBoundaries, defaultUpperBoundaries;
     private final double[] globalMinPos;
     private final double globalMinValue;
     private String name;
 
     public AbstractTestFunction(int dim,
-                                double[] lowerBoundaries,
-                                double[] upperBoundaries,
+                                double[] defaultLowerBoundaries,
+                                double[] defaultUpperBoundaries,
                                 double[] globalMinPos,
                                 double globalMinValue) {
 
-        validateArgs(dim, lowerBoundaries, upperBoundaries, globalMinPos);
+        validateArgs(dim, defaultLowerBoundaries, defaultUpperBoundaries, globalMinPos);
 
         this.dim = dim;
-        this.lowerBoundaries = lowerBoundaries;
-        this.upperBoundaries = upperBoundaries;
+        this.defaultLowerBoundaries = defaultLowerBoundaries;
+        this.defaultUpperBoundaries = defaultUpperBoundaries;
+        this.lowerBoundaries = defaultLowerBoundaries.clone();
+        this.upperBoundaries = defaultUpperBoundaries.clone();
         this.globalMinPos = globalMinPos;
         this.globalMinValue = globalMinValue;
     }
@@ -59,6 +62,13 @@ public abstract class AbstractTestFunction {
             if (pos[i] < lowerBoundaries[i] || pos[i] > upperBoundaries[i]) {
                 throw new IllegalArgumentException("variable is out of boundaries");
             }
+        }
+    }
+
+    public void restoreDefaultRanges() {
+        for (int i = 0; i < dim; i++) {
+            lowerBoundaries[i] = defaultLowerBoundaries[i];
+            upperBoundaries[i] = defaultUpperBoundaries[i];
         }
     }
 
