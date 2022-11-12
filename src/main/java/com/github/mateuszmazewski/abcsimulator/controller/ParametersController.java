@@ -2,6 +2,7 @@ package com.github.mateuszmazewski.abcsimulator.controller;
 
 import com.github.mateuszmazewski.abcsimulator.abc.ArtificialBeeColony;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AbstractTestFunction;
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AckleyFunction;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.BealeFunction;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.RastriginFunction;
 import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
@@ -78,6 +79,10 @@ public class ParametersController {
         AbstractTestFunction rastrigin = new RastriginFunction();
         rastrigin.setName(messagesBundle.getString("rastriginFunction.name"));
         funcList.add(rastrigin);
+
+        AbstractTestFunction ackley = new AckleyFunction();
+        ackley.setName(messagesBundle.getString("ackleyFunction.name"));
+        funcList.add(ackley);
 
         funcComboBox.setItems(funcList);
         func.bind(funcComboBox.valueProperty());
