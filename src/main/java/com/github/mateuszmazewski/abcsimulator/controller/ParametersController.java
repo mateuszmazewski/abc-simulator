@@ -1,10 +1,7 @@
 package com.github.mateuszmazewski.abcsimulator.controller;
 
 import com.github.mateuszmazewski.abcsimulator.abc.ArtificialBeeColony;
-import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AbstractTestFunction;
-import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AckleyFunction;
-import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.BealeFunction;
-import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.RastriginFunction;
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.*;
 import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.beans.property.BooleanProperty;
@@ -84,6 +81,10 @@ public class ParametersController {
         ackley.setName(messagesBundle.getString("ackleyFunction.name"));
         funcList.add(ackley);
 
+        AbstractTestFunction sphere = new SphereFunction();
+        sphere.setName(messagesBundle.getString("sphereFunction.name"));
+        funcList.add(sphere);
+
         funcComboBox.setItems(funcList);
         func.bind(funcComboBox.valueProperty());
         funcComboBox.getSelectionModel().selectFirst();
@@ -116,7 +117,6 @@ public class ParametersController {
                 wrongParameters.setValue(true);
                 return;
             }
-
 
             if (textField == swarmSizeTextField) {
                 textFieldValueInRange(number, ArtificialBeeColony.MIN_SWARM_SIZE, ArtificialBeeColony.MAX_SWARM_SIZE, textField);
@@ -217,8 +217,12 @@ public class ParametersController {
         rangeChangeListenersActive = false;
         xRangeFromTextField.textProperty().setValue(String.valueOf(func.getValue().getLowerBoundaries()[0]));
         yRangeFromTextField.textProperty().setValue(String.valueOf(func.getValue().getLowerBoundaries()[1]));
-        rangeChangeListenersActive = true;
+        // Set the old value manually to ensure that it is different from the new one
+        // in order to run text-field's listeners
+        xRangeToTextField.textProperty().setValue(String.valueOf(-Double.MAX_VALUE));
+        yRangeToTextField.textProperty().setValue(String.valueOf(-Double.MAX_VALUE));
         xRangeToTextField.textProperty().setValue(String.valueOf(func.getValue().getUpperBoundaries()[0]));
+        rangeChangeListenersActive = true; // Draw chart only once
         yRangeToTextField.textProperty().setValue(String.valueOf(func.getValue().getUpperBoundaries()[1]));
     }
 

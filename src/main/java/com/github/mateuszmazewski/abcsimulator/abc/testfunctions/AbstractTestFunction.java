@@ -49,6 +49,11 @@ public abstract class AbstractTestFunction {
         if (globalMinPos.length != dim) {
             throw new IllegalArgumentException("globalMinPos length must be equal to the function's dimension");
         }
+        for (int i = 0; i < dim; i++) {
+            if (lowerBoundaries[i] >= upperBoundaries[i]) {
+                throw new IllegalArgumentException("lower bound must be less than upper bound");
+            }
+        }
     }
 
     public abstract double getValue(double[] pos);
