@@ -1,6 +1,6 @@
 package com.github.mateuszmazewski.abcsimulator.controller;
 
-import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.BealeFunction;
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.RastriginFunction;
 import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.application.Platform;
@@ -29,8 +29,7 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        // TODO
-        FunctionChart2D functionChart2D = new FunctionChart2D(new BealeFunction());
+        FunctionChart2D functionChart2D = new FunctionChart2D(new RastriginFunction());
         BorderPane.setMargin(functionChart2D, new Insets(10, 10, 10, 10));
         borderPane.setCenter(functionChart2D);
         parametersController.setMainController(this);

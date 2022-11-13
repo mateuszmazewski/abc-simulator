@@ -69,9 +69,6 @@ public class ParametersController {
     @FXML
     private void initialize() {
         ResourceBundle messagesBundle = FxmlUtils.getResourceBundle();
-        AbstractTestFunction beale = new BealeFunction();
-        beale.setName(messagesBundle.getString("bealeFunction.name"));
-        funcList.add(beale);
 
         AbstractTestFunction rastrigin = new RastriginFunction();
         rastrigin.setName(messagesBundle.getString("rastriginFunction.name"));
@@ -89,9 +86,17 @@ public class ParametersController {
         rosenbrock.setName(messagesBundle.getString("rosenbrockFunction.name"));
         funcList.add(rosenbrock);
 
+        AbstractTestFunction beale = new BealeFunction();
+        beale.setName(messagesBundle.getString("bealeFunction.name"));
+        funcList.add(beale);
+
         AbstractTestFunction goldsteinPrice = new GoldsteinPriceFunction();
         goldsteinPrice.setName(messagesBundle.getString("goldsteinPriceFunction.name"));
         funcList.add(goldsteinPrice);
+
+        AbstractTestFunction booth = new BoothFunction();
+        booth.setName(messagesBundle.getString("boothFunction.name"));
+        funcList.add(booth);
 
         AbstractTestFunction threeHumpCamel = new ThreeHumpCamelFunction();
         threeHumpCamel.setName(messagesBundle.getString("threeHumpCamelFunction.name"));
