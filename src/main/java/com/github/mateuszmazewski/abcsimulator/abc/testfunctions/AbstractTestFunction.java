@@ -1,5 +1,7 @@
 package com.github.mateuszmazewski.abcsimulator.abc.testfunctions;
 
+import com.github.mateuszmazewski.abcsimulator.utils.MathUtils;
+
 public abstract class AbstractTestFunction {
 
     public final static double MIN_X = -10000.0;
@@ -64,7 +66,7 @@ public abstract class AbstractTestFunction {
         }
 
         for (int i = 0; i < dim; i++) {
-            if (pos[i] < lowerBoundaries[i] || pos[i] > upperBoundaries[i]) {
+            if (pos[i] < lowerBoundaries[i] - MathUtils.EPS || pos[i] > upperBoundaries[i] + MathUtils.EPS) {
                 throw new IllegalArgumentException("variable is out of boundaries");
             }
         }

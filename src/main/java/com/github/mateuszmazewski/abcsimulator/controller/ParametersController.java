@@ -89,6 +89,10 @@ public class ParametersController {
         rosenbrock.setName(messagesBundle.getString("rosenbrockFunction.name"));
         funcList.add(rosenbrock);
 
+        AbstractTestFunction goldsteinPrice = new GoldsteinPriceFunction();
+        goldsteinPrice.setName(messagesBundle.getString("goldsteinPriceFunction.name"));
+        funcList.add(goldsteinPrice);
+
         funcComboBox.setItems(funcList);
         func.bind(funcComboBox.valueProperty());
         funcComboBox.getSelectionModel().selectFirst();
