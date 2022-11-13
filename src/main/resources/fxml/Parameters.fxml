@@ -26,7 +26,7 @@
   </rowConstraints>
    <children>
       <Label text="%parameters.function" />
-      <ComboBox fx:id="funcComboBox" onAction="#onActionFuncComboBox" prefWidth="150.0" GridPane.columnIndex="1" />
+      <ComboBox fx:id="funcComboBox" maxWidth="1.7976931348623157E308" onAction="#onActionFuncComboBox" GridPane.columnIndex="1" />
       <Label text="%parameters.xRange" GridPane.rowIndex="1" />
       <Label text="%parameters.swarmSize" GridPane.rowIndex="3" />
       <TextField fx:id="swarmSizeTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
