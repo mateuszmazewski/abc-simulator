@@ -97,6 +97,10 @@ public class ParametersController {
         threeHumpCamel.setName(messagesBundle.getString("threeHumpCamelFunction.name"));
         funcList.add(threeHumpCamel);
 
+        AbstractTestFunction eggholderFunction = new EggholderFunction();
+        eggholderFunction.setName(messagesBundle.getString("eggholderFunction.name"));
+        funcList.add(eggholderFunction);
+
         funcComboBox.setItems(funcList);
         func.bind(funcComboBox.valueProperty());
         funcComboBox.getSelectionModel().selectFirst();
