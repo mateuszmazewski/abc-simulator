@@ -93,6 +93,10 @@ public class ParametersController {
         goldsteinPrice.setName(messagesBundle.getString("goldsteinPriceFunction.name"));
         funcList.add(goldsteinPrice);
 
+        AbstractTestFunction threeHumpCamel = new ThreeHumpCamelFunction();
+        threeHumpCamel.setName(messagesBundle.getString("threeHumpCamelFunction.name"));
+        funcList.add(threeHumpCamel);
+
         funcComboBox.setItems(funcList);
         func.bind(funcComboBox.valueProperty());
         funcComboBox.getSelectionModel().selectFirst();
