@@ -85,6 +85,10 @@ public class ParametersController {
         sphere.setName(messagesBundle.getString("sphereFunction.name"));
         funcList.add(sphere);
 
+        AbstractTestFunction rosenbrock = new RosenbrockFunction();
+        rosenbrock.setName(messagesBundle.getString("rosenbrockFunction.name"));
+        funcList.add(rosenbrock);
+
         funcComboBox.setItems(funcList);
         func.bind(funcComboBox.valueProperty());
         funcComboBox.getSelectionModel().selectFirst();
