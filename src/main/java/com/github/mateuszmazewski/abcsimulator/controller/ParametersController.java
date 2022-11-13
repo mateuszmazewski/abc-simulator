@@ -98,6 +98,10 @@ public class ParametersController {
         booth.setName(messagesBundle.getString("boothFunction.name"));
         funcList.add(booth);
 
+        AbstractTestFunction matyas = new MatyasFunction();
+        matyas.setName(messagesBundle.getString("matyasFunction.name"));
+        funcList.add(matyas);
+
         AbstractTestFunction threeHumpCamel = new ThreeHumpCamelFunction();
         threeHumpCamel.setName(messagesBundle.getString("threeHumpCamelFunction.name"));
         funcList.add(threeHumpCamel);
