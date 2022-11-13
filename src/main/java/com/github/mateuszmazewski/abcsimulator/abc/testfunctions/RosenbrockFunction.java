@@ -4,10 +4,11 @@ public class RosenbrockFunction extends AbstractTestFunction {
 
     public RosenbrockFunction() {
         super(2,
-                new double[]{-2.0, -1.0},
-                new double[]{2.0, 3.0},
+                new double[]{-2.0, -2.0},
+                new double[]{2.0, 2.0},
                 new double[]{1.0, 1.0},
-                0.0);
+                0.0,
+                true);
     }
 
     @Override

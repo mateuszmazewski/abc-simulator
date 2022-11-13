@@ -7,7 +7,8 @@ public class GoldsteinPriceFunction extends AbstractTestFunction {
                 new double[]{-2.0, -3.0},
                 new double[]{2.0, 1.0},
                 new double[]{0.0, -1.0},
-                3.0);
+                3.0,
+                true);
     }
 
     @Override

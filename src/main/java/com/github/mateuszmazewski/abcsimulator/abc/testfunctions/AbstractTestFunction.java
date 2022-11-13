@@ -14,12 +14,14 @@ public abstract class AbstractTestFunction {
     private final double[] globalMinPos;
     private final double globalMinValue;
     private String name;
+    private final boolean chartInLogScale;
 
     public AbstractTestFunction(int dim,
                                 double[] defaultLowerBoundaries,
                                 double[] defaultUpperBoundaries,
                                 double[] globalMinPos,
-                                double globalMinValue) {
+                                double globalMinValue,
+                                boolean chartInLogScale) {
 
         validateArgs(dim, defaultLowerBoundaries, defaultUpperBoundaries, globalMinPos);
 
@@ -30,6 +32,7 @@ public abstract class AbstractTestFunction {
         this.upperBoundaries = defaultUpperBoundaries.clone();
         this.globalMinPos = globalMinPos;
         this.globalMinValue = globalMinValue;
+        this.chartInLogScale = chartInLogScale;
     }
 
     private void validateArgs(int dim,
@@ -59,6 +62,10 @@ public abstract class AbstractTestFunction {
     }
 
     public abstract double getValue(double[] pos);
+
+    public double getLog10Value(double[] pos) {
+        return Math.log10(getValue(pos));
+    }
 
     protected void validatePos(double[] pos) throws IllegalArgumentException {
         if (pos == null || pos.length != dim) {
@@ -110,5 +117,9 @@ public abstract class AbstractTestFunction {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isChartInLogScale() {
+        return chartInLogScale;
     }
 }

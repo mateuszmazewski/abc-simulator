@@ -7,7 +7,8 @@ public class AckleyFunction extends AbstractTestFunction {
                 new double[]{-5.0, -5.0},
                 new double[]{5.0, 5.0},
                 new double[]{0.0, 0.0},
-                0.0);
+                0.0,
+                false);
     }
 
     @Override

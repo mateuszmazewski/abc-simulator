@@ -4,10 +4,11 @@ public class BealeFunction extends AbstractTestFunction {
 
     public BealeFunction() {
         super(2,
-                new double[]{-4.5, -4.5},
-                new double[]{4.5, 4.5},
+                new double[]{-4.0, -4.0},
+                new double[]{4.0, 4.0},
                 new double[]{3.0, 0.5},
-                0.0);
+                0.0,
+                true);
     }
 
     @Override

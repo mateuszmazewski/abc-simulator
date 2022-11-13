@@ -4,10 +4,11 @@ public class SphereFunction extends AbstractTestFunction {
 
     public SphereFunction() {
         super(2,
-                new double[]{-5.0, -5.0},
-                new double[]{5.0, 5.0},
+                new double[]{-2.0, -2.0},
+                new double[]{2.0, 2.0},
                 new double[]{0.0, 0.0},
-                0.0);
+                0.0,
+                false);
     }
 
     @Override
