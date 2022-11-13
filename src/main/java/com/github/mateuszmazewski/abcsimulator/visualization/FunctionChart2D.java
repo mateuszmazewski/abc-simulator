@@ -163,12 +163,17 @@ public class FunctionChart2D extends GridPane {
         double[] canvasXY;
         GraphicsContext beesGraphics = beesCanvas.getGraphicsContext2D();
         beesGraphics.setFill(Color.WHITE);
-        beesGraphics.clearRect(0, 0, beesCanvas.getWidth(), beesCanvas.getHeight());
+        clearBees();
 
         for (double[] foodSource : foodSources) {
             canvasXY = getCanvasXY(foodSource);
             beesGraphics.fillOval(canvasXY[0], canvasXY[1], 10, 10);
         }
+    }
+
+    public void clearBees() {
+        currentIterBees = null;
+        beesCanvas.getGraphicsContext2D().clearRect(0, 0, beesCanvas.getWidth(), beesCanvas.getHeight());
     }
 
     private void updateFuncValuesRange() {

@@ -238,6 +238,10 @@ public class ParametersController {
 
     @FXML
     private void onActionFuncComboBox() {
+        if(mainController != null) {
+            mainController.getCenterChart().clearBees();
+            resetIterSlider();
+        }
         func.getValue().restoreDefaultRanges();
         rangeChangeListenersActive = false;
         xRangeFromTextField.textProperty().setValue(String.valueOf(func.getValue().getLowerBoundaries()[0]));
@@ -270,6 +274,12 @@ public class ParametersController {
         double[][][] allFoodSources = abc.getAllFoodSources();
 
         initIterSlider(maxIter, allFoodSources);
+    }
+
+    private void resetIterSlider() {
+        iterSlider.setDisable(true);
+        iterSlider.setShowTickMarks(false);
+        iterSlider.setShowTickLabels(false);
     }
 
     private void initIterSlider(int maxIter, double[][][] allFoodSources) {
