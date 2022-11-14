@@ -8,10 +8,7 @@ public class MathUtils {
 
     public static final double EPS = 10e-8; // Double numbers precision
     public static final DecimalFormat decimalFormat3 = new DecimalFormat("0.000", DecimalFormatSymbols.getInstance(Locale.US));
-
-    public static double roundToTwoDecimalPlaces(double x) {
-        return Math.round(x * 100.0) / 100.0;
-    }
+    public static final DecimalFormat decimalFormat2 = new DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.US));
 
     public static String doubleToString(double d) {
         String s = MathUtils.decimalFormat3.format(d);

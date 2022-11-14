@@ -13,7 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.roundToTwoDecimalPlaces;
+import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.decimalFormat2;
 
 public class FunctionChart2D extends GridPane {
 
@@ -116,8 +116,8 @@ public class FunctionChart2D extends GridPane {
         yAxisGraphics.clearRect(0, 0, yAxisCanvas.getWidth(), yAxisCanvas.getHeight());
 
         for (int i = 0; i <= stepsCount; i++) {
-            xText = String.valueOf(roundToTwoDecimalPlaces(x1 + i * xFuncStep));
-            yText = String.valueOf(roundToTwoDecimalPlaces(y1 + (stepsCount - i) * yFuncStep));
+            xText = String.valueOf(decimalFormat2.format(x1 + i * xFuncStep));
+            yText = String.valueOf(decimalFormat2.format(y1 + (stepsCount - i) * yFuncStep));
 
             xAxisGraphics.setTextBaseline(VPos.BOTTOM);
             yAxisGraphics.setTextAlign(TextAlignment.RIGHT);
