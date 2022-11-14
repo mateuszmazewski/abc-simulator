@@ -18,7 +18,10 @@ import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.roundToTwo
 public class FunctionChart2D extends GridPane {
 
     private AbstractTestFunction testFunction;
-    private final Canvas chartCanvas, beesCanvas, xAxisCanvas, yAxisCanvas;
+    private final Canvas chartCanvas = new Canvas();
+    private final Canvas beesCanvas = new Canvas();
+    private final Canvas xAxisCanvas = new Canvas();
+    private final Canvas yAxisCanvas = new Canvas();
     private final PixelWriter pixelWriter;
     private double funcMinValue = Double.MAX_VALUE;
     private double funcMaxValue = Double.MIN_VALUE;
@@ -39,12 +42,33 @@ public class FunctionChart2D extends GridPane {
 
     public FunctionChart2D(AbstractTestFunction testFunction) {
         setTestFunction(testFunction);
-
-        chartCanvas = new Canvas();
-        beesCanvas = new Canvas();
-        xAxisCanvas = new Canvas();
-        yAxisCanvas = new Canvas();
+        initCanvases();
         pixelWriter = chartCanvas.getGraphicsContext2D().getPixelWriter();
+        initGridPane();
+        drawAll();
+
+        ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
+            chartCanvasWidth = (int) chartCanvas.getWidth();
+            chartCanvasHeight = (int) chartCanvas.getHeight();
+            updateFuncValuesRange();
+            drawAll();
+        };
+
+        widthProperty().addListener(paneSizeListener);
+        heightProperty().addListener(paneSizeListener);
+    }
+
+    private void initGridPane() {
+        getChildren().addAll(chartCanvas, beesCanvas, xAxisCanvas, yAxisCanvas);
+        GridPane.setHalignment(xAxisCanvas, HPos.RIGHT);
+        GridPane.setValignment(yAxisCanvas, VPos.TOP);
+        GridPane.setConstraints(chartCanvas, 1, 0, 1, 1);
+        GridPane.setConstraints(beesCanvas, 1, 0, 1, 1);
+        GridPane.setConstraints(xAxisCanvas, 0, 1, 2, 1);
+        GridPane.setConstraints(yAxisCanvas, 0, 0, 1, 2);
+    }
+
+    private void initCanvases() {
         chartCanvas.widthProperty().bind(chartCanvas.heightProperty()); // chartCanvas is square
         chartCanvas.heightProperty().bind(heightProperty().multiply(0.9));
         beesCanvas.widthProperty().bind(chartCanvas.widthProperty());
@@ -57,25 +81,16 @@ public class FunctionChart2D extends GridPane {
         xAxisCanvas.setHeight(axesMarkerLength + axesFontSize + axesGapBetweenMarkerAndText);
         yAxisCanvas.setWidth(axesMarkerLength + axesGapBetweenMarkerAndText + getLongestYTextWidth());
 
-        getChildren().addAll(chartCanvas, beesCanvas, xAxisCanvas, yAxisCanvas);
-        GridPane.setHalignment(xAxisCanvas, HPos.RIGHT);
-        GridPane.setValignment(yAxisCanvas, VPos.TOP);
-        GridPane.setConstraints(chartCanvas, 1, 0, 1, 1);
-        GridPane.setConstraints(beesCanvas, 1, 0, 1, 1);
-        GridPane.setConstraints(xAxisCanvas, 0, 1, 2, 1);
-        GridPane.setConstraints(yAxisCanvas, 0, 0, 1, 2);
+        initAxes();
+    }
 
-        drawAll();
-
-        ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
-            chartCanvasWidth = (int) chartCanvas.getWidth();
-            chartCanvasHeight = (int) chartCanvas.getHeight();
-            updateFuncValuesRange();
-            drawAll();
-        };
-
-        widthProperty().addListener(paneSizeListener);
-        heightProperty().addListener(paneSizeListener);
+    private void initAxes() {
+        GraphicsContext xAxisGraphics = xAxisCanvas.getGraphicsContext2D();
+        GraphicsContext yAxisGraphics = yAxisCanvas.getGraphicsContext2D();
+        xAxisGraphics.setStroke(Color.BLACK);
+        yAxisGraphics.setStroke(Color.BLACK);
+        xAxisGraphics.setFont(axesFont);
+        yAxisGraphics.setFont(axesFont);
     }
 
     private double getLongestYTextWidth() {
@@ -92,16 +107,10 @@ public class FunctionChart2D extends GridPane {
         double yAxisStep = yAxisCanvas.getHeight() / stepsCount;
         double xFuncStep = (x2 - x1) / stepsCount;
         double yFuncStep = (y2 - y1) / stepsCount;
-
         GraphicsContext xAxisGraphics = xAxisCanvas.getGraphicsContext2D();
         GraphicsContext yAxisGraphics = yAxisCanvas.getGraphicsContext2D();
-        xAxisGraphics.setStroke(Color.BLACK);
-        yAxisGraphics.setStroke(Color.BLACK);
-
         double x, y;
         String xText, yText;
-        xAxisGraphics.setFont(axesFont);
-        yAxisGraphics.setFont(axesFont);
 
         xAxisGraphics.clearRect(0, 0, xAxisCanvas.getWidth(), xAxisCanvas.getHeight());
         yAxisGraphics.clearRect(0, 0, yAxisCanvas.getWidth(), yAxisCanvas.getHeight());
