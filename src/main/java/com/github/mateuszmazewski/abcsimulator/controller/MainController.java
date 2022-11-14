@@ -1,5 +1,6 @@
 package com.github.mateuszmazewski.abcsimulator.controller;
 
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AbstractTestFunction;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.RastriginFunction;
 import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
@@ -23,6 +24,9 @@ public class MainController {
     @FXML
     private ParametersController parametersController;
 
+    @FXML
+    private ResultsController resultsController;
+
     public FunctionChart2D getCenterChart() {
         return (FunctionChart2D) borderPane.getCenter();
     }
@@ -38,6 +42,10 @@ public class MainController {
         iterSlider.setShowTickLabels(false);
         iterSlider.setShowTickMarks(false);
         parametersController.setIterSlider(iterSlider);
+
+        AbstractTestFunction func = parametersController.getFunc();
+        resultsController.showFuncBest(func.getGlobalMinPos(), func.getGlobalMinValue());
+        resultsController.setResultsVisible(false);
     }
 
     @FXML
@@ -55,5 +63,9 @@ public class MainController {
     @FXML
     private void showAboutDialog() {
         DialogUtils.showAboutDialog();
+    }
+
+    public ResultsController getResultsController() {
+        return resultsController;
     }
 }

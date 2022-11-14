@@ -118,6 +118,10 @@ public class ParametersController {
         startButton.disableProperty().bind(wrongParameters);
 
         addValueChangeListenerToTextFields();
+
+        swarmSizeTextField.setText("50");
+        maxIterTextField.setText("100");
+        trialsLimitTextField.setText("50");
     }
 
     private void addValueChangeListenerToTextFields() {
@@ -238,9 +242,11 @@ public class ParametersController {
 
     @FXML
     private void onActionFuncComboBox() {
-        if(mainController != null) {
+        if (mainController != null) {
             mainController.getCenterChart().clearBees();
             resetIterSlider();
+            mainController.getResultsController().showFuncBest(func.getValue().getGlobalMinPos(), func.getValue().getGlobalMinValue());
+            mainController.getResultsController().setResultsVisible(false);
         }
         func.getValue().restoreDefaultRanges();
         rangeChangeListenersActive = false;
@@ -272,8 +278,12 @@ public class ParametersController {
         ArtificialBeeColony abc = new ArtificialBeeColony(swarmSize, maxIter, func.getValue(), trialsLimit);
         abc.run();
         double[][][] allFoodSources = abc.getAllFoodSources();
+        double[][] bestFoodSources = abc.getBestFoodSources();
+        double[] bestFx = abc.getBestFx();
 
-        initIterSlider(maxIter, allFoodSources);
+        initIterSlider(maxIter, allFoodSources, bestFoodSources, bestFx);
+        mainController.getResultsController().setResultsVisible(true);
+        mainController.getResultsController().showResults(maxIter, bestFoodSources[maxIter], bestFx[maxIter]);
     }
 
     private void resetIterSlider() {
@@ -282,7 +292,7 @@ public class ParametersController {
         iterSlider.setShowTickLabels(false);
     }
 
-    private void initIterSlider(int maxIter, double[][][] allFoodSources) {
+    private void initIterSlider(int maxIter, double[][][] allFoodSources, double[][] bestFoodSources, double[] bestFx) {
         iterSlider.setDisable(false);
         iterSlider.setShowTickMarks(true);
         iterSlider.setShowTickLabels(true);
@@ -301,8 +311,11 @@ public class ParametersController {
         if (sliderValueChangeListener != null) {
             iterSlider.valueProperty().removeListener(sliderValueChangeListener);
         }
-        sliderValueChangeListener = (observable, oldValue, newValue) ->
-                mainController.getCenterChart().drawBees(allFoodSources[newValue.intValue()]);
+        sliderValueChangeListener = (observable, oldValue, newValue) -> {
+            int iterNumber = newValue.intValue();
+            mainController.getCenterChart().drawBees(allFoodSources[iterNumber]);
+            mainController.getResultsController().showResults(iterNumber, bestFoodSources[iterNumber], bestFx[iterNumber]);
+        };
 
         iterSlider.valueProperty().addListener(sliderValueChangeListener);
         iterSlider.setValue(maxIter);
@@ -315,5 +328,9 @@ public class ParametersController {
 
     public void setIterSlider(Slider iterSlider) {
         this.iterSlider = iterSlider;
+    }
+
+    public AbstractTestFunction getFunc() {
+        return func.getValue();
     }
 }
