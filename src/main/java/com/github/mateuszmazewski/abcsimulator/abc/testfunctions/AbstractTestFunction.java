@@ -64,7 +64,12 @@ public abstract class AbstractTestFunction {
     public abstract double getValue(double[] pos);
 
     public double getLog10Value(double[] pos) {
-        return Math.log10(getValue(pos));
+        double value = getValue(pos);
+        if (value >= 0.0 && value < MathUtils.EPS) {
+            return -4.0;
+        } else {
+            return Math.log10(value);
+        }
     }
 
     protected void validatePos(double[] pos) throws IllegalArgumentException {
