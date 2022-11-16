@@ -146,6 +146,7 @@ public class ArtificialBeeColony {
             foodSources[i] = newPos;
             fx[i] = newFx;
             fitness[i] = newFitness;
+            trials[i] = 0;
         } else {
             trials[i]++;
         }
