@@ -11,7 +11,7 @@ public class ArtificialBeeColony {
     public static final int MAX_SWARM_SIZE = 1000000;
     public static final int MAX_ITER_LOWER_LIMIT = 1;
     public static final int MAX_ITER_UPPER_LIMIT = 1000000;
-    public static final int MIN_TRIALS_LIMIT = 1;
+    public static final int MIN_TRIALS_LIMIT = 0;
     public static final int MAX_TRIALS_LIMIT = 1000000;
 
     // -------------------------INPUT PARAMETERS-------------------------

@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -25,28 +26,61 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label text="%parameters.function" />
-      <ComboBox fx:id="funcComboBox" maxWidth="1.7976931348623157E308" onAction="#onActionFuncComboBox" GridPane.columnIndex="1" />
+      <Label text="%parameters.function">
+         <tooltip>
+            <Tooltip text="%tooltip.funcLabel" wrapText="true" />
+         </tooltip></Label>
+      <ComboBox fx:id="funcComboBox" maxWidth="1.7976931348623157E308" onAction="#onActionFuncComboBox" GridPane.columnIndex="1">
+         <tooltip>
+            <Tooltip text="Empty Tooltip" />
+         </tooltip></ComboBox>
       <Label text="%parameters.xRange" GridPane.rowIndex="1" />
-      <Label text="%parameters.swarmSize" GridPane.rowIndex="3" />
-      <TextField fx:id="swarmSizeTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <TextField fx:id="maxIterTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Label text="%parameters.swarmSize" GridPane.rowIndex="3">
+         <tooltip>
+            <Tooltip text="%tooltip.swarmSizeLabel" wrapText="true" />
+         </tooltip></Label>
+      <TextField fx:id="swarmSizeTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <tooltip>
+            <Tooltip text="%tooltip.swarmSizeTextField" wrapText="true" />
+         </tooltip></TextField>
+      <TextField fx:id="maxIterTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <tooltip>
+            <Tooltip text="%tooltip.maxIterTextField" wrapText="true" />
+         </tooltip></TextField>
       <Label text="%parameters.maxIter" GridPane.rowIndex="4" />
-      <Label text="%parameters.trialsLimit" GridPane.rowIndex="5" />
-      <TextField fx:id="trialsLimitTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Label text="%parameters.trialsLimit" GridPane.rowIndex="5">
+         <tooltip>
+            <Tooltip text="%tooltip.trialsLimitLabel" wrapText="true" />
+         </tooltip></Label>
+      <TextField fx:id="trialsLimitTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <tooltip>
+            <Tooltip text="%tooltip.trialsLimitTextField" wrapText="true" />
+         </tooltip></TextField>
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <TextField maxWidth="100.0" fx:id="xRangeFromTextField" />
+            <TextField maxWidth="100.0" fx:id="xRangeFromTextField">
+               <tooltip>
+                  <Tooltip text="%tooltip.xRangeFromTextField" wrapText="true" />
+               </tooltip></TextField>
             <Label text="-" />
-            <TextField maxWidth="100.0" fx:id="xRangeToTextField" />
+            <TextField maxWidth="100.0" fx:id="xRangeToTextField">
+               <tooltip>
+                  <Tooltip text="%tooltip.xRangeToTextField" wrapText="true" />
+               </tooltip></TextField>
          </children>
       </HBox>
       <Label text="%parameters.yRange" GridPane.rowIndex="2" />
-      <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
-            <TextField fx:id="yRangeFromTextField" maxWidth="100.0" />
+            <TextField fx:id="yRangeFromTextField" maxWidth="100.0">
+               <tooltip>
+                  <Tooltip text="%tooltip.yRangeFromTextField" wrapText="true" />
+               </tooltip></TextField>
             <Label text="-" />
-            <TextField fx:id="yRangeToTextField" maxWidth="100.0" />
+            <TextField fx:id="yRangeToTextField" maxWidth="100.0">
+               <tooltip>
+                  <Tooltip text="%tooltip.yRangeToTextField" wrapText="true" />
+               </tooltip></TextField>
          </children>
       </HBox>
       <Button fx:id="startButton" mnemonicParsing="false" onAction="#onActionStartButton" text="%parameters.startButton" GridPane.columnIndex="1" GridPane.rowIndex="6" />
