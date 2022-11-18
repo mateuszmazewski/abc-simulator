@@ -1,6 +1,5 @@
 package com.github.mateuszmazewski.abcsimulator.controller;
 
-import com.github.mateuszmazewski.abcsimulator.utils.MathUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,25 +10,19 @@ import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToSt
 public class ResultsController {
 
     @FXML
+    private Label minimumValueLabel;
+
+    @FXML
     private Label foundMinimumLabel;
 
     @FXML
-    private Label foundMinimumLabelValue;
-
-    @FXML
-    private Label minimumPosLabel;
+    private Label foundMinimumValueLabel;
 
     @FXML
     private Label iterNumberLabel;
 
     @FXML
     private Label iterNumberLabelValue;
-
-    @FXML
-    private Label minimumLabel;
-
-    @FXML
-    private Label foundMinimumLabelXY;
 
     @FXML
     private Button saveResultsButton;
@@ -44,24 +37,25 @@ public class ResultsController {
     }
 
     public void showFuncBest(double[] globalMinPos, double globalMinValue) {
-        minimumPosLabel.setText("x = " + doubleToString(globalMinPos[0])
-                + ", y = " + doubleToString(globalMinPos[1]));
-        minimumLabel.setText("f(x, y) = " + doubleToString(globalMinValue));
+        String x = doubleToString(globalMinPos[0]);
+        String y = doubleToString(globalMinPos[1]);
+        String fx = doubleToString(globalMinValue);
+        minimumValueLabel.setText("f(" + x + ", " + y + ") = " + fx);
     }
 
     public void showResults(int iterNumber, double[] bestFoodSource, double bestFx) {
         setResultsVisible(true);
+        String x = doubleToString(bestFoodSource[0]);
+        String y = doubleToString(bestFoodSource[1]);
+        String fx = doubleToString(bestFx);
 
-        foundMinimumLabelValue.setText("x = " + doubleToString(bestFoodSource[0])
-                + ", y = " + doubleToString(bestFoodSource[1]));
-        foundMinimumLabelXY.setText("f(x, y) = " + doubleToString(bestFx));
+        foundMinimumValueLabel.setText("f(" + x + ", " + y + ") = " + fx);
         iterNumberLabelValue.setText(String.valueOf(iterNumber));
     }
 
     public void setResultsVisible(boolean visible) {
         foundMinimumLabel.setVisible(visible);
-        foundMinimumLabelXY.setVisible(visible);
-        foundMinimumLabelValue.setVisible(visible);
+        foundMinimumValueLabel.setVisible(visible);
         iterNumberLabel.setVisible(visible);
         iterNumberLabelValue.setVisible(visible);
         saveResultsButton.setVisible(visible);
