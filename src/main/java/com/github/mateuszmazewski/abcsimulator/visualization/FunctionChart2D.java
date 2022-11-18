@@ -244,7 +244,7 @@ public class FunctionChart2D extends GridPane {
         funcValStep = (funcMaxValue - funcMinValue) / stepsCount;
         GraphicsContext scaleAxisGraphics = scaleAxisCanvas.getGraphicsContext2D();
         double y, funcVal;
-        String text = "";
+        String text;
         long exponent;
         List<Long> addedExponents = new ArrayList<>();
 
@@ -311,10 +311,7 @@ public class FunctionChart2D extends GridPane {
     }
 
     private double getFuncVal(int xCanvas, int yCanvas) {
-        // Scale canvas' coords to function's coords
-        double xFunc = (double) xCanvas / chartCanvasWidth * (x2 - x1) + x1;
-        double yFunc = (double) (chartCanvasHeight - yCanvas) / chartCanvasHeight * (y2 - y1) + y1;
-        double[] pos = new double[]{xFunc, yFunc};
+        double[] pos = getFuncXY(xCanvas, yCanvas);
         if (testFunction.isChartInLogScale()) {
             return testFunction.getLog10Value(pos);
         } else {
@@ -323,10 +320,17 @@ public class FunctionChart2D extends GridPane {
     }
 
     private double[] getCanvasXY(double[] xyFunc) {
-        // Scale function's coords to canvas' coords
+        // Scale function coords to canvas coords
         double xCanvas = (xyFunc[0] - x1) / (x2 - x1) * chartCanvasWidth;
         double yCanvas = chartCanvasHeight - (xyFunc[1] - y1) / (y2 - y1) * chartCanvasHeight;
         return new double[]{xCanvas, yCanvas};
+    }
+
+    private double[] getFuncXY(int xCanvas, int yCanvas) {
+        // Scale canvas coords to function coords
+        double xFunc = (double) xCanvas / chartCanvasWidth * (x2 - x1) + x1;
+        double yFunc = (double) (chartCanvasHeight - yCanvas) / chartCanvasHeight * (y2 - y1) + y1;
+        return new double[]{xFunc, yFunc};
     }
 
     public void setTestFunction(AbstractTestFunction testFunction) {
