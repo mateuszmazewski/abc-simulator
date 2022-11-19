@@ -169,6 +169,7 @@ public class ParametersController {
                 FunctionChart2D chart = mainController.getCenterChart();
                 chart.setTestFunction(func.getValue());
                 chart.drawAll();
+                mainController.getResultsController().showFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
             }
         });
     }
@@ -245,7 +246,7 @@ public class ParametersController {
         if (mainController != null) {
             mainController.getCenterChart().clearBees();
             resetIterSlider();
-            mainController.getResultsController().showFuncBest(func.getValue().getGlobalMinPos(), func.getValue().getGlobalMinValue());
+            mainController.getResultsController().showFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
             mainController.getResultsController().setResultsVisible(false);
         }
         func.getValue().restoreDefaultRanges();

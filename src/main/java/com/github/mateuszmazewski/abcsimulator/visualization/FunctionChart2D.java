@@ -31,13 +31,11 @@ public class FunctionChart2D extends GridPane {
     private final Canvas yAxisCanvas = new Canvas();
     private final Canvas scaleAxisCanvas = new Canvas();
     private final PixelWriter pixelWriter;
+    private double[] funcMinValuePos = new double[2];
     private double funcMinValue = Double.MAX_VALUE;
-    private double funcMaxValue = Double.MIN_VALUE;
-    private double x1;
-    private double x2;
-    private double y1;
-    private double y2; // Function's args range
-    private int chartCanvasWidth, chartCanvasHeight;
+    private double funcMaxValue = -Double.MAX_VALUE;
+    private double x1, x2, y1, y2; // Function's args range
+    private double chartCanvasWidth, chartCanvasHeight;
 
     // -------------------------AXES' PARAMETERS-------------------------
     private final double axesFontSize = 12.0;
@@ -56,8 +54,8 @@ public class FunctionChart2D extends GridPane {
         drawAll();
 
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
-            chartCanvasWidth = (int) chartCanvas.getWidth();
-            chartCanvasHeight = (int) chartCanvas.getHeight();
+            chartCanvasWidth = chartCanvas.getWidth();
+            chartCanvasHeight = chartCanvas.getHeight();
             updateFuncValuesRange();
             drawAll();
         };
@@ -85,8 +83,8 @@ public class FunctionChart2D extends GridPane {
         chartCanvas.heightProperty().bind(heightProperty().multiply(0.9));
         beesCanvas.widthProperty().bind(chartCanvas.widthProperty());
         beesCanvas.heightProperty().bind(chartCanvas.heightProperty());
-        chartCanvasWidth = (int) chartCanvas.getWidth();
-        chartCanvasHeight = (int) chartCanvas.getHeight();
+        chartCanvasWidth = chartCanvas.getWidth();
+        chartCanvasHeight = chartCanvas.getHeight();
 
         xAxisCanvas.widthProperty().bind(chartCanvas.widthProperty());
         yAxisCanvas.heightProperty().bind(chartCanvas.heightProperty());
@@ -299,18 +297,24 @@ public class FunctionChart2D extends GridPane {
 
     private void updateFuncValuesRange() {
         funcMinValue = Double.MAX_VALUE;
-        funcMaxValue = Double.MIN_VALUE;
+        funcMaxValue = -Double.MAX_VALUE;
 
-        for (int xCanvas = 0; xCanvas < chartCanvasWidth; xCanvas++) {
-            for (int yCanvas = chartCanvasHeight - 1; yCanvas >= 0; yCanvas--) {
-                double funcVal = getFuncVal(xCanvas, yCanvas);
-                funcMinValue = Math.min(funcMinValue, funcVal);
+        for (double xCanvas = 0.0; xCanvas <= chartCanvasWidth; xCanvas += 0.2) {
+            for (double yCanvas = chartCanvasHeight; yCanvas >= 0.0; yCanvas -= 0.2) {
+                double funcVal = getFuncVal(xCanvas, yCanvas); // Might be f(x, y) or log10(f(x, y))
+                if (funcVal < funcMinValue) {
+                    funcMinValue = funcVal;
+                    funcMinValuePos = getFuncXY(xCanvas, yCanvas);
+                }
                 funcMaxValue = Math.max(funcMaxValue, funcVal);
             }
         }
+
+        testFunction.setMinValuePos(funcMinValuePos);
+        testFunction.setMinValue(testFunction.getValue(funcMinValuePos)); // Make sure it's f(x, y), not log10(f(x, y))
     }
 
-    private double getFuncVal(int xCanvas, int yCanvas) {
+    private double getFuncVal(double xCanvas, double yCanvas) {
         double[] pos = getFuncXY(xCanvas, yCanvas);
         if (testFunction.isChartInLogScale()) {
             return testFunction.getLog10Value(pos);
@@ -326,10 +330,10 @@ public class FunctionChart2D extends GridPane {
         return new double[]{xCanvas, yCanvas};
     }
 
-    private double[] getFuncXY(int xCanvas, int yCanvas) {
+    private double[] getFuncXY(double xCanvas, double yCanvas) {
         // Scale canvas coords to function coords
-        double xFunc = (double) xCanvas / chartCanvasWidth * (x2 - x1) + x1;
-        double yFunc = (double) (chartCanvasHeight - yCanvas) / chartCanvasHeight * (y2 - y1) + y1;
+        double xFunc = xCanvas / chartCanvasWidth * (x2 - x1) + x1;
+        double yFunc = (chartCanvasHeight - yCanvas) / chartCanvasHeight * (y2 - y1) + y1;
         return new double[]{xFunc, yFunc};
     }
 
@@ -347,6 +351,9 @@ public class FunctionChart2D extends GridPane {
 
         if (yAxisCanvas != null) {
             yAxisCanvas.setWidth(getYAxisWidth());
+        }
+        if (scaleAxisCanvas != null) {
+            scaleAxisCanvas.setWidth(getScaleAxisWidth());
         }
     }
 

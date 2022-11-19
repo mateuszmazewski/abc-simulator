@@ -44,7 +44,7 @@ public class MainController {
         parametersController.setIterSlider(iterSlider);
 
         AbstractTestFunction func = parametersController.getFunc();
-        resultsController.showFuncBest(func.getGlobalMinPos(), func.getGlobalMinValue());
+        resultsController.showFuncBest(func.getMinValuePos(), func.getMinValue());
         resultsController.setResultsVisible(false);
     }
 

@@ -11,48 +11,48 @@ public abstract class AbstractTestFunction {
     private final int dim;
     private final double[] lowerBoundaries, upperBoundaries;
     private final double[] defaultLowerBoundaries, defaultUpperBoundaries;
-    private final double[] globalMinPos;
-    private final double globalMinValue;
+    private double[] minValuePos;
+    private double minValue;
     private String name;
     private final boolean chartInLogScale;
 
     public AbstractTestFunction(int dim,
                                 double[] defaultLowerBoundaries,
                                 double[] defaultUpperBoundaries,
-                                double[] globalMinPos,
-                                double globalMinValue,
+                                double[] minValuePos,
+                                double minValue,
                                 boolean chartInLogScale) {
 
-        validateArgs(dim, defaultLowerBoundaries, defaultUpperBoundaries, globalMinPos);
+        validateArgs(dim, defaultLowerBoundaries, defaultUpperBoundaries, minValuePos);
 
         this.dim = dim;
         this.defaultLowerBoundaries = defaultLowerBoundaries;
         this.defaultUpperBoundaries = defaultUpperBoundaries;
         this.lowerBoundaries = defaultLowerBoundaries.clone();
         this.upperBoundaries = defaultUpperBoundaries.clone();
-        this.globalMinPos = globalMinPos;
-        this.globalMinValue = globalMinValue;
+        this.minValuePos = minValuePos;
+        this.minValue = minValue;
         this.chartInLogScale = chartInLogScale;
     }
 
     private void validateArgs(int dim,
                               double[] lowerBoundaries,
                               double[] upperBoundaries,
-                              double[] globalMinPos) throws IllegalArgumentException {
+                              double[] minValuePos) throws IllegalArgumentException {
         if (dim <= 0) {
             throw new IllegalArgumentException("dim must be positive");
         }
         if (lowerBoundaries == null || upperBoundaries == null) {
             throw new IllegalArgumentException("boundaries cannot be null");
         }
-        if (globalMinPos == null) {
-            throw new IllegalArgumentException("globalMinPos cannot be null");
+        if (minValuePos == null) {
+            throw new IllegalArgumentException("minValuePos cannot be null");
         }
         if (lowerBoundaries.length != dim || upperBoundaries.length != dim) {
             throw new IllegalArgumentException("lower and upper boundaries must have length equal to the function's dimension");
         }
-        if (globalMinPos.length != dim) {
-            throw new IllegalArgumentException("globalMinPos length must be equal to the function's dimension");
+        if (minValuePos.length != dim) {
+            throw new IllegalArgumentException("minValuePos length must be equal to the function's dimension");
         }
         for (int i = 0; i < dim; i++) {
             if (lowerBoundaries[i] >= upperBoundaries[i]) {
@@ -108,12 +108,20 @@ public abstract class AbstractTestFunction {
         return upperBoundaries;
     }
 
-    public double[] getGlobalMinPos() {
-        return globalMinPos;
+    public double[] getMinValuePos() {
+        return minValuePos;
     }
 
-    public double getGlobalMinValue() {
-        return globalMinValue;
+    public void setMinValuePos(double[] minValuePos) {
+        this.minValuePos = minValuePos;
+    }
+
+    public double getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(double minValue) {
+        this.minValue = minValue;
     }
 
     public String getName() {
