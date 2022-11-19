@@ -213,4 +213,20 @@ public class ArtificialBeeColony {
     public double[] getBestFx() {
         return bestFx;
     }
+
+    public int getSwarmSize() {
+        return swarmSize;
+    }
+
+    public int getMaxIter() {
+        return maxIter;
+    }
+
+    public int getTrialsLimit() {
+        return trialsLimit;
+    }
+
+    public AbstractTestFunction getFunc() {
+        return func;
+    }
 }

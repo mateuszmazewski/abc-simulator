@@ -1,6 +1,7 @@
 package com.github.mateuszmazewski.abcsimulator.controller;
 
 import com.github.mateuszmazewski.abcsimulator.abc.ArtificialBeeColony;
+import com.github.mateuszmazewski.abcsimulator.abc.ABCResults;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.*;
 import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
@@ -278,14 +279,14 @@ public class ParametersController {
 
         ArtificialBeeColony abc = new ArtificialBeeColony(swarmSize, maxIter, func.getValue(), trialsLimit);
         abc.run();
-        double[][][] allFoodSources = abc.getAllFoodSources();
-        double[][] bestFoodSources = abc.getBestFoodSources();
-        double[] bestFx = abc.getBestFx();
+        ABCResults results = new ABCResults(abc);
+        mainController.getResultsController().setResults(results);
 
-        initIterSlider(maxIter, allFoodSources, bestFoodSources, bestFx);
+        initIterSlider(results);
         mainController.getResultsController().setResultsVisible(true);
-        mainController.getResultsController().showResults(maxIter, bestFoodSources[maxIter], bestFx[maxIter]);
+        mainController.getResultsController().showResults(maxIter);
     }
+
 
     private void resetIterSlider() {
         iterSlider.setDisable(true);
@@ -293,7 +294,8 @@ public class ParametersController {
         iterSlider.setShowTickLabels(false);
     }
 
-    private void initIterSlider(int maxIter, double[][][] allFoodSources, double[][] bestFoodSources, double[] bestFx) {
+    private void initIterSlider(ABCResults results) {
+        int maxIter = results.getMaxIter();
         iterSlider.setDisable(false);
         iterSlider.setShowTickMarks(true);
         iterSlider.setShowTickLabels(true);
@@ -314,13 +316,13 @@ public class ParametersController {
         }
         sliderValueChangeListener = (observable, oldValue, newValue) -> {
             int iterNumber = newValue.intValue();
-            mainController.getCenterChart().drawBees(allFoodSources[iterNumber]);
-            mainController.getResultsController().showResults(iterNumber, bestFoodSources[iterNumber], bestFx[iterNumber]);
+            mainController.getCenterChart().drawBees(results.getAllFoodSources()[iterNumber]);
+            mainController.getResultsController().showResults(iterNumber);
         };
 
         iterSlider.valueProperty().addListener(sliderValueChangeListener);
         iterSlider.setValue(maxIter);
-        mainController.getCenterChart().drawBees(allFoodSources[maxIter]);
+        mainController.getCenterChart().drawBees(results.getAllFoodSources()[maxIter]);
     }
 
     public void setMainController(MainController mainController) {

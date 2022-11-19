@@ -1,13 +1,21 @@
 package com.github.mateuszmazewski.abcsimulator.controller;
 
+import com.github.mateuszmazewski.abcsimulator.abc.ABCResults;
+import com.github.mateuszmazewski.abcsimulator.abc.ABCResultsIO;
+import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToString;
 
 
 public class ResultsController {
+
+    private Stage stage;
 
     @FXML
     private Label minimumValueLabel;
@@ -26,6 +34,7 @@ public class ResultsController {
 
     @FXML
     private Button saveResultsButton;
+    private ABCResults results;
 
     @FXML
     private void initialize() {
@@ -33,7 +42,12 @@ public class ResultsController {
 
     @FXML
     void onActionSaveResultsButton() {
-
+        ABCResultsIO resultsIO = new ABCResultsIO(stage);
+        try {
+            resultsIO.saveResults(results);
+        } catch (IOException e) {
+            DialogUtils.errorDialog(e.getMessage());
+        }
     }
 
     public void showFuncBest(double[] globalMinPos, double globalMinValue) {
@@ -43,11 +57,12 @@ public class ResultsController {
         minimumValueLabel.setText("f(" + x + ", " + y + ") = " + fx);
     }
 
-    public void showResults(int iterNumber, double[] bestFoodSource, double bestFx) {
+    public void showResults(int iterNumber) {
         setResultsVisible(true);
+        double[] bestFoodSource = results.getBestFoodSources()[iterNumber];
         String x = doubleToString(bestFoodSource[0]);
         String y = doubleToString(bestFoodSource[1]);
-        String fx = doubleToString(bestFx);
+        String fx = doubleToString(results.getBestFx()[iterNumber]);
 
         foundMinimumValueLabel.setText("f(" + x + ", " + y + ") = " + fx);
         iterNumberLabelValue.setText(String.valueOf(iterNumber));
@@ -60,4 +75,13 @@ public class ResultsController {
         iterNumberLabelValue.setVisible(visible);
         saveResultsButton.setVisible(visible);
     }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void setResults(ABCResults results) {
+        this.results = results;
+    }
+
 }

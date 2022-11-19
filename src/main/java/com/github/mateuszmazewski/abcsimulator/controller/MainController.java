@@ -10,10 +10,13 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.util.Optional;
 
 public class MainController {
+
+    private Stage stage;
 
     @FXML
     private BorderPane borderPane;
@@ -67,5 +70,10 @@ public class MainController {
 
     public ResultsController getResultsController() {
         return resultsController;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        resultsController.setStage(stage);
     }
 }
