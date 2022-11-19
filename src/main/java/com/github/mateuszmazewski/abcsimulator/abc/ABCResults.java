@@ -18,6 +18,13 @@ public class ABCResults {
         createResults(abc);
     }
 
+    public ABCResults() {
+        minValuePos = new double[2];
+        foundMinValuePos = new double[2];
+        lowerBoundaries = new double[2];
+        upperBoundaries = new double[2];
+    }
+
     private void createResults(ArtificialBeeColony abc) {
         AbstractTestFunction func = abc.getFunc();
         minValue = func.getMinValue();
@@ -40,55 +47,111 @@ public class ABCResults {
         return testFunctionName;
     }
 
+    public void setTestFunctionName(String testFunctionName) {
+        this.testFunctionName = testFunctionName;
+    }
+
     public double[] getMinValuePos() {
         return minValuePos;
+    }
+
+    public void setMinValuePos(double[] minValuePos) {
+        this.minValuePos = minValuePos;
     }
 
     public double[] getFoundMinValuePos() {
         return foundMinValuePos;
     }
 
+    public void setFoundMinValuePos(double[] foundMinValuePos) {
+        this.foundMinValuePos = foundMinValuePos;
+    }
+
     public double getMinValue() {
         return minValue;
+    }
+
+    public void setMinValue(double minValue) {
+        this.minValue = minValue;
     }
 
     public double getFoundMinValue() {
         return foundMinValue;
     }
 
+    public void setFoundMinValue(double foundMinValue) {
+        this.foundMinValue = foundMinValue;
+    }
+
     public double[] getLowerBoundaries() {
         return lowerBoundaries;
+    }
+
+    public void setLowerBoundaries(double[] lowerBoundaries) {
+        this.lowerBoundaries = lowerBoundaries;
     }
 
     public double[] getUpperBoundaries() {
         return upperBoundaries;
     }
 
+    public void setUpperBoundaries(double[] upperBoundaries) {
+        this.upperBoundaries = upperBoundaries;
+    }
+
     public int getMaxIter() {
         return maxIter;
+    }
+
+    public void setMaxIter(int maxIter) {
+        this.maxIter = maxIter;
     }
 
     public int getSwarmSize() {
         return swarmSize;
     }
 
+    public void setSwarmSize(int swarmSize) {
+        this.swarmSize = swarmSize;
+    }
+
     public int getTrialsLimit() {
         return trialsLimit;
+    }
+
+    public void setTrialsLimit(int trialsLimit) {
+        this.trialsLimit = trialsLimit;
     }
 
     public double[][][] getAllFoodSources() {
         return allFoodSources;
     }
 
+    public void setAllFoodSources(double[][][] allFoodSources) {
+        this.allFoodSources = allFoodSources;
+    }
+
     public double[][] getBestFoodSources() {
         return bestFoodSources;
+    }
+
+    public void setBestFoodSources(double[][] bestFoodSources) {
+        this.bestFoodSources = bestFoodSources;
     }
 
     public double[] getBestFx() {
         return bestFx;
     }
 
+    public void setBestFx(double[] bestFx) {
+        this.bestFx = bestFx;
+    }
+
     public double[][] getAllFx() {
         return allFx;
+    }
+
+    public void setAllFx(double[][] allFx) {
+        this.allFx = allFx;
     }
 }

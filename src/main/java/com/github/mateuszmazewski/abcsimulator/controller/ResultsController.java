@@ -41,11 +41,21 @@ public class ResultsController {
     }
 
     @FXML
-    void onActionSaveResultsButton() {
+    private void onActionSaveResultsButton() {
         ABCResultsIO resultsIO = new ABCResultsIO(stage);
         try {
             resultsIO.saveResults(results);
         } catch (IOException e) {
+            DialogUtils.errorDialog(e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onActionReadButton() {
+        ABCResultsIO resultsIO = new ABCResultsIO(stage);
+        try {
+            results = resultsIO.readResults();
+        } catch (IOException | NumberFormatException e) {
             DialogUtils.errorDialog(e.getMessage());
         }
     }
