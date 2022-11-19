@@ -23,6 +23,7 @@ public class FunctionChart2D extends GridPane {
 
     private static final double SCALE_CANVAS_WIDTH = 15.0;
     private static final double SCALE_CANVAS_LEFT_MARGIN = 10.0;
+    private static final double BEE_SIZE = 10.0;
     private AbstractTestFunction testFunction;
     private final Canvas chartCanvas = new Canvas();
     private final Canvas beesCanvas = new Canvas();
@@ -202,13 +203,14 @@ public class FunctionChart2D extends GridPane {
     public void drawBees(double[][] foodSources) {
         currentIterBees = foodSources; // In case user resizes the window, we need to draw bees again
         double[] canvasXY;
+        double offset = BEE_SIZE / 2.0; // Bee's position is the circle's center (not upper-left vertex)
         GraphicsContext beesGraphics = beesCanvas.getGraphicsContext2D();
         beesGraphics.setFill(Color.WHITE);
         beesCanvas.getGraphicsContext2D().clearRect(0, 0, beesCanvas.getWidth(), beesCanvas.getHeight());
 
         for (double[] foodSource : foodSources) {
             canvasXY = getCanvasXY(foodSource);
-            beesGraphics.fillOval(canvasXY[0], canvasXY[1], 10, 10);
+            beesGraphics.fillOval(canvasXY[0] - offset, canvasXY[1] - offset, BEE_SIZE, BEE_SIZE);
         }
     }
 
