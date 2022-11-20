@@ -6,16 +6,10 @@ import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 
 import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToString;
 
-
 public class ResultsController {
-
-    private Stage stage;
 
     @FXML
     private Label minimumValueLabel;
@@ -36,27 +30,35 @@ public class ResultsController {
     private Button saveResultsButton;
     private ABCResults results;
 
+    // --------------------Injected by MainController--------------------
+    private MainController mainController;
+
     @FXML
     private void initialize() {
     }
 
     @FXML
     private void onActionSaveResultsButton() {
-        ABCResultsIO resultsIO = new ABCResultsIO(stage);
+        ABCResultsIO resultsIO = new ABCResultsIO(mainController.getStage());
         try {
             resultsIO.saveResults(results);
-        } catch (IOException e) {
-            DialogUtils.errorDialog(e.getMessage());
+        } catch (Exception e) {
+            DialogUtils.errorDialog(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
 
     @FXML
     private void onActionReadButton() {
-        ABCResultsIO resultsIO = new ABCResultsIO(stage);
+        ABCResultsIO resultsIO = new ABCResultsIO(mainController.getStage());
         try {
             results = resultsIO.readResults();
-        } catch (IOException | NumberFormatException e) {
-            DialogUtils.errorDialog(e.getMessage());
+            if (results == null) {
+                return;
+            }
+
+            mainController.getParametersController().initResults(results);
+        } catch (Exception e) {
+            DialogUtils.errorDialog(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
 
@@ -86,12 +88,11 @@ public class ResultsController {
         saveResultsButton.setVisible(visible);
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
     public void setResults(ABCResults results) {
         this.results = results;
     }
 
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 }

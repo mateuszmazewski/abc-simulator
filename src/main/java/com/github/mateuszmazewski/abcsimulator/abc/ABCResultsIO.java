@@ -84,7 +84,7 @@ public class ABCResultsIO {
         writer.close();
     }
 
-    public ABCResults readResults() throws IOException, NumberFormatException {
+    public ABCResults readResults() throws IOException, NumberFormatException, ArrayIndexOutOfBoundsException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(messages.getString("fileChooser.read.title"));
         fileChooser.getExtensionFilters().addAll(
@@ -98,13 +98,13 @@ public class ABCResultsIO {
         return results;
     }
 
-    private ABCResults readFromFile(File file) throws IOException, NumberFormatException {
+    private ABCResults readFromFile(File file) throws IOException, NumberFormatException, ArrayIndexOutOfBoundsException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         ABCResults results = new ABCResults();
 
         String line;
-        String[] splittedLine;
-        int splittedLineLength;
+        String[] splitLine;
+        int splitLineLength;
         int lineNumber = 0;
 
         while ((line = reader.readLine()) != null) {
@@ -116,58 +116,57 @@ public class ABCResultsIO {
                 break;
             }
 
-            splittedLine = line.split("\\s+");
-            splittedLineLength = splittedLine.length;
-            if (splittedLineLength < 3 || splittedLineLength > 4) {
+            splitLine = line.split("\\s+");
+            splitLineLength = splitLine.length;
+            if (splitLineLength < 3 || splitLineLength > 4) {
                 throw new IOException("Wrong line format: line " + lineNumber);
             }
 
-            switch (splittedLine[0]) {
+            switch (splitLine[0]) {
                 case "function":
-                    results.setTestFunctionName(splittedLine[2]);
+                    results.setTestFunctionName(splitLine[2]);
                     break;
                 case "x_range":
-                    results.getLowerBoundaries()[0] = Double.parseDouble(splittedLine[2]);
-                    results.getUpperBoundaries()[0] = Double.parseDouble(splittedLine[3]);
+                    results.getLowerBoundaries()[0] = Double.parseDouble(splitLine[2]);
+                    results.getUpperBoundaries()[0] = Double.parseDouble(splitLine[3]);
                     break;
                 case "y_range":
-                    results.getLowerBoundaries()[1] = Double.parseDouble(splittedLine[2]);
-                    results.getUpperBoundaries()[1] = Double.parseDouble(splittedLine[3]);
+                    results.getLowerBoundaries()[1] = Double.parseDouble(splitLine[2]);
+                    results.getUpperBoundaries()[1] = Double.parseDouble(splitLine[3]);
                     break;
                 case "iterations":
-                    results.setMaxIter(Integer.parseInt(splittedLine[2]) + 1); // Include initial random population
+                    results.setMaxIter(Integer.parseInt(splitLine[2]));
                     break;
                 case "swarm_size":
-                    results.setSwarmSize(Integer.parseInt(splittedLine[2]));
+                    results.setSwarmSize(Integer.parseInt(splitLine[2]));
                     break;
                 case "trials_limit":
-                    results.setTrialsLimit(Integer.parseInt(splittedLine[2]));
+                    results.setTrialsLimit(Integer.parseInt(splitLine[2]));
                     break;
                 case "min_possible_value":
-                    results.setMinValue(Double.parseDouble(splittedLine[2]));
+                    results.setMinValue(Double.parseDouble(splitLine[2]));
                     break;
                 case "min_possible_value_position":
-                    results.getMinValuePos()[0] = Double.parseDouble(splittedLine[2]);
-                    results.getMinValuePos()[1] = Double.parseDouble(splittedLine[3]);
+                    results.getMinValuePos()[0] = Double.parseDouble(splitLine[2]);
+                    results.getMinValuePos()[1] = Double.parseDouble(splitLine[3]);
                     break;
                 case "min_found_value":
-                    results.setFoundMinValue(Double.parseDouble(splittedLine[2]));
+                    results.setFoundMinValue(Double.parseDouble(splitLine[2]));
                     break;
                 case "min_found_value_position":
-                    results.getFoundMinValuePos()[0] = Double.parseDouble(splittedLine[2]);
-                    results.getFoundMinValuePos()[1] = Double.parseDouble(splittedLine[3]);
+                    results.getFoundMinValuePos()[0] = Double.parseDouble(splitLine[2]);
+                    results.getFoundMinValuePos()[1] = Double.parseDouble(splitLine[3]);
                     break;
                 default:
                     throw new IOException("Wrong line format: line " + lineNumber);
             }
         }
 
-        results.setBestFoodSources(new double[results.getMaxIter()][2]);
-        results.setAllFoodSources(new double[results.getMaxIter()][results.getSwarmSize()][2]);
-        results.setBestFx(new double[results.getMaxIter()]);
-        results.setAllFx(new double[results.getMaxIter()][results.getSwarmSize()]);
+        results.setBestFoodSources(new double[results.getMaxIter() + 1][2]);
+        results.setAllFoodSources(new double[results.getMaxIter() + 1][results.getSwarmSize()][2]);
+        results.setBestFx(new double[results.getMaxIter() + 1]);
+        results.setAllFx(new double[results.getMaxIter() + 1][results.getSwarmSize()]);
         int iter, bee;
-        double x, y, fx;
 
         while ((line = reader.readLine()) != null) {
             lineNumber++;
@@ -175,31 +174,25 @@ public class ABCResultsIO {
                 continue;
             }
 
-            splittedLine = line.split("\\s+");
-            splittedLineLength = splittedLine.length;
-            if (splittedLine[0].equals("iteration")) {
+            splitLine = line.split("\\s+");
+            splitLineLength = splitLine.length;
+            if (splitLine[0].equals("iteration")) {
                 continue;
             }
 
-            if (splittedLineLength == 4) {
-                iter = Integer.parseInt(splittedLine[0]);
-                x = Double.parseDouble(splittedLine[1]);
-                y = Double.parseDouble(splittedLine[2]);
-                fx = Double.parseDouble(splittedLine[3]);
+            if (splitLineLength == 4) {
+                iter = Integer.parseInt(splitLine[0]);
 
-                results.getBestFoodSources()[iter][0] = x;
-                results.getBestFoodSources()[iter][1] = y;
-                results.getBestFx()[iter] = fx;
-            } else if (splittedLineLength == 5) {
-                iter = Integer.parseInt(splittedLine[0]);
-                bee = Integer.parseInt(splittedLine[1]);
-                x = Double.parseDouble(splittedLine[2]);
-                y = Double.parseDouble(splittedLine[3]);
-                fx = Double.parseDouble(splittedLine[4]);
+                results.getBestFoodSources()[iter][0] = Double.parseDouble(splitLine[1]);
+                results.getBestFoodSources()[iter][1] = Double.parseDouble(splitLine[2]);
+                results.getBestFx()[iter] = Double.parseDouble(splitLine[3]);
+            } else if (splitLineLength == 5) {
+                iter = Integer.parseInt(splitLine[0]);
+                bee = Integer.parseInt(splitLine[1]);
 
-                results.getAllFoodSources()[iter][bee][0] = x;
-                results.getAllFoodSources()[iter][bee][1] = y;
-                results.getAllFx()[iter][bee] = fx;
+                results.getAllFoodSources()[iter][bee][0] = Double.parseDouble(splitLine[2]);
+                results.getAllFoodSources()[iter][bee][1] = Double.parseDouble(splitLine[3]);
+                results.getAllFx()[iter][bee] = Double.parseDouble(splitLine[4]);
             } else {
                 throw new IOException("Wrong line format: line " + lineNumber);
             }

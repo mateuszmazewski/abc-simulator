@@ -1,7 +1,7 @@
 package com.github.mateuszmazewski.abcsimulator.controller;
 
-import com.github.mateuszmazewski.abcsimulator.abc.ArtificialBeeColony;
 import com.github.mateuszmazewski.abcsimulator.abc.ABCResults;
+import com.github.mateuszmazewski.abcsimulator.abc.ArtificialBeeColony;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.*;
 import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -53,7 +53,7 @@ public class ParametersController {
     @FXML
     private Button startButton;
 
-    private final ObservableList<AbstractTestFunction> funcList = FXCollections.observableArrayList();
+    private final ObservableMap<String, AbstractTestFunction> testFunctionObservableMap = FXCollections.observableHashMap();
     private final ObjectProperty<AbstractTestFunction> func = new SimpleObjectProperty<>();
     private final String textFieldDefaultStyle = new TextField().getStyle();
     private final String textFieldErrorStyle = "-fx-background-color: lightcoral;";
@@ -73,47 +73,47 @@ public class ParametersController {
 
         AbstractTestFunction rastrigin = new RastriginFunction();
         rastrigin.setName(messagesBundle.getString("rastriginFunction.name"));
-        funcList.add(rastrigin);
+        testFunctionObservableMap.put(rastrigin.getClass().getSimpleName(), rastrigin);
 
         AbstractTestFunction ackley = new AckleyFunction();
         ackley.setName(messagesBundle.getString("ackleyFunction.name"));
-        funcList.add(ackley);
+        testFunctionObservableMap.put(ackley.getClass().getSimpleName(), ackley);
 
         AbstractTestFunction sphere = new SphereFunction();
         sphere.setName(messagesBundle.getString("sphereFunction.name"));
-        funcList.add(sphere);
+        testFunctionObservableMap.put(sphere.getClass().getSimpleName(), sphere);
 
         AbstractTestFunction rosenbrock = new RosenbrockFunction();
         rosenbrock.setName(messagesBundle.getString("rosenbrockFunction.name"));
-        funcList.add(rosenbrock);
+        testFunctionObservableMap.put(rosenbrock.getClass().getSimpleName(), rosenbrock);
 
         AbstractTestFunction beale = new BealeFunction();
         beale.setName(messagesBundle.getString("bealeFunction.name"));
-        funcList.add(beale);
+        testFunctionObservableMap.put(beale.getClass().getSimpleName(), beale);
 
         AbstractTestFunction goldsteinPrice = new GoldsteinPriceFunction();
         goldsteinPrice.setName(messagesBundle.getString("goldsteinPriceFunction.name"));
-        funcList.add(goldsteinPrice);
+        testFunctionObservableMap.put(goldsteinPrice.getClass().getSimpleName(), goldsteinPrice);
 
         AbstractTestFunction booth = new BoothFunction();
         booth.setName(messagesBundle.getString("boothFunction.name"));
-        funcList.add(booth);
+        testFunctionObservableMap.put(booth.getClass().getSimpleName(), booth);
 
         AbstractTestFunction matyas = new MatyasFunction();
         matyas.setName(messagesBundle.getString("matyasFunction.name"));
-        funcList.add(matyas);
+        testFunctionObservableMap.put(matyas.getClass().getSimpleName(), matyas);
 
         AbstractTestFunction threeHumpCamel = new ThreeHumpCamelFunction();
         threeHumpCamel.setName(messagesBundle.getString("threeHumpCamelFunction.name"));
-        funcList.add(threeHumpCamel);
+        testFunctionObservableMap.put(threeHumpCamel.getClass().getSimpleName(), threeHumpCamel);
 
         AbstractTestFunction eggholderFunction = new EggholderFunction();
         eggholderFunction.setName(messagesBundle.getString("eggholderFunction.name"));
-        funcList.add(eggholderFunction);
+        testFunctionObservableMap.put(eggholderFunction.getClass().getSimpleName(), eggholderFunction);
 
-        funcComboBox.setItems(funcList);
+        funcComboBox.setItems(FXCollections.observableArrayList(testFunctionObservableMap.values()));
         func.bind(funcComboBox.valueProperty());
-        funcComboBox.getSelectionModel().selectFirst();
+        funcComboBox.getSelectionModel().select(rastrigin);
         onActionFuncComboBox();
 
         startButton.disableProperty().bind(wrongParameters);
@@ -251,6 +251,10 @@ public class ParametersController {
             mainController.getResultsController().setResultsVisible(false);
         }
         func.getValue().restoreDefaultRanges();
+        setRangeTextFields();
+    }
+
+    private void setRangeTextFields() {
         rangeChangeListenersActive = false;
         xRangeFromTextField.textProperty().setValue(String.valueOf(func.getValue().getLowerBoundaries()[0]));
         yRangeFromTextField.textProperty().setValue(String.valueOf(func.getValue().getLowerBoundaries()[1]));
@@ -323,6 +327,27 @@ public class ParametersController {
         iterSlider.valueProperty().addListener(sliderValueChangeListener);
         iterSlider.setValue(maxIter);
         mainController.getCenterChart().drawBees(results.getAllFoodSources()[maxIter]);
+    }
+
+    public void initResults(ABCResults results) {
+        AbstractTestFunction func = testFunctionObservableMap.get(results.getTestFunctionName());
+        funcComboBox.getSelectionModel().select(func);
+
+        func.getLowerBoundaries()[0] = results.getLowerBoundaries()[0];
+        func.getLowerBoundaries()[1] = results.getLowerBoundaries()[1];
+        func.getUpperBoundaries()[0] = results.getUpperBoundaries()[0];
+        func.getUpperBoundaries()[1] = results.getUpperBoundaries()[1];
+        func.setMinValue(results.getMinValue());
+        func.setMinValuePos(results.getMinValuePos());
+        setRangeTextFields();
+
+        mainController.getResultsController().showResults(results.getMaxIter());
+
+        maxIterTextField.setText(String.valueOf(results.getMaxIter()));
+        swarmSizeTextField.setText(String.valueOf(results.getSwarmSize()));
+        trialsLimitTextField.setText(String.valueOf(results.getTrialsLimit()));
+
+        initIterSlider(results);
     }
 
     public void setMainController(MainController mainController) {

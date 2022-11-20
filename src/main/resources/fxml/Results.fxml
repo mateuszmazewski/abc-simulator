@@ -28,8 +28,8 @@
       <Label fx:id="foundMinimumValueLabel" text="f(?, ?) = ?" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
          <children>
+            <Button mnemonicParsing="false" onAction="#onActionReadButton" text="%results.readResultsButton" />
             <Button fx:id="saveResultsButton" mnemonicParsing="false" onAction="#onActionSaveResultsButton" text="%results.saveButton" />
-            <Button mnemonicParsing="false" onAction="#onActionReadButton" text="%parameters.readResultsButton" />
          </children>
       </HBox>
    </children>

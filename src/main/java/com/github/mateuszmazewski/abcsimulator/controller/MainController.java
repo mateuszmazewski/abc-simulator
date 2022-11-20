@@ -47,6 +47,7 @@ public class MainController {
         parametersController.setIterSlider(iterSlider);
 
         AbstractTestFunction func = parametersController.getFunc();
+        resultsController.setMainController(this);
         resultsController.showFuncBest(func.getMinValuePos(), func.getMinValue());
         resultsController.setResultsVisible(false);
     }
@@ -72,8 +73,15 @@ public class MainController {
         return resultsController;
     }
 
+    public ParametersController getParametersController() {
+        return parametersController;
+    }
+
     public void setStage(Stage stage) {
         this.stage = stage;
-        resultsController.setStage(stage);
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }
