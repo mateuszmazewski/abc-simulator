@@ -14,8 +14,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.decimalFormat2;
 
@@ -301,16 +301,46 @@ public class FunctionChart2D extends GridPane {
         funcMinValue = Double.MAX_VALUE;
         funcMaxValue = -Double.MAX_VALUE;
 
-        for (double xCanvas = 0.0; xCanvas <= chartCanvasWidth; xCanvas += 0.2) {
-            for (double yCanvas = chartCanvasHeight; yCanvas >= 0.0; yCanvas -= 0.2) {
-                double funcVal = getFuncVal(xCanvas, yCanvas); // Might be f(x, y) or log10(f(x, y))
-                if (funcVal < funcMinValue) {
-                    funcMinValue = funcVal;
-                    funcMinValuePos = getFuncXY(xCanvas, yCanvas);
+        int ccw = (int) chartCanvasWidth;
+        int cch = (int) chartCanvasHeight;
+        double[] funcValues = new double[cch * ccw];
+
+        IntStream.range(0, cch).parallel().forEach(yCanvas ->
+                IntStream.range(0, ccw).parallel().forEach(xCanvas ->
+                        funcValues[yCanvas * ccw + xCanvas] = getFuncVal(xCanvas, yCanvas) // Might be f(x, y) or log10(f(x, y))
+                ));
+
+        OptionalInt maybeMinValueIdx = IntStream.range(0, funcValues.length).parallel().reduce((a, b) -> funcValues[a] < funcValues[b] ? a : b);
+        OptionalDouble maybeMaxValue = Arrays.stream(funcValues).reduce(Double::max);
+
+        if (maybeMinValueIdx.isPresent() && maybeMaxValue.isPresent()) {
+            int minValueIdx = maybeMinValueIdx.getAsInt();
+
+            int xMinCanvas = minValueIdx % ccw;
+            int yMinCanvas = minValueIdx / ccw;
+
+            funcMinValue = funcValues[minValueIdx];
+            funcMinValuePos = getFuncXY(xMinCanvas, yMinCanvas);
+            funcMaxValue = maybeMaxValue.getAsDouble();
+
+            double funcVal;
+
+            for (double xCanvas = xMinCanvas - 2.0; xCanvas <= xMinCanvas + 2.0; xCanvas += 0.02) {
+                for (double yCanvas = yMinCanvas - 2.0; yCanvas <= yMinCanvas + 2.0; yCanvas += 0.02) {
+                    try {
+                        funcVal = getFuncVal(xCanvas, yCanvas); // Might be f(x, y) or log10(f(x, y))
+                    } catch (IllegalArgumentException e) {
+                        continue; // Coords are out of boundaries
+                    }
+
+                    if (funcVal < funcMinValue) {
+                        funcMinValue = funcVal;
+                        funcMinValuePos = getFuncXY(xCanvas, yCanvas);
+                    }
                 }
-                funcMaxValue = Math.max(funcMaxValue, funcVal);
             }
         }
+
 
         testFunction.setMinValuePos(funcMinValuePos);
         testFunction.setMinValue(testFunction.getValue(funcMinValuePos)); // Make sure it's f(x, y), not log10(f(x, y))
