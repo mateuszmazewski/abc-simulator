@@ -125,6 +125,7 @@ public class FunctionChart2D extends GridPane {
                         funcValues[yCanvas * ccw + xCanvas] = getFuncVal(xCanvas, yCanvas) // Might be f(x, y) or log10(f(x, y))
                 ));
 
+        // Find min value index and max value
         OptionalInt maybeMinValueIdx = IntStream.range(0, funcValues.length).parallel().reduce((a, b) -> funcValues[a] < funcValues[b] ? a : b);
         OptionalDouble maybeMaxValue = Arrays.stream(funcValues).reduce(Double::max);
 
@@ -140,6 +141,7 @@ public class FunctionChart2D extends GridPane {
 
             double funcVal;
 
+            // Find more exact min value
             for (double xCanvas = xMinCanvas - 2.0; xCanvas <= xMinCanvas + 2.0; xCanvas += 0.02) {
                 for (double yCanvas = yMinCanvas - 2.0; yCanvas <= yMinCanvas + 2.0; yCanvas += 0.02) {
                     try {
@@ -155,7 +157,6 @@ public class FunctionChart2D extends GridPane {
                 }
             }
         }
-
 
         testFunction.setMinValuePos(funcMinValuePos);
         testFunction.setMinValue(testFunction.getValue(funcMinValuePos)); // Make sure it's f(x, y), not log10(f(x, y))
