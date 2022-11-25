@@ -19,26 +19,28 @@ import java.util.stream.IntStream;
 public class FunctionChart2D extends GridPane {
 
     private static final double BEE_SIZE = 10.0;
-    private AbstractTestFunction testFunction;
+
     private final Canvas chartCanvas = new Canvas();
     private final Canvas beesCanvas = new Canvas();
     private final FunctionChartScale functionChartScale;
     private final FunctionChartAxes functionChartAxes;
     private final Canvas xAxisCanvas, yAxisCanvas, scaleCanvas, scaleAxisCanvas;
-    private final PixelWriter pixelWriter;
-    private double[] funcMinValuePos = new double[2];
-    private double funcMinValue = Double.MAX_VALUE;
-    private double funcMaxValue = -Double.MAX_VALUE;
-    private double x1, x2, y1, y2; // Function's args range
     private double chartCanvasWidth, chartCanvasHeight;
 
     // -------------------------------BEES-------------------------------
     private double[][] currentIterBees;
 
+    // -----------------------------FUNCTION-----------------------------
+    private AbstractTestFunction testFunction;
+    private double x1, x2, y1, y2; // Function's args range
+    private double[] funcMinValuePos = new double[2];
+    private double funcMinValue = Double.MAX_VALUE;
+    private double funcMaxValue = -Double.MAX_VALUE;
+    double[] funcValues;
+
     public FunctionChart2D(AbstractTestFunction testFunction) {
         setTestFunction(testFunction);
         initCanvases();
-        pixelWriter = chartCanvas.getGraphicsContext2D().getPixelWriter();
         functionChartAxes = new FunctionChartAxes(chartCanvas, y1, y2);
         xAxisCanvas = functionChartAxes.getXAxisCanvas();
         yAxisCanvas = functionChartAxes.getYAxisCanvas();
@@ -51,7 +53,7 @@ public class FunctionChart2D extends GridPane {
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
             chartCanvasWidth = chartCanvas.getWidth();
             chartCanvasHeight = chartCanvas.getHeight();
-            updateFuncValuesRange();
+            updateFuncValues();
             drawAll();
         };
 
@@ -84,9 +86,13 @@ public class FunctionChart2D extends GridPane {
 
     private void drawFunc() {
         double funcVal;
-        for (int xCanvas = 0; xCanvas < chartCanvasWidth; xCanvas++) {
-            for (int yCanvas = 0; yCanvas < chartCanvasHeight; yCanvas++) {
-                funcVal = getFuncVal(xCanvas, yCanvas);
+        int cch = (int) chartCanvasHeight;
+        int ccw = (int) chartCanvasWidth;
+        PixelWriter pixelWriter = chartCanvas.getGraphicsContext2D().getPixelWriter();
+
+        for (int yCanvas = 0; yCanvas < cch; yCanvas++) {
+            for (int xCanvas = 0; xCanvas < ccw; xCanvas++) {
+                funcVal = funcValues[yCanvas * ccw + xCanvas];
                 Color color = functionChartScale.getColorFromFuncValue(funcVal, funcMinValue, funcMaxValue);
                 pixelWriter.setColor(xCanvas, yCanvas, color);
             }
@@ -112,13 +118,12 @@ public class FunctionChart2D extends GridPane {
         beesCanvas.getGraphicsContext2D().clearRect(0, 0, beesCanvas.getWidth(), beesCanvas.getHeight());
     }
 
-    private void updateFuncValuesRange() {
+    private void updateFuncValues() {
+        int cch = (int) chartCanvasHeight;
+        int ccw = (int) chartCanvasWidth;
+        funcValues = new double[cch * ccw];
         funcMinValue = Double.MAX_VALUE;
         funcMaxValue = -Double.MAX_VALUE;
-
-        int ccw = (int) chartCanvasWidth;
-        int cch = (int) chartCanvasHeight;
-        double[] funcValues = new double[cch * ccw];
 
         IntStream.range(0, cch).parallel().forEach(yCanvas ->
                 IntStream.range(0, ccw).parallel().forEach(xCanvas ->
@@ -195,7 +200,7 @@ public class FunctionChart2D extends GridPane {
         x2 = testFunction.getUpperBoundaries()[0];
         y1 = testFunction.getLowerBoundaries()[1];
         y2 = testFunction.getUpperBoundaries()[1];
-        updateFuncValuesRange();
+        updateFuncValues();
 
         if (yAxisCanvas != null) {
             functionChartAxes.updateYAxisCanvasWidth(y1, y2);
