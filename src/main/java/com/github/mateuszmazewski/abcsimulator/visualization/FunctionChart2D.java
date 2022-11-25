@@ -10,7 +10,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -18,6 +17,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.decimalFormat2;
+import static com.github.mateuszmazewski.abcsimulator.visualization.FunctionChartAxes.*;
 
 public class FunctionChart2D extends GridPane {
 
@@ -28,8 +28,9 @@ public class FunctionChart2D extends GridPane {
     private final Canvas chartCanvas = new Canvas();
     private final Canvas beesCanvas = new Canvas();
     private final Canvas scaleCanvas = new Canvas();
-    private final Canvas xAxisCanvas = new Canvas();
-    private final Canvas yAxisCanvas = new Canvas();
+    private final FunctionChartAxes functionChartAxes;
+    private final Canvas xAxisCanvas;
+    private final Canvas yAxisCanvas;
     private final Canvas scaleAxisCanvas = new Canvas();
     private final PixelWriter pixelWriter;
     private double[] funcMinValuePos = new double[2];
@@ -38,12 +39,6 @@ public class FunctionChart2D extends GridPane {
     private double x1, x2, y1, y2; // Function's args range
     private double chartCanvasWidth, chartCanvasHeight;
 
-    // -------------------------AXES' PARAMETERS-------------------------
-    private final double axesFontSize = 12.0;
-    private final Font axesFont = new Font(axesFontSize);
-    private final double axesMarkerLength = 8.0;
-    private final double axesGapBetweenMarkerAndText = 5.0;
-
     // -------------------------------BEES-------------------------------
     private double[][] currentIterBees;
 
@@ -51,8 +46,11 @@ public class FunctionChart2D extends GridPane {
         setTestFunction(testFunction);
         initCanvases();
         pixelWriter = chartCanvas.getGraphicsContext2D().getPixelWriter();
+        functionChartAxes = new FunctionChartAxes(chartCanvas, y1, y2);
+        xAxisCanvas = functionChartAxes.getXAxisCanvas();
+        yAxisCanvas = functionChartAxes.getYAxisCanvas();
+
         initGridPane();
-        drawAll();
 
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
             chartCanvasWidth = chartCanvas.getWidth();
@@ -87,34 +85,19 @@ public class FunctionChart2D extends GridPane {
         chartCanvasWidth = chartCanvas.getWidth();
         chartCanvasHeight = chartCanvas.getHeight();
 
-        xAxisCanvas.widthProperty().bind(chartCanvas.widthProperty());
-        yAxisCanvas.heightProperty().bind(chartCanvas.heightProperty());
-        xAxisCanvas.setHeight(axesMarkerLength + axesFontSize + axesGapBetweenMarkerAndText);
-        yAxisCanvas.setWidth(getYAxisWidth());
-
         scaleCanvas.setWidth(SCALE_CANVAS_WIDTH);
         scaleCanvas.heightProperty().bind(chartCanvas.heightProperty());
 
         scaleAxisCanvas.setWidth(getScaleAxisWidth());
         scaleAxisCanvas.heightProperty().bind(scaleCanvas.heightProperty());
 
-        initCanvas(xAxisCanvas);
-        initCanvas(yAxisCanvas);
         initCanvas(scaleCanvas);
         initCanvas(scaleAxisCanvas);
     }
 
     private void initCanvas(Canvas canvas) {
         canvas.getGraphicsContext2D().setStroke(Color.BLACK);
-        canvas.getGraphicsContext2D().setFont(axesFont);
-    }
-
-    private double getYAxisWidth() {
-        // Longest number on y-axis is a negative number with two digits after decimal point
-        double longestNumberOnYAxis = -((int) Math.max(Math.abs(y1), Math.abs(y2)) + 0.77);
-        Text longestYText = new Text(String.valueOf(longestNumberOnYAxis));
-        longestYText.setFont(axesFont);
-        return longestYText.getLayoutBounds().getWidth() + axesMarkerLength + axesGapBetweenMarkerAndText;
+        canvas.getGraphicsContext2D().setFont(AXES_FONT);
     }
 
     private double getScaleAxisWidth() {
@@ -125,61 +108,8 @@ public class FunctionChart2D extends GridPane {
             double longestNumberOnScaleAxis = -((int) Math.max(Math.abs(funcMinValue), Math.abs(funcMaxValue)) + 0.77);
             longestScaleAxisText = new Text(String.valueOf(longestNumberOnScaleAxis));
         }
-        longestScaleAxisText.setFont(axesFont);
-        return longestScaleAxisText.getLayoutBounds().getWidth() + axesMarkerLength + axesGapBetweenMarkerAndText;
-    }
-
-    private void drawAxes() {
-        int stepsCount = 10;
-        double xAxisStep = xAxisCanvas.getWidth() / stepsCount;
-        double yAxisStep = yAxisCanvas.getHeight() / stepsCount;
-        double xFuncStep = (x2 - x1) / stepsCount;
-        double yFuncStep = (y2 - y1) / stepsCount;
-        GraphicsContext xAxisGraphics = xAxisCanvas.getGraphicsContext2D();
-        GraphicsContext yAxisGraphics = yAxisCanvas.getGraphicsContext2D();
-        double x, y;
-        String xText, yText;
-
-        xAxisGraphics.clearRect(0, 0, xAxisCanvas.getWidth(), xAxisCanvas.getHeight());
-        yAxisGraphics.clearRect(0, 0, yAxisCanvas.getWidth(), yAxisCanvas.getHeight());
-
-        for (int i = 0; i <= stepsCount; i++) {
-            xText = decimalFormat2.format(x1 + i * xFuncStep);
-            yText = decimalFormat2.format(y1 + (stepsCount - i) * yFuncStep);
-
-            xAxisGraphics.setTextBaseline(VPos.BOTTOM);
-            yAxisGraphics.setTextAlign(TextAlignment.RIGHT);
-
-            // Determine line's position to avoid antialiasing
-            // Determine text alignment/baseline to fit text on canvas
-            if (i == 0) {
-                // first marker
-                x = Math.round(i * xAxisStep) + 0.5;
-                xAxisGraphics.setTextAlign(TextAlignment.LEFT);
-
-                y = Math.round(i * yAxisStep) + 0.5;
-                yAxisGraphics.setTextBaseline(VPos.TOP);
-            } else if (i == stepsCount) {
-                // last marker
-                x = Math.round(i * xAxisStep) - 0.5;
-                xAxisGraphics.setTextAlign(TextAlignment.RIGHT);
-
-                y = Math.round(i * yAxisStep) - 0.5;
-                yAxisGraphics.setTextBaseline(VPos.BOTTOM);
-            } else {
-                x = Math.round(i * xAxisStep) + 0.5;
-                xAxisGraphics.setTextAlign(TextAlignment.CENTER);
-
-                y = Math.round(i * yAxisStep) + 0.5;
-                yAxisGraphics.setTextBaseline(VPos.CENTER);
-            }
-
-            xAxisGraphics.strokeLine(x, 0, x, axesMarkerLength);
-            xAxisGraphics.fillText(xText, x, axesMarkerLength + axesFontSize + axesGapBetweenMarkerAndText);
-
-            yAxisGraphics.strokeLine(yAxisCanvas.getWidth(), y, yAxisCanvas.getWidth() - axesMarkerLength, y);
-            yAxisGraphics.fillText(yText, yAxisCanvas.getWidth() - (axesMarkerLength + axesGapBetweenMarkerAndText), y);
-        }
+        longestScaleAxisText.setFont(AXES_FONT);
+        return longestScaleAxisText.getLayoutBounds().getWidth() + AXES_MARKER_LENGTH + AXES_GAP_BETWEEN_MARKER_AND_TEXT;
     }
 
     private void drawFunc() {
@@ -287,8 +217,8 @@ public class FunctionChart2D extends GridPane {
                 scaleAxisGraphics.setTextBaseline(VPos.CENTER);
             }
 
-            scaleAxisGraphics.strokeLine(0, y, axesMarkerLength, y);
-            scaleAxisGraphics.fillText(text, axesMarkerLength + axesGapBetweenMarkerAndText, y);
+            scaleAxisGraphics.strokeLine(0, y, AXES_MARKER_LENGTH, y);
+            scaleAxisGraphics.fillText(text, AXES_MARKER_LENGTH + AXES_GAP_BETWEEN_MARKER_AND_TEXT, y);
         }
     }
 
@@ -382,7 +312,7 @@ public class FunctionChart2D extends GridPane {
         updateFuncValuesRange();
 
         if (yAxisCanvas != null) {
-            yAxisCanvas.setWidth(getYAxisWidth());
+            functionChartAxes.updateYAxisCanvasWidth(y1, y2);
         }
         if (scaleAxisCanvas != null) {
             scaleAxisCanvas.setWidth(getScaleAxisWidth());
@@ -391,7 +321,7 @@ public class FunctionChart2D extends GridPane {
 
     public void drawAll() {
         drawFunc();
-        drawAxes();
+        functionChartAxes.drawAxes(x1, x2, y1, y2);
         drawScale();
         drawScaleAxis();
         if (currentIterBees != null) {
