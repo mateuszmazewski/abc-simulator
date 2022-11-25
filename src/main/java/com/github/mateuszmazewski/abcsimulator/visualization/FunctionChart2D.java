@@ -10,28 +10,21 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 import java.util.stream.IntStream;
-
-import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.decimalFormat2;
-import static com.github.mateuszmazewski.abcsimulator.visualization.FunctionChartAxes.*;
 
 public class FunctionChart2D extends GridPane {
 
-    private static final double SCALE_CANVAS_WIDTH = 15.0;
-    private static final double SCALE_CANVAS_LEFT_MARGIN = 10.0;
     private static final double BEE_SIZE = 10.0;
     private AbstractTestFunction testFunction;
     private final Canvas chartCanvas = new Canvas();
     private final Canvas beesCanvas = new Canvas();
-    private final Canvas scaleCanvas = new Canvas();
+    private final FunctionChartScale functionChartScale;
     private final FunctionChartAxes functionChartAxes;
-    private final Canvas xAxisCanvas;
-    private final Canvas yAxisCanvas;
-    private final Canvas scaleAxisCanvas = new Canvas();
+    private final Canvas xAxisCanvas, yAxisCanvas, scaleCanvas, scaleAxisCanvas;
     private final PixelWriter pixelWriter;
     private double[] funcMinValuePos = new double[2];
     private double funcMinValue = Double.MAX_VALUE;
@@ -49,6 +42,9 @@ public class FunctionChart2D extends GridPane {
         functionChartAxes = new FunctionChartAxes(chartCanvas, y1, y2);
         xAxisCanvas = functionChartAxes.getXAxisCanvas();
         yAxisCanvas = functionChartAxes.getYAxisCanvas();
+        functionChartScale = new FunctionChartScale(chartCanvas, funcMinValue, funcMaxValue, testFunction.isChartInLogScale());
+        scaleCanvas = functionChartScale.getScaleCanvas();
+        scaleAxisCanvas = functionChartScale.getScaleAxisCanvas();
 
         initGridPane();
 
@@ -74,7 +70,7 @@ public class FunctionChart2D extends GridPane {
         GridPane.setConstraints(scaleCanvas, 2, 0, 1, 1);
         GridPane.setConstraints(scaleAxisCanvas, 3, 0, 1, 1);
 
-        GridPane.setMargin(scaleCanvas, new Insets(0, 0, 0, SCALE_CANVAS_LEFT_MARGIN));
+        GridPane.setMargin(scaleCanvas, new Insets(0, 0, 0, FunctionChartScale.SCALE_CANVAS_LEFT_MARGIN));
     }
 
     private void initCanvases() {
@@ -84,32 +80,6 @@ public class FunctionChart2D extends GridPane {
         beesCanvas.heightProperty().bind(chartCanvas.heightProperty());
         chartCanvasWidth = chartCanvas.getWidth();
         chartCanvasHeight = chartCanvas.getHeight();
-
-        scaleCanvas.setWidth(SCALE_CANVAS_WIDTH);
-        scaleCanvas.heightProperty().bind(chartCanvas.heightProperty());
-
-        scaleAxisCanvas.setWidth(getScaleAxisWidth());
-        scaleAxisCanvas.heightProperty().bind(scaleCanvas.heightProperty());
-
-        initCanvas(scaleCanvas);
-        initCanvas(scaleAxisCanvas);
-    }
-
-    private void initCanvas(Canvas canvas) {
-        canvas.getGraphicsContext2D().setStroke(Color.BLACK);
-        canvas.getGraphicsContext2D().setFont(AXES_FONT);
-    }
-
-    private double getScaleAxisWidth() {
-        Text longestScaleAxisText;
-        if (testFunction.isChartInLogScale()) {
-            longestScaleAxisText = new Text("10^(-99)");
-        } else {
-            double longestNumberOnScaleAxis = -((int) Math.max(Math.abs(funcMinValue), Math.abs(funcMaxValue)) + 0.77);
-            longestScaleAxisText = new Text(String.valueOf(longestNumberOnScaleAxis));
-        }
-        longestScaleAxisText.setFont(AXES_FONT);
-        return longestScaleAxisText.getLayoutBounds().getWidth() + AXES_MARKER_LENGTH + AXES_GAP_BETWEEN_MARKER_AND_TEXT;
     }
 
     private void drawFunc() {
@@ -117,17 +87,10 @@ public class FunctionChart2D extends GridPane {
         for (int xCanvas = 0; xCanvas < chartCanvasWidth; xCanvas++) {
             for (int yCanvas = 0; yCanvas < chartCanvasHeight; yCanvas++) {
                 funcVal = getFuncVal(xCanvas, yCanvas);
-                Color color = getColorFromFuncValue(funcVal);
+                Color color = functionChartScale.getColorFromFuncValue(funcVal, funcMinValue, funcMaxValue);
                 pixelWriter.setColor(xCanvas, yCanvas, color);
             }
         }
-    }
-
-    private Color getColorFromFuncValue(double funcVal) {
-        // Scale func. values to [0, 240] ->  HSV color space
-        // 0 deg. = red, 120 deg. = green, 240 deg. = blue
-        double funcValScaled = (funcVal - funcMinValue) / (funcMaxValue - funcMinValue) * 240;
-        return Color.hsb(240.0 - funcValScaled, 1.0, 1.0);
     }
 
     public void drawBees(double[][] foodSources) {
@@ -141,84 +104,6 @@ public class FunctionChart2D extends GridPane {
         for (double[] foodSource : foodSources) {
             canvasXY = getCanvasXY(foodSource);
             beesGraphics.fillOval(canvasXY[0] - offset, canvasXY[1] - offset, BEE_SIZE, BEE_SIZE);
-        }
-    }
-
-    private void drawScale() {
-        int scaleCanvasWidth = (int) scaleCanvas.getWidth();
-        int scaleCanvasHeight = (int) scaleCanvas.getHeight();
-        PixelWriter scalePixelWriter = scaleCanvas.getGraphicsContext2D().getPixelWriter();
-        double funcValRange = funcMaxValue - funcMinValue;
-        double funcVal;
-
-        for (int yCanvas = 0; yCanvas < scaleCanvasHeight; yCanvas++) {
-            //funcVal = funcValRange / scaleCanvasHeight * (scaleCanvasHeight - yCanvas);
-            funcVal = funcMinValue + (scaleCanvasHeight - yCanvas) * funcValRange / (scaleCanvasHeight - 1);
-
-            Color color = getColorFromFuncValue(funcVal);
-            for (int xCanvas = 0; xCanvas < scaleCanvasWidth; xCanvas++) {
-                scalePixelWriter.setColor(xCanvas, yCanvas, color);
-            }
-        }
-    }
-
-    private void drawScaleAxis() {
-        int stepsCount;
-        double step, funcValStep;
-        if (testFunction.isChartInLogScale()) {
-            stepsCount = (int) scaleAxisCanvas.getHeight();
-        } else {
-            stepsCount = 10;
-        }
-        step = scaleAxisCanvas.getHeight() / stepsCount;
-        funcValStep = (funcMaxValue - funcMinValue) / stepsCount;
-        GraphicsContext scaleAxisGraphics = scaleAxisCanvas.getGraphicsContext2D();
-        double y, funcVal;
-        String text;
-        long exponent;
-        List<Long> addedExponents = new ArrayList<>();
-
-        scaleAxisGraphics.clearRect(0, 0, scaleAxisCanvas.getWidth(), scaleAxisCanvas.getHeight());
-
-        for (int i = 0; i <= stepsCount; i++) {
-            funcVal = funcMinValue + (stepsCount - i) * funcValStep;
-
-            if (testFunction.isChartInLogScale()) {
-                // Find only integer exponents
-                if (Math.abs(funcVal % 1) < 0.05) {
-                    exponent = Math.round(funcVal);
-                    if (!addedExponents.contains(exponent)) {
-                        addedExponents.add(exponent);
-                        text = "10^" + (exponent >= 0 ? exponent : "(" + exponent + ")");
-                    } else {
-                        continue;
-                    }
-                } else {
-                    continue;
-                }
-            } else {
-                text = decimalFormat2.format(funcVal);
-            }
-
-            scaleAxisGraphics.setTextAlign(TextAlignment.LEFT);
-
-            // Determine line's position to avoid antialiasing
-            // Determine text alignment/baseline to fit text on canvas
-            if (i == 0) {
-                // first marker
-                y = Math.round(i * step) + 0.5;
-                scaleAxisGraphics.setTextBaseline(VPos.TOP);
-            } else if (i == stepsCount) {
-                // last marker
-                y = Math.round(i * step) - 0.5;
-                scaleAxisGraphics.setTextBaseline(VPos.BOTTOM);
-            } else {
-                y = Math.round(i * step) + 0.5;
-                scaleAxisGraphics.setTextBaseline(VPos.CENTER);
-            }
-
-            scaleAxisGraphics.strokeLine(0, y, AXES_MARKER_LENGTH, y);
-            scaleAxisGraphics.fillText(text, AXES_MARKER_LENGTH + AXES_GAP_BETWEEN_MARKER_AND_TEXT, y);
         }
     }
 
@@ -315,15 +200,15 @@ public class FunctionChart2D extends GridPane {
             functionChartAxes.updateYAxisCanvasWidth(y1, y2);
         }
         if (scaleAxisCanvas != null) {
-            scaleAxisCanvas.setWidth(getScaleAxisWidth());
+            functionChartScale.updateScaleAxisCanvasWidth(funcMinValue, funcMaxValue, testFunction.isChartInLogScale());
         }
     }
 
     public void drawAll() {
         drawFunc();
         functionChartAxes.drawAxes(x1, x2, y1, y2);
-        drawScale();
-        drawScaleAxis();
+        functionChartScale.drawScale(funcMinValue, funcMaxValue);
+        functionChartScale.drawScaleAxis(funcMinValue, funcMaxValue, testFunction.isChartInLogScale());
         if (currentIterBees != null) {
             drawBees(currentIterBees);
         }
