@@ -42,8 +42,8 @@ public class MainController {
         parametersController.setMainController(this);
 
         iterSlider.setDisable(true);
-        iterSlider.setShowTickLabels(false);
-        iterSlider.setShowTickMarks(false);
+        iterSlider.setMin(0);
+        iterSlider.setMax(ParametersController.INITIAL_MAX_ITER);
         parametersController.setIterSlider(iterSlider);
 
         AbstractTestFunction func = parametersController.getFunc();

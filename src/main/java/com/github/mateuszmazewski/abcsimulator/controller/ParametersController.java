@@ -24,7 +24,10 @@ import java.util.stream.Stream;
 public class ParametersController {
 
     private static final int SLIDER_MAJOR_TICKS_COUNT = 20;
-    private static final int BY_ONE_TICKS_LIMIT = 30;
+    private static final int SLIDER_BY_ONE_TICKS_LIMIT = 30;
+    public static final int INITIAL_SWARM_SIZE = 50;
+    public static final int INITIAL_MAX_ITER = 100;
+    public static final int INITIAL_TRIALS_LIMIT = 50;
 
     @FXML
     private ComboBox<AbstractTestFunction> funcComboBox;
@@ -120,9 +123,9 @@ public class ParametersController {
 
         addValueChangeListenerToTextFields();
 
-        swarmSizeTextField.setText("50");
-        maxIterTextField.setText("100");
-        trialsLimitTextField.setText("50");
+        swarmSizeTextField.setText(String.valueOf(INITIAL_SWARM_SIZE));
+        maxIterTextField.setText(String.valueOf(INITIAL_MAX_ITER));
+        trialsLimitTextField.setText(String.valueOf(INITIAL_TRIALS_LIMIT));
     }
 
     private void addValueChangeListenerToTextFields() {
@@ -246,7 +249,7 @@ public class ParametersController {
     private void onActionFuncComboBox() {
         if (mainController != null) {
             mainController.getCenterChart().clearBees();
-            resetIterSlider();
+            iterSlider.setDisable(true);
             mainController.getResultsController().showFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
             mainController.getResultsController().setResultsVisible(false);
         }
@@ -291,13 +294,6 @@ public class ParametersController {
         mainController.getResultsController().showResults(maxIter);
     }
 
-
-    private void resetIterSlider() {
-        iterSlider.setDisable(true);
-        iterSlider.setShowTickMarks(false);
-        iterSlider.setShowTickLabels(false);
-    }
-
     private void initIterSlider(ABCResults results) {
         int maxIter = results.getMaxIter();
         iterSlider.setDisable(false);
@@ -307,7 +303,7 @@ public class ParametersController {
         iterSlider.setMax(maxIter);
         iterSlider.setBlockIncrement(1);
 
-        if (maxIter < BY_ONE_TICKS_LIMIT) {
+        if (maxIter < SLIDER_BY_ONE_TICKS_LIMIT) {
             iterSlider.setMajorTickUnit(1);
             iterSlider.setMinorTickCount(0);
         } else {
