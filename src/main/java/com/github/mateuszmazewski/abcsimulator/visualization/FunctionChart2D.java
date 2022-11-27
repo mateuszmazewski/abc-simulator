@@ -77,7 +77,7 @@ public class FunctionChart2D extends GridPane {
 
     private void initCanvases() {
         chartCanvas.widthProperty().bind(chartCanvas.heightProperty()); // chartCanvas is square
-        chartCanvas.heightProperty().bind(heightProperty().multiply(0.9));
+        chartCanvas.heightProperty().bind(heightProperty().multiply(0.95));
         beesCanvas.widthProperty().bind(chartCanvas.widthProperty());
         beesCanvas.heightProperty().bind(chartCanvas.heightProperty());
         chartCanvasWidth = chartCanvas.getWidth();
