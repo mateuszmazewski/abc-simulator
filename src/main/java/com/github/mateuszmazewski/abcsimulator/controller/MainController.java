@@ -7,12 +7,10 @@ import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
 import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -53,6 +51,9 @@ public class MainController {
     @FXML
     private Menu languageMenu;
 
+    @FXML
+    private CheckMenuItem alwaysOnTopCheckMenuItem;
+
     public FunctionChart2D getCenterChart() {
         return (FunctionChart2D) borderPane.getCenter();
     }
@@ -80,10 +81,17 @@ public class MainController {
 
     private void initLanguageBindings() {
         applicationMenu.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.app"));
+        alwaysOnTopCheckMenuItem.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.alwaysOnTop"));
         helpMenu.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.help"));
         closeMenuItem.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.app.close"));
         aboutMenuItem.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.help.about"));
         languageMenu.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.language"));
+    }
+
+    @FXML
+    private void setAlwaysOnTop(ActionEvent actionEvent) {
+        boolean checkboxSelected = ((CheckMenuItem) actionEvent.getSource()).isSelected();
+        stage.setAlwaysOnTop(checkboxSelected);
     }
 
     @FXML
