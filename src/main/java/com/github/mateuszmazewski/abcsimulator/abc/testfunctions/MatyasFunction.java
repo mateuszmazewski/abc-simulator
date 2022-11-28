@@ -5,7 +5,7 @@ public class MatyasFunction extends AbstractTestFunction {
     public MatyasFunction() {
         super(2,
                 new double[]{-10.0, -10.0},
-                new double[]{10.1, 10.0},
+                new double[]{10.0, 10.0},
                 new double[]{0.0, 0.0},
                 0.0,
                 true);

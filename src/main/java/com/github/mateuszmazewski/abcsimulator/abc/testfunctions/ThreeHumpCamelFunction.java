@@ -5,7 +5,7 @@ public class ThreeHumpCamelFunction extends AbstractTestFunction {
     public ThreeHumpCamelFunction() {
         super(2,
                 new double[]{-3.4, -3.4},
-                new double[]{3.41, 3.41},
+                new double[]{3.4, 3.4},
                 new double[]{0.0, 0.0},
                 0.0,
                 true);
