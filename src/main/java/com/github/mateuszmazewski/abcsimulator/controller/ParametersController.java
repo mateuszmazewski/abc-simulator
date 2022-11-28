@@ -72,6 +72,37 @@ public class ParametersController {
 
     @FXML
     private Label trialsLimitLabel;
+
+    @FXML
+    private Tooltip functionLabelTooltip;
+
+    @FXML
+    private Tooltip swarmSizeLabelTooltip;
+
+    @FXML
+    private Tooltip swarmSizeTextFieldTooltip;
+
+    @FXML
+    private Tooltip maxIterTextFieldTooltip;
+
+    @FXML
+    private Tooltip trialsLimitLabelTooltip;
+
+    @FXML
+    private Tooltip trialsLimitTextFieldTooltip;
+
+    @FXML
+    private Tooltip xRangeFromTextFieldTooltip;
+
+    @FXML
+    private Tooltip xRangeToTextFieldTooltip;
+
+    @FXML
+    private Tooltip yRangeFromTextFieldTooltip;
+
+    @FXML
+    private Tooltip yRangeToTextFieldTooltip;
+
     // -----------------------------------------------------------------
 
     private final ObservableMap<String, AbstractTestFunction> testFunctionObservableMap = FXCollections.observableHashMap();
@@ -152,6 +183,17 @@ public class ParametersController {
         maxIterLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.maxIter"));
         trialsLimitLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.trialsLimit"));
         startButton.textProperty().bind(messagesFactory.getStringBinding("parameters.startButton"));
+
+        functionLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.funcLabel"));
+        swarmSizeLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.swarmSizeLabel"));
+        swarmSizeTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.swarmSizeTextField"));
+        maxIterTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.maxIterTextField"));
+        trialsLimitLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.trialsLimitLabel"));
+        trialsLimitTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.trialsLimitTextField"));
+        xRangeFromTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.xRangeFromTextField"));
+        xRangeToTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.xRangeToTextField"));
+        yRangeFromTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.yRangeFromTextField"));
+        yRangeToTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.yRangeToTextField"));
     }
 
     private void addValueChangeListenerToTextFields() {

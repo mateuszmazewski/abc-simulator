@@ -28,44 +28,41 @@
    <children>
       <Label fx:id="funcLabel" text="%parameters.function">
          <tooltip>
-            <Tooltip text="%tooltip.funcLabel" wrapText="true" />
+            <Tooltip fx:id="functionLabelTooltip" text="%tooltip.funcLabel" wrapText="true" />
          </tooltip></Label>
-      <ComboBox fx:id="funcComboBox" maxWidth="1.7976931348623157E308" onAction="#onActionFuncComboBox" GridPane.columnIndex="1">
-         <tooltip>
-            <Tooltip text="Empty Tooltip" />
-         </tooltip></ComboBox>
+      <ComboBox fx:id="funcComboBox" maxWidth="1.7976931348623157E308" onAction="#onActionFuncComboBox" GridPane.columnIndex="1" />
       <Label text="%parameters.xRange" GridPane.rowIndex="1" fx:id="xRangeLabel" />
       <Label fx:id="swarmSizeLabel" text="%parameters.swarmSize" GridPane.rowIndex="3">
          <tooltip>
-            <Tooltip text="%tooltip.swarmSizeLabel" wrapText="true" />
+            <Tooltip fx:id="swarmSizeLabelTooltip" text="%tooltip.swarmSizeLabel" wrapText="true" />
          </tooltip></Label>
       <TextField fx:id="swarmSizeTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <tooltip>
-            <Tooltip text="%tooltip.swarmSizeTextField" wrapText="true" />
+            <Tooltip fx:id="swarmSizeTextFieldTooltip" text="%tooltip.swarmSizeTextField" wrapText="true" />
          </tooltip></TextField>
       <TextField fx:id="maxIterTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <tooltip>
-            <Tooltip text="%tooltip.maxIterTextField" wrapText="true" />
+            <Tooltip fx:id="maxIterTextFieldTooltip" text="%tooltip.maxIterTextField" wrapText="true" />
          </tooltip></TextField>
       <Label fx:id="maxIterLabel" text="%parameters.maxIter" GridPane.rowIndex="4" />
       <Label fx:id="trialsLimitLabel" text="%parameters.trialsLimit" GridPane.rowIndex="5">
          <tooltip>
-            <Tooltip text="%tooltip.trialsLimitLabel" wrapText="true" />
+            <Tooltip fx:id="trialsLimitLabelTooltip" text="%tooltip.trialsLimitLabel" wrapText="true" />
          </tooltip></Label>
       <TextField fx:id="trialsLimitTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <tooltip>
-            <Tooltip text="%tooltip.trialsLimitTextField" wrapText="true" />
+            <Tooltip fx:id="trialsLimitTextFieldTooltip" text="%tooltip.trialsLimitTextField" wrapText="true" />
          </tooltip></TextField>
       <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
             <TextField maxWidth="100.0" fx:id="xRangeFromTextField">
                <tooltip>
-                  <Tooltip text="%tooltip.xRangeFromTextField" wrapText="true" />
+                  <Tooltip text="%tooltip.xRangeFromTextField" wrapText="true" fx:id="xRangeFromTextFieldTooltip" />
                </tooltip></TextField>
             <Label text="-" />
             <TextField maxWidth="100.0" fx:id="xRangeToTextField">
                <tooltip>
-                  <Tooltip text="%tooltip.xRangeToTextField" wrapText="true" />
+                  <Tooltip text="%tooltip.xRangeToTextField" wrapText="true" fx:id="xRangeToTextFieldTooltip" />
                </tooltip></TextField>
          </children>
       </HBox>
@@ -74,12 +71,12 @@
          <children>
             <TextField fx:id="yRangeFromTextField" maxWidth="100.0">
                <tooltip>
-                  <Tooltip text="%tooltip.yRangeFromTextField" wrapText="true" />
+                  <Tooltip fx:id="yRangeFromTextFieldTooltip" text="%tooltip.yRangeFromTextField" wrapText="true" />
                </tooltip></TextField>
             <Label text="-" />
             <TextField fx:id="yRangeToTextField" maxWidth="100.0">
                <tooltip>
-                  <Tooltip text="%tooltip.yRangeToTextField" wrapText="true" />
+                  <Tooltip fx:id="yRangeToTextFieldTooltip" text="%tooltip.yRangeToTextField" wrapText="true" />
                </tooltip></TextField>
          </children>
       </HBox>
