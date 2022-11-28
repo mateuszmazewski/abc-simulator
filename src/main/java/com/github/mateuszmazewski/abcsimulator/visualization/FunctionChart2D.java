@@ -19,6 +19,7 @@ import java.util.stream.IntStream;
 public class FunctionChart2D extends GridPane {
 
     private static final double BEE_SIZE = 10.0;
+    private static final double MINIMUM_MARK_SIZE = 12.0;
 
     private final Canvas chartCanvas = new Canvas();
     private final Canvas beesCanvas = new Canvas();
@@ -111,6 +112,18 @@ public class FunctionChart2D extends GridPane {
             canvasXY = getCanvasXY(foodSource);
             beesGraphics.fillOval(canvasXY[0] - offset, canvasXY[1] - offset, BEE_SIZE, BEE_SIZE);
         }
+    }
+
+    private void drawMinimum() {
+        GraphicsContext funcGraphics = chartCanvas.getGraphicsContext2D();
+        funcGraphics.setStroke(Color.RED);
+        funcGraphics.setLineWidth(2.0);
+
+        double[] canvasXY = getCanvasXY(funcMinValuePos);
+        double offset = MINIMUM_MARK_SIZE / 2.0;
+
+        funcGraphics.strokeLine(canvasXY[0] - offset, canvasXY[1] - offset, canvasXY[0] + offset, canvasXY[1] + offset);
+        funcGraphics.strokeLine(canvasXY[0] + offset, canvasXY[1] - offset, canvasXY[0] - offset, canvasXY[1] + offset);
     }
 
     public void clearBees() {
@@ -212,6 +225,7 @@ public class FunctionChart2D extends GridPane {
 
     public void drawAll() {
         drawFunc();
+        drawMinimum();
         functionChartAxes.drawAxes(x1, x2, y1, y2);
         functionChartScale.drawScale(funcMinValue, funcMaxValue);
         functionChartScale.drawScaleAxis(funcMinValue, funcMaxValue, testFunction.isChartInLogScale());
