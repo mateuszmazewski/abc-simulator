@@ -3,6 +3,7 @@ package com.github.mateuszmazewski.abcsimulator.controller;
 import com.github.mateuszmazewski.abcsimulator.abc.ABCResults;
 import com.github.mateuszmazewski.abcsimulator.abc.ABCResultsIO;
 import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
+import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,8 +12,13 @@ import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToSt
 
 public class ResultsController {
 
+    private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
+
     @FXML
     private Label minimumValueLabel;
+
+    @FXML
+    private Label minimumLabel;
 
     @FXML
     private Label foundMinimumLabel;
@@ -28,6 +34,9 @@ public class ResultsController {
 
     @FXML
     private Button saveResultsButton;
+
+    @FXML
+    private Button readResultsButton;
     private ABCResults results;
 
     // --------------------Injected by MainController--------------------
@@ -35,6 +44,15 @@ public class ResultsController {
 
     @FXML
     private void initialize() {
+        initLanguageBindings();
+    }
+
+    private void initLanguageBindings() {
+        minimumLabel.textProperty().bind(messagesFactory.getStringBinding("results.minimum"));
+        foundMinimumLabel.textProperty().bind(messagesFactory.getStringBinding("results.foundMinimum"));
+        iterNumberLabel.textProperty().bind(messagesFactory.getStringBinding("results.iterNumber"));
+        saveResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.saveButton"));
+        readResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.readResultsButton"));
     }
 
     @FXML

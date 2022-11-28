@@ -26,7 +26,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label text="%parameters.function">
+      <Label fx:id="funcLabel" text="%parameters.function">
          <tooltip>
             <Tooltip text="%tooltip.funcLabel" wrapText="true" />
          </tooltip></Label>
@@ -34,8 +34,8 @@
          <tooltip>
             <Tooltip text="Empty Tooltip" />
          </tooltip></ComboBox>
-      <Label text="%parameters.xRange" GridPane.rowIndex="1" />
-      <Label text="%parameters.swarmSize" GridPane.rowIndex="3">
+      <Label text="%parameters.xRange" GridPane.rowIndex="1" fx:id="xRangeLabel" />
+      <Label fx:id="swarmSizeLabel" text="%parameters.swarmSize" GridPane.rowIndex="3">
          <tooltip>
             <Tooltip text="%tooltip.swarmSizeLabel" wrapText="true" />
          </tooltip></Label>
@@ -47,8 +47,8 @@
          <tooltip>
             <Tooltip text="%tooltip.maxIterTextField" wrapText="true" />
          </tooltip></TextField>
-      <Label text="%parameters.maxIter" GridPane.rowIndex="4" />
-      <Label text="%parameters.trialsLimit" GridPane.rowIndex="5">
+      <Label fx:id="maxIterLabel" text="%parameters.maxIter" GridPane.rowIndex="4" />
+      <Label fx:id="trialsLimitLabel" text="%parameters.trialsLimit" GridPane.rowIndex="5">
          <tooltip>
             <Tooltip text="%tooltip.trialsLimitLabel" wrapText="true" />
          </tooltip></Label>
@@ -69,7 +69,7 @@
                </tooltip></TextField>
          </children>
       </HBox>
-      <Label text="%parameters.yRange" GridPane.rowIndex="2" />
+      <Label fx:id="yRangeLabel" text="%parameters.yRange" GridPane.rowIndex="2" />
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <TextField fx:id="yRangeFromTextField" maxWidth="100.0">

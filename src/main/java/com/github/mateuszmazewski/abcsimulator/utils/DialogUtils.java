@@ -5,17 +5,16 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 public class DialogUtils {
 
-    private static final ResourceBundle messagesBundle = FxmlUtils.getResourceBundle();
+    private static final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
 
     public static void errorDialog(String msg) {
         Alert error = new Alert(Alert.AlertType.ERROR);
 
-        error.setTitle(messagesBundle.getString("errorDialog.title"));
-        error.setHeaderText(messagesBundle.getString("errorDialog.header"));
+        error.titleProperty().bind(messagesFactory.getStringBinding("errorDialog.title"));
+        error.headerTextProperty().bind(messagesFactory.getStringBinding("errorDialog.header"));
         TextArea textArea = new TextArea(msg);
         textArea.setEditable(false);
         error.getDialogPane().setContent(textArea);
@@ -26,10 +25,10 @@ public class DialogUtils {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
 
         try {
-            confirm.setTitle(messagesBundle.getString(titleKey));
-            confirm.setHeaderText(messagesBundle.getString(headerTextKey));
+            confirm.titleProperty().bind(messagesFactory.getStringBinding(titleKey));
+            confirm.headerTextProperty().bind(messagesFactory.getStringBinding(headerTextKey));
             if (contextTextKey != null && !contextTextKey.isEmpty()) {
-                confirm.setContentText(messagesBundle.getString(contextTextKey));
+                confirm.contentTextProperty().bind(messagesFactory.getStringBinding(contextTextKey));
             }
         } catch (Exception e) {
             errorDialog(e.getMessage());
@@ -42,9 +41,9 @@ public class DialogUtils {
     public static void showAboutDialog() {
         Alert about = new Alert(Alert.AlertType.INFORMATION);
 
-        about.setTitle(messagesBundle.getString("aboutDialog.title"));
-        about.setHeaderText(messagesBundle.getString("aboutDialog.header"));
-        about.setContentText(messagesBundle.getString("aboutDialog.content"));
+        about.titleProperty().bind(messagesFactory.getStringBinding("aboutDialog.title"));
+        about.headerTextProperty().bind(messagesFactory.getStringBinding("aboutDialog.header"));
+        about.contentTextProperty().bind(messagesFactory.getStringBinding("aboutDialog.content"));
         about.showAndWait();
     }
 }

@@ -4,7 +4,9 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -14,14 +16,24 @@
          <children>
             <MenuBar>
               <menus>
-                <Menu mnemonicParsing="false" text="%topMenuBar.app">
+                <Menu fx:id="applicationMenu" mnemonicParsing="false" text="%topMenuBar.app">
                   <items>
-                    <MenuItem mnemonicParsing="false" onAction="#closeApp" text="%topMenuBar.app.close" />
+                    <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeApp" text="%topMenuBar.app.close" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="%topMenuBar.help">
+                  <Menu fx:id="languageMenu" mnemonicParsing="false" text="%topMenuBar.language">
+                    <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onActionPolishRadioMenuItem" selected="true" text="%topMenuBar.app.language.pl">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="lang" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onActionEnglishRadioMenuItem" text="%topMenuBar.app.language.en" toggleGroup="$lang" />
+                    </items>
+                  </Menu>
+                <Menu fx:id="helpMenu" mnemonicParsing="false" text="%topMenuBar.help">
                   <items>
-                    <MenuItem mnemonicParsing="false" onAction="#showAboutDialog" text="%topMenuBar.help.about" />
+                    <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#showAboutDialog" text="%topMenuBar.help.about" />
                   </items>
                 </Menu>
               </menus>

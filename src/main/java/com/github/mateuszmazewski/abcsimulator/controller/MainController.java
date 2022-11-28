@@ -3,18 +3,25 @@ package com.github.mateuszmazewski.abcsimulator.controller;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AbstractTestFunction;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.RastriginFunction;
 import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
+import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
+import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.util.Locale;
 import java.util.Optional;
 
 public class MainController {
+
+    private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
 
     private Stage stage;
 
@@ -30,12 +37,31 @@ public class MainController {
     @FXML
     private ResultsController resultsController;
 
+    // ---------------------ONLY TO CHANGE THE LANGUAGE----------------------
+    @FXML
+    private Menu applicationMenu;
+
+    @FXML
+    private MenuItem closeMenuItem;
+
+    @FXML
+    private Menu helpMenu;
+
+    @FXML
+    private MenuItem aboutMenuItem;
+
+    @FXML
+    private Menu languageMenu;
+
     public FunctionChart2D getCenterChart() {
         return (FunctionChart2D) borderPane.getCenter();
     }
 
     @FXML
     private void initialize() {
+        messagesFactory.setResources(FxmlUtils.getResourceBundle(Locale.forLanguageTag("pl")));
+        initLanguageBindings();
+
         FunctionChart2D functionChart2D = new FunctionChart2D(new RastriginFunction());
         BorderPane.setMargin(functionChart2D, new Insets(10, 10, 10, 10));
         borderPane.setCenter(functionChart2D);
@@ -50,6 +76,24 @@ public class MainController {
         resultsController.setMainController(this);
         resultsController.showFuncBest(func.getMinValuePos(), func.getMinValue());
         resultsController.setResultsVisible(false);
+    }
+
+    private void initLanguageBindings() {
+        applicationMenu.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.app"));
+        helpMenu.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.help"));
+        closeMenuItem.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.app.close"));
+        aboutMenuItem.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.help.about"));
+        languageMenu.textProperty().bind(messagesFactory.getStringBinding("topMenuBar.language"));
+    }
+
+    @FXML
+    private void onActionPolishRadioMenuItem() {
+        messagesFactory.setResources(FxmlUtils.getResourceBundle(Locale.forLanguageTag("pl")));
+    }
+
+    @FXML
+    private void onActionEnglishRadioMenuItem() {
+        messagesFactory.setResources(FxmlUtils.getResourceBundle(Locale.ROOT));
     }
 
     @FXML

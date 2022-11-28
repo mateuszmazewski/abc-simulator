@@ -1,22 +1,20 @@
 package com.github.mateuszmazewski.abcsimulator.abc;
 
-import com.github.mateuszmazewski.abcsimulator.utils.FxmlUtils;
+import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
 
 public class ABCResultsIO {
 
+    private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
     private final Stage stage;
-    private final ResourceBundle messages;
 
     public ABCResultsIO(Stage stage) {
         this.stage = stage;
-        messages = FxmlUtils.getResourceBundle();
     }
 
     public void saveResults(ABCResults results) throws IOException {
@@ -25,9 +23,9 @@ public class ABCResultsIO {
         }
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(messages.getString("fileChooser.save.title"));
+        fileChooser.titleProperty().bind(messagesFactory.getStringBinding("fileChooser.save.title"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(messages.getString("fileChooser.extensionDescription"), "*.txt"));
+                new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription"), "*.txt"));
         fileChooser.setInitialFileName(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd_HH.mm.ss")));
         File chosenFile = fileChooser.showSaveDialog(stage);
 
@@ -86,9 +84,9 @@ public class ABCResultsIO {
 
     public ABCResults readResults() throws IOException, NumberFormatException, ArrayIndexOutOfBoundsException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(messages.getString("fileChooser.read.title"));
+        fileChooser.titleProperty().bind(messagesFactory.getStringBinding("fileChooser.read.title"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(messages.getString("fileChooser.extensionDescription"), "*.txt"));
+                new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription"), "*.txt"));
         File chosenFile = fileChooser.showOpenDialog(stage);
         ABCResults results = null;
 

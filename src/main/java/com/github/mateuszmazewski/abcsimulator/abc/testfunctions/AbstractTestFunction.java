@@ -1,6 +1,8 @@
 package com.github.mateuszmazewski.abcsimulator.abc.testfunctions;
 
 import com.github.mateuszmazewski.abcsimulator.utils.MathUtils;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public abstract class AbstractTestFunction {
 
@@ -13,7 +15,7 @@ public abstract class AbstractTestFunction {
     private final double[] defaultLowerBoundaries, defaultUpperBoundaries;
     private double[] minValuePos;
     private double minValue;
-    private String name;
+    private final StringProperty name = new SimpleStringProperty();
     private final boolean chartInLogScale;
 
     public AbstractTestFunction(int dim,
@@ -93,7 +95,7 @@ public abstract class AbstractTestFunction {
 
     @Override
     public String toString() {
-        return name;
+        return name.getValue();
     }
 
     public int getDim() {
@@ -125,11 +127,15 @@ public abstract class AbstractTestFunction {
     }
 
     public String getName() {
+        return name.get();
+    }
+
+    public StringProperty nameProperty() {
         return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name.set(name);
     }
 
     public boolean isChartInLogScale() {

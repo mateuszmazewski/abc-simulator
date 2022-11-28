@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.Locale;
+
 public class Main extends Application {
 
     private static final String MAIN_FXML = "/fxml/Main.fxml";
@@ -18,15 +20,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //Locale.setDefault(new Locale("pl"));
-        FXMLLoader mainLoader = FxmlUtils.getLoader(MAIN_FXML);
+        FXMLLoader mainLoader = FxmlUtils.getLoader(MAIN_FXML, Locale.forLanguageTag("pl"));
         Pane mainBorderPane = mainLoader.load();
 
         assert mainBorderPane != null;
         ((MainController) mainLoader.getController()).setStage(primaryStage);
         Scene scene = new Scene(mainBorderPane);
         primaryStage.setScene(scene);
-        primaryStage.setTitle(FxmlUtils.getResourceBundle().getString("app.title"));
+        primaryStage.setTitle(FxmlUtils.getResourceBundle(Locale.forLanguageTag("pl")).getString("app.title"));
         primaryStage.show();
     }
 }
