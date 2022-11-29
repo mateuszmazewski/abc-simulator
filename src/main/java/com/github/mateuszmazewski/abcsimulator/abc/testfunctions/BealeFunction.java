@@ -13,8 +13,7 @@ public class BealeFunction extends AbstractTestFunction {
     }
 
     @Override
-    public double getValue(double[] pos) {
-        validatePos(pos);
+    protected double calculateValue(double[] pos) {
         double x = pos[0];
         double y = pos[1];
         return Math.pow(1.5 - x + x * y, 2) + Math.pow(2.25 - x + x * Math.pow(y, 2), 2) + Math.pow(2.625 - x + x * Math.pow(y, 3), 2);

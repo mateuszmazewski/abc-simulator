@@ -68,7 +68,12 @@ public abstract class AbstractTestFunction {
         }
     }
 
-    public abstract double getValue(double[] pos);
+    public double getValue(double[] pos) {
+        validatePos(pos);
+        return calculateValue(pos);
+    }
+
+    protected abstract double calculateValue(double[] pos);
 
     public double getLog10Value(double[] pos) {
         double value = getValue(pos);

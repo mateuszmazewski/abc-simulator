@@ -13,8 +13,7 @@ public class RastriginFunction extends AbstractTestFunction {
     }
 
     @Override
-    public double getValue(double[] pos) {
-        validatePos(pos);
+    protected double calculateValue(double[] pos) {
         double x = pos[0];
         double y = pos[1];
         double A = 10.0, n = 2;

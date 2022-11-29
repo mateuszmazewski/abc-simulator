@@ -13,8 +13,7 @@ public class BoothFunction extends AbstractTestFunction {
     }
 
     @Override
-    public double getValue(double[] pos) {
-        validatePos(pos);
+    protected double calculateValue(double[] pos) {
         double x = pos[0];
         double y = pos[1];
         return Math.pow(x + 2 * y - 7.0, 2) + Math.pow(2 * x + y - 5.0, 2);

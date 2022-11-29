@@ -13,8 +13,7 @@ public class EggholderFunction extends AbstractTestFunction {
     }
 
     @Override
-    public double getValue(double[] pos) {
-        validatePos(pos);
+    protected double calculateValue(double[] pos) {
         double x = pos[0];
         double y = pos[1];
         return -(y + 47.0) * Math.sin(Math.sqrt(Math.abs(x / 2.0 + (y + 47.0))))

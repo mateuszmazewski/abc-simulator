@@ -13,8 +13,7 @@ public class MatyasFunction extends AbstractTestFunction {
     }
 
     @Override
-    public double getValue(double[] pos) {
-        validatePos(pos);
+    protected double calculateValue(double[] pos) {
         double x = pos[0];
         double y = pos[1];
         return 0.26 * (Math.pow(x, 2) + Math.pow(y, 2)) - 0.48 * x * y;

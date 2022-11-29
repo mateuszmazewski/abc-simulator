@@ -13,8 +13,7 @@ public class SphereFunction extends AbstractTestFunction {
     }
 
     @Override
-    public double getValue(double[] pos) {
-        validatePos(pos);
+    protected double calculateValue(double[] pos) {
         double x = pos[0];
         double y = pos[1];
         return Math.pow(x, 2) + Math.pow(y, 2);
