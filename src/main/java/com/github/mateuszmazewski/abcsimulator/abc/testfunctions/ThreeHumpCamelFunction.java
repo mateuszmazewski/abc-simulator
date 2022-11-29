@@ -8,7 +8,8 @@ public class ThreeHumpCamelFunction extends AbstractTestFunction {
                 new double[]{3.4, 3.4},
                 new double[]{0.0, 0.0},
                 0.0,
-                true);
+                true,
+                "threeHumpCamelFunction.name");
     }
 
     @Override

@@ -8,7 +8,8 @@ public class MatyasFunction extends AbstractTestFunction {
                 new double[]{10.0, 10.0},
                 new double[]{0.0, 0.0},
                 0.0,
-                true);
+                true,
+                "matyasFunction.name");
     }
 
     @Override

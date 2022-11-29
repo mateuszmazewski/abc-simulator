@@ -8,7 +8,8 @@ public class BealeFunction extends AbstractTestFunction {
                 new double[]{4.0, 4.0},
                 new double[]{3.0, 0.5},
                 0.0,
-                true);
+                true,
+                "bealeFunction.name");
     }
 
     @Override

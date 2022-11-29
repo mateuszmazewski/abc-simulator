@@ -1,6 +1,7 @@
 package com.github.mateuszmazewski.abcsimulator.abc.testfunctions;
 
 import com.github.mateuszmazewski.abcsimulator.utils.MathUtils;
+import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -23,7 +24,8 @@ public abstract class AbstractTestFunction {
                                 double[] defaultUpperBoundaries,
                                 double[] minValuePos,
                                 double minValue,
-                                boolean chartInLogScale) {
+                                boolean chartInLogScale,
+                                String nameBindingKey) {
 
         validateArgs(dim, defaultLowerBoundaries, defaultUpperBoundaries, minValuePos);
 
@@ -35,6 +37,9 @@ public abstract class AbstractTestFunction {
         this.minValuePos = minValuePos;
         this.minValue = minValue;
         this.chartInLogScale = chartInLogScale;
+
+        ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
+        nameProperty().bind(messagesFactory.getStringBinding(nameBindingKey));
     }
 
     private void validateArgs(int dim,

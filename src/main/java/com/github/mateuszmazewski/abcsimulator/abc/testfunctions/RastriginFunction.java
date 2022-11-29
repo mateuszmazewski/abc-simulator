@@ -8,7 +8,8 @@ public class RastriginFunction extends AbstractTestFunction {
                 new double[]{5.12, 5.12},
                 new double[]{0.0, 0.0},
                 0.0,
-                false);
+                false,
+                "rastriginFunction.name");
     }
 
     @Override

@@ -8,7 +8,8 @@ public class BoothFunction extends AbstractTestFunction {
                 new double[]{10.0, 10.0},
                 new double[]{1.0, 3.0},
                 0.0,
-                true);
+                true,
+                "boothFunction.name");
     }
 
     @Override

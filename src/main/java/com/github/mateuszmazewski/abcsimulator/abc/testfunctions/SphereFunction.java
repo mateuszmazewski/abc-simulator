@@ -8,7 +8,8 @@ public class SphereFunction extends AbstractTestFunction {
                 new double[]{2.0, 2.0},
                 new double[]{0.0, 0.0},
                 0.0,
-                false);
+                false,
+                "sphereFunction.name");
     }
 
     @Override

@@ -8,7 +8,8 @@ public class RosenbrockFunction extends AbstractTestFunction {
                 new double[]{2.0, 2.0},
                 new double[]{1.0, 1.0},
                 0.0,
-                true);
+                true,
+                "rosenbrockFunction.name");
     }
 
     @Override

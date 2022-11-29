@@ -8,7 +8,8 @@ public class EggholderFunction extends AbstractTestFunction {
                 new double[]{512.0, 512.0},
                 new double[]{512.0, 404.2319},
                 -959.6407,
-                false);
+                false,
+                "eggholderFunction.name");
     }
 
     @Override

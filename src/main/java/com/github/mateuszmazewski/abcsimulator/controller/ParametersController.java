@@ -125,43 +125,33 @@ public class ParametersController {
         initLanguageBindings();
 
         AbstractTestFunction rastrigin = new RastriginFunction();
-        rastrigin.nameProperty().bind(messagesFactory.getStringBinding("rastriginFunction.name"));
         testFunctionObservableMap.put(rastrigin.getClass().getSimpleName(), rastrigin);
 
         AbstractTestFunction ackley = new AckleyFunction();
-        ackley.nameProperty().bind(messagesFactory.getStringBinding("ackleyFunction.name"));
         testFunctionObservableMap.put(ackley.getClass().getSimpleName(), ackley);
 
         AbstractTestFunction sphere = new SphereFunction();
-        sphere.nameProperty().bind(messagesFactory.getStringBinding("sphereFunction.name"));
         testFunctionObservableMap.put(sphere.getClass().getSimpleName(), sphere);
 
         AbstractTestFunction rosenbrock = new RosenbrockFunction();
-        rosenbrock.nameProperty().bind(messagesFactory.getStringBinding("rosenbrockFunction.name"));
         testFunctionObservableMap.put(rosenbrock.getClass().getSimpleName(), rosenbrock);
 
         AbstractTestFunction beale = new BealeFunction();
-        beale.nameProperty().bind(messagesFactory.getStringBinding("bealeFunction.name"));
         testFunctionObservableMap.put(beale.getClass().getSimpleName(), beale);
 
         AbstractTestFunction goldsteinPrice = new GoldsteinPriceFunction();
-        goldsteinPrice.nameProperty().bind(messagesFactory.getStringBinding("goldsteinPriceFunction.name"));
         testFunctionObservableMap.put(goldsteinPrice.getClass().getSimpleName(), goldsteinPrice);
 
         AbstractTestFunction booth = new BoothFunction();
-        booth.nameProperty().bind(messagesFactory.getStringBinding("boothFunction.name"));
         testFunctionObservableMap.put(booth.getClass().getSimpleName(), booth);
 
         AbstractTestFunction matyas = new MatyasFunction();
-        matyas.nameProperty().bind(messagesFactory.getStringBinding("matyasFunction.name"));
         testFunctionObservableMap.put(matyas.getClass().getSimpleName(), matyas);
 
         AbstractTestFunction threeHumpCamel = new ThreeHumpCamelFunction();
-        threeHumpCamel.nameProperty().bind(messagesFactory.getStringBinding("threeHumpCamelFunction.name"));
         testFunctionObservableMap.put(threeHumpCamel.getClass().getSimpleName(), threeHumpCamel);
 
         AbstractTestFunction eggholderFunction = new EggholderFunction();
-        eggholderFunction.nameProperty().bind(messagesFactory.getStringBinding("eggholderFunction.name"));
         testFunctionObservableMap.put(eggholderFunction.getClass().getSimpleName(), eggholderFunction);
 
         funcComboBox.setItems(FXCollections.observableArrayList(testFunctionObservableMap.values()));
