@@ -114,8 +114,11 @@ public class ParametersController {
     // --------------------Injected by MainController--------------------
     private MainController mainController;
     private Slider iterSlider;
+
+    // ------------------------------------------------------------------
     private ChangeListener<Number> sliderValueChangeListener;
     private boolean rangeChangeListenersActive = true;
+    private boolean funcComboBoxChangeListenerActive = true;
 
     @FXML
     private void initialize() {
@@ -162,6 +165,17 @@ public class ParametersController {
         testFunctionObservableMap.put(eggholderFunction.getClass().getSimpleName(), eggholderFunction);
 
         funcComboBox.setItems(FXCollections.observableArrayList(testFunctionObservableMap.values()));
+
+        messagesFactory.resourcesProperty().addListener(e -> {
+            // Set items again with changed names
+            funcComboBoxChangeListenerActive = false;
+            AbstractTestFunction selected = funcComboBox.getSelectionModel().getSelectedItem();
+            funcComboBox.setItems(null);
+            funcComboBox.setItems(FXCollections.observableArrayList(testFunctionObservableMap.values()));
+            funcComboBox.getSelectionModel().select(selected);
+            funcComboBoxChangeListenerActive = true;
+        });
+
         func.bind(funcComboBox.valueProperty());
         funcComboBox.getSelectionModel().select(rastrigin);
         onActionFuncComboBox();
@@ -315,14 +329,16 @@ public class ParametersController {
 
     @FXML
     private void onActionFuncComboBox() {
-        if (mainController != null) {
-            mainController.getCenterChart().clearBees();
-            iterSlider.setDisable(true);
-            mainController.getResultsController().showFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
-            mainController.getResultsController().setResultsVisible(false);
+        if (funcComboBoxChangeListenerActive) {
+            if (mainController != null) {
+                mainController.getCenterChart().clearBees();
+                iterSlider.setDisable(true);
+                mainController.getResultsController().showFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
+                mainController.getResultsController().setResultsVisible(false);
+            }
+            func.getValue().restoreDefaultRanges();
+            setRangeTextFields();
         }
-        func.getValue().restoreDefaultRanges();
-        setRangeTextFields();
     }
 
     private void setRangeTextFields() {
