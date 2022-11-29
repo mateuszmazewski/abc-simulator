@@ -123,36 +123,7 @@ public class ParametersController {
     @FXML
     private void initialize() {
         initLanguageBindings();
-
-        AbstractTestFunction rastrigin = new RastriginFunction();
-        testFunctionObservableMap.put(rastrigin.getClass().getSimpleName(), rastrigin);
-
-        AbstractTestFunction ackley = new AckleyFunction();
-        testFunctionObservableMap.put(ackley.getClass().getSimpleName(), ackley);
-
-        AbstractTestFunction sphere = new SphereFunction();
-        testFunctionObservableMap.put(sphere.getClass().getSimpleName(), sphere);
-
-        AbstractTestFunction rosenbrock = new RosenbrockFunction();
-        testFunctionObservableMap.put(rosenbrock.getClass().getSimpleName(), rosenbrock);
-
-        AbstractTestFunction beale = new BealeFunction();
-        testFunctionObservableMap.put(beale.getClass().getSimpleName(), beale);
-
-        AbstractTestFunction goldsteinPrice = new GoldsteinPriceFunction();
-        testFunctionObservableMap.put(goldsteinPrice.getClass().getSimpleName(), goldsteinPrice);
-
-        AbstractTestFunction booth = new BoothFunction();
-        testFunctionObservableMap.put(booth.getClass().getSimpleName(), booth);
-
-        AbstractTestFunction matyas = new MatyasFunction();
-        testFunctionObservableMap.put(matyas.getClass().getSimpleName(), matyas);
-
-        AbstractTestFunction threeHumpCamel = new ThreeHumpCamelFunction();
-        testFunctionObservableMap.put(threeHumpCamel.getClass().getSimpleName(), threeHumpCamel);
-
-        AbstractTestFunction eggholderFunction = new EggholderFunction();
-        testFunctionObservableMap.put(eggholderFunction.getClass().getSimpleName(), eggholderFunction);
+        initTestFunctionObservableMap();
 
         funcComboBox.setItems(FXCollections.observableArrayList(testFunctionObservableMap.values()));
 
@@ -167,7 +138,7 @@ public class ParametersController {
         });
 
         func.bind(funcComboBox.valueProperty());
-        funcComboBox.getSelectionModel().select(rastrigin);
+        funcComboBox.getSelectionModel().select(testFunctionObservableMap.get(RastriginFunction.class.getSimpleName()));
         onActionFuncComboBox();
 
         startButton.disableProperty().bind(wrongParameters);
@@ -198,6 +169,19 @@ public class ParametersController {
         xRangeToTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.xRangeToTextField"));
         yRangeFromTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.yRangeFromTextField"));
         yRangeToTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.yRangeToTextField"));
+    }
+
+    private void initTestFunctionObservableMap() {
+        testFunctionObservableMap.put(RastriginFunction.class.getSimpleName(), new RastriginFunction());
+        testFunctionObservableMap.put(AckleyFunction.class.getSimpleName(), new AckleyFunction());
+        testFunctionObservableMap.put(SphereFunction.class.getSimpleName(), new SphereFunction());
+        testFunctionObservableMap.put(RosenbrockFunction.class.getSimpleName(), new RosenbrockFunction());
+        testFunctionObservableMap.put(BealeFunction.class.getSimpleName(), new BealeFunction());
+        testFunctionObservableMap.put(GoldsteinPriceFunction.class.getSimpleName(), new GoldsteinPriceFunction());
+        testFunctionObservableMap.put(BoothFunction.class.getSimpleName(), new BoothFunction());
+        testFunctionObservableMap.put(MatyasFunction.class.getSimpleName(), new MatyasFunction());
+        testFunctionObservableMap.put(ThreeHumpCamelFunction.class.getSimpleName(), new ThreeHumpCamelFunction());
+        testFunctionObservableMap.put(EggholderFunction.class.getSimpleName(), new EggholderFunction());
     }
 
     private void addValueChangeListenerToTextFields() {
