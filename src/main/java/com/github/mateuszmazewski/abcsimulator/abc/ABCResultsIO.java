@@ -1,5 +1,6 @@
 package com.github.mateuszmazewski.abcsimulator.abc;
 
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.TestFunctionsList;
 import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -7,9 +8,24 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class ABCResultsIO {
 
+    public static final String FUNCTION_PARAM = "function";
+    public static final String X_RANGE_PARAM = "x_range";
+    public static final String Y_RANGE_PARAM = "y_range";
+    public static final String ITERATIONS_PARAM = "iterations";
+    public static final String SWARM_SIZE_PARAM = "swarm_size";
+    public static final String TRIALS_LIMIT_PARAM = "trials_limit";
+    public static final String MIN_POSSIBLE_VALUE_PARAM = "min_possible_value";
+    public static final String MIN_POSSIBLE_VALUE_POSITION_PARAM = "min_possible_value_position";
+    public static final String MIN_FOUND_VALUE_PARAM = "min_found_value";
+    public static final String MIN_FOUND_VALUE_POSITION_PARAM = "min_found_value_position";
     private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
     private final Stage stage;
 
@@ -44,20 +60,20 @@ public class ABCResultsIO {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 
-        writer.write("function = " + results.getTestFunctionName());
-        writer.write("\nx_range = " + results.getLowerBoundaries()[0] + " " + results.getUpperBoundaries()[0]);
-        writer.write("\ny_range = " + results.getLowerBoundaries()[1] + " " + results.getUpperBoundaries()[1]);
-        writer.write("\niterations = " + maxIter);
-        writer.write("\nswarm_size = " + swarmSize);
-        writer.write("\ntrials_limit = " + results.getTrialsLimit());
+        writer.write(FUNCTION_PARAM + " = " + results.getTestFunctionName());
+        writer.write("\n" + X_RANGE_PARAM + " = " + results.getLowerBoundaries()[0] + " " + results.getUpperBoundaries()[0]);
+        writer.write("\n" + Y_RANGE_PARAM + " = " + results.getLowerBoundaries()[1] + " " + results.getUpperBoundaries()[1]);
+        writer.write("\n" + ITERATIONS_PARAM + " = " + maxIter);
+        writer.write("\n" + SWARM_SIZE_PARAM + " = " + swarmSize);
+        writer.write("\n" + TRIALS_LIMIT_PARAM + " = " + results.getTrialsLimit());
 
         writer.write("\n\n# Best possible solution");
-        writer.write("\nmin_possible_value = " + results.getMinValue());
-        writer.write("\nmin_possible_value_position = " + results.getMinValuePos()[0] + " " + results.getMinValuePos()[1]);
+        writer.write("\n" + MIN_POSSIBLE_VALUE_PARAM + " = " + results.getMinValue());
+        writer.write("\n" + MIN_POSSIBLE_VALUE_POSITION_PARAM + " = " + results.getMinValuePos()[0] + " " + results.getMinValuePos()[1]);
 
         writer.write("\n\n# Best found solution");
-        writer.write("\nmin_found_value = " + results.getFoundMinValue());
-        writer.write("\nmin_found_value_position = " + results.getFoundMinValuePos()[0] + " " + results.getFoundMinValuePos()[1]);
+        writer.write("\n" + MIN_FOUND_VALUE_PARAM + " = " + results.getFoundMinValue());
+        writer.write("\n" + MIN_FOUND_VALUE_POSITION_PARAM + " = " + results.getFoundMinValuePos()[0] + " " + results.getFoundMinValuePos()[1]);
 
         writer.write("\n\nIterations");
 
@@ -99,6 +115,7 @@ public class ABCResultsIO {
     private ABCResults readFromFile(File file) throws IOException, NumberFormatException, ArrayIndexOutOfBoundsException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         ABCResults results = new ABCResults();
+        Map<String, Boolean> foundParametersInFileMap = initFoundParametersInFileMap();
 
         String line;
         String[] splitLine;
@@ -121,44 +138,93 @@ public class ABCResultsIO {
             }
 
             switch (splitLine[0]) {
-                case "function":
+                case FUNCTION_PARAM:
+                    if (!TestFunctionsList.allTestFunctionNames.contains(splitLine[2])) {
+                        throw new IOException("Unknown function: " + splitLine[2]);
+                    }
                     results.setTestFunctionName(splitLine[2]);
+                    foundParametersInFileMap.put(FUNCTION_PARAM, true);
                     break;
-                case "x_range":
+                case X_RANGE_PARAM:
+                    if (splitLineLength != 4) {
+                        throw new IOException("Wrong line format: line " + lineNumber);
+                    }
                     results.getLowerBoundaries()[0] = Double.parseDouble(splitLine[2]);
                     results.getUpperBoundaries()[0] = Double.parseDouble(splitLine[3]);
+                    if (results.getLowerBoundaries()[0] > results.getUpperBoundaries()[0]) {
+                        throw new IOException("Wrong range <" + results.getLowerBoundaries()[0] + ", " + results.getUpperBoundaries()[0] + ">, line: " + lineNumber);
+                    }
+                    foundParametersInFileMap.put(X_RANGE_PARAM, true);
                     break;
-                case "y_range":
+                case Y_RANGE_PARAM:
+                    if (splitLineLength != 4) {
+                        throw new IOException("Wrong line format: line " + lineNumber);
+                    }
                     results.getLowerBoundaries()[1] = Double.parseDouble(splitLine[2]);
                     results.getUpperBoundaries()[1] = Double.parseDouble(splitLine[3]);
+                    if (results.getLowerBoundaries()[1] > results.getUpperBoundaries()[1]) {
+                        throw new IOException("Wrong range <" + results.getLowerBoundaries()[1] + ", " + results.getUpperBoundaries()[1] + ">, line: " + lineNumber);
+                    }
+                    foundParametersInFileMap.put(Y_RANGE_PARAM, true);
                     break;
-                case "iterations":
+                case ITERATIONS_PARAM:
                     results.setMaxIter(Integer.parseInt(splitLine[2]));
+                    foundParametersInFileMap.put(ITERATIONS_PARAM, true);
                     break;
-                case "swarm_size":
+                case SWARM_SIZE_PARAM:
                     results.setSwarmSize(Integer.parseInt(splitLine[2]));
+                    foundParametersInFileMap.put(SWARM_SIZE_PARAM, true);
                     break;
-                case "trials_limit":
+                case TRIALS_LIMIT_PARAM:
                     results.setTrialsLimit(Integer.parseInt(splitLine[2]));
+                    foundParametersInFileMap.put(TRIALS_LIMIT_PARAM, true);
                     break;
-                case "min_possible_value":
+                case MIN_POSSIBLE_VALUE_PARAM:
                     results.setMinValue(Double.parseDouble(splitLine[2]));
+                    foundParametersInFileMap.put(MIN_POSSIBLE_VALUE_PARAM, true);
                     break;
-                case "min_possible_value_position":
+                case MIN_POSSIBLE_VALUE_POSITION_PARAM:
                     results.getMinValuePos()[0] = Double.parseDouble(splitLine[2]);
                     results.getMinValuePos()[1] = Double.parseDouble(splitLine[3]);
+                    foundParametersInFileMap.put(MIN_POSSIBLE_VALUE_POSITION_PARAM, true);
                     break;
-                case "min_found_value":
+                case MIN_FOUND_VALUE_PARAM:
                     results.setFoundMinValue(Double.parseDouble(splitLine[2]));
+                    foundParametersInFileMap.put(MIN_FOUND_VALUE_PARAM, true);
                     break;
-                case "min_found_value_position":
+                case MIN_FOUND_VALUE_POSITION_PARAM:
                     results.getFoundMinValuePos()[0] = Double.parseDouble(splitLine[2]);
                     results.getFoundMinValuePos()[1] = Double.parseDouble(splitLine[3]);
+                    foundParametersInFileMap.put(MIN_FOUND_VALUE_POSITION_PARAM, true);
                     break;
                 default:
                     throw new IOException("Wrong line format: line " + lineNumber);
             }
         }
+
+        List<String> missingParams = new ArrayList<>();
+        for (Map.Entry<String, Boolean> entry : foundParametersInFileMap.entrySet()) {
+            if (!entry.getValue()) {
+                missingParams.add(entry.getKey());
+            }
+        }
+        if (!missingParams.isEmpty()) {
+            throw new IOException("File is missing required parameters: " + String.join(", ", missingParams));
+        }
+
+        if (results.getMaxIter() < ArtificialBeeColony.MAX_ITER_LOWER_LIMIT || results.getMaxIter() > ArtificialBeeColony.MAX_ITER_UPPER_LIMIT) {
+            throw new IOException("Parameter " + ITERATIONS_PARAM + " must be in range" +
+                    " <" + ArtificialBeeColony.MAX_ITER_LOWER_LIMIT + ", " + ArtificialBeeColony.MAX_ITER_UPPER_LIMIT + ">");
+        }
+        if (results.getSwarmSize() < ArtificialBeeColony.MIN_SWARM_SIZE || results.getSwarmSize() > ArtificialBeeColony.MAX_SWARM_SIZE) {
+            throw new IOException("Parameter " + SWARM_SIZE_PARAM + " must be in range" +
+                    " <" + ArtificialBeeColony.MIN_SWARM_SIZE + ", " + ArtificialBeeColony.MAX_SWARM_SIZE + ">");
+        }
+        if (results.getTrialsLimit() < ArtificialBeeColony.MIN_TRIALS_LIMIT || results.getTrialsLimit() > ArtificialBeeColony.MAX_TRIALS_LIMIT) {
+            throw new IOException("Parameter " + TRIALS_LIMIT_PARAM + " must be in range" +
+                    " <" + ArtificialBeeColony.MIN_TRIALS_LIMIT + ", " + ArtificialBeeColony.MAX_TRIALS_LIMIT + ">");
+        }
+
 
         results.setBestFoodSources(new double[results.getMaxIter() + 1][2]);
         results.setAllFoodSources(new double[results.getMaxIter() + 1][results.getSwarmSize()][2]);
@@ -197,5 +263,22 @@ public class ABCResultsIO {
         }
 
         return results;
+    }
+
+    private Map<String, Boolean> initFoundParametersInFileMap() {
+        Map<String, Boolean> map = new HashMap<>();
+        Stream.of(
+                FUNCTION_PARAM,
+                X_RANGE_PARAM,
+                Y_RANGE_PARAM,
+                ITERATIONS_PARAM,
+                SWARM_SIZE_PARAM,
+                TRIALS_LIMIT_PARAM,
+                MIN_POSSIBLE_VALUE_PARAM,
+                MIN_POSSIBLE_VALUE_POSITION_PARAM,
+                MIN_FOUND_VALUE_PARAM,
+                MIN_FOUND_VALUE_POSITION_PARAM
+        ).forEach(param -> map.put(param, false));
+        return map;
     }
 }

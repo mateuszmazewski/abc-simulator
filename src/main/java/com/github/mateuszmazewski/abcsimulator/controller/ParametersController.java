@@ -2,7 +2,10 @@ package com.github.mateuszmazewski.abcsimulator.controller;
 
 import com.github.mateuszmazewski.abcsimulator.abc.ABCResults;
 import com.github.mateuszmazewski.abcsimulator.abc.ArtificialBeeColony;
-import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.*;
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AbstractTestFunction;
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.RastriginFunction;
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.TestFunctionsList;
+import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.beans.property.BooleanProperty;
@@ -15,11 +18,10 @@ import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.IOException;
 import java.util.stream.Stream;
 
 public class ParametersController {
-
-    private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
 
     private static final int SLIDER_MAJOR_TICKS_COUNT = 20;
     private static final int SLIDER_BY_ONE_TICKS_LIMIT = 30;
@@ -105,6 +107,7 @@ public class ParametersController {
 
     // -----------------------------------------------------------------
 
+    private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
     private final ObservableMap<String, AbstractTestFunction> testFunctionObservableMap = FXCollections.observableHashMap();
     private final ObjectProperty<AbstractTestFunction> func = new SimpleObjectProperty<>();
     private final String textFieldDefaultStyle = new TextField().getStyle();
@@ -172,16 +175,13 @@ public class ParametersController {
     }
 
     private void initTestFunctionObservableMap() {
-        testFunctionObservableMap.put(RastriginFunction.class.getSimpleName(), new RastriginFunction());
-        testFunctionObservableMap.put(AckleyFunction.class.getSimpleName(), new AckleyFunction());
-        testFunctionObservableMap.put(SphereFunction.class.getSimpleName(), new SphereFunction());
-        testFunctionObservableMap.put(RosenbrockFunction.class.getSimpleName(), new RosenbrockFunction());
-        testFunctionObservableMap.put(BealeFunction.class.getSimpleName(), new BealeFunction());
-        testFunctionObservableMap.put(GoldsteinPriceFunction.class.getSimpleName(), new GoldsteinPriceFunction());
-        testFunctionObservableMap.put(BoothFunction.class.getSimpleName(), new BoothFunction());
-        testFunctionObservableMap.put(MatyasFunction.class.getSimpleName(), new MatyasFunction());
-        testFunctionObservableMap.put(ThreeHumpCamelFunction.class.getSimpleName(), new ThreeHumpCamelFunction());
-        testFunctionObservableMap.put(EggholderFunction.class.getSimpleName(), new EggholderFunction());
+        TestFunctionsList.allTestFunctionClasses.forEach(funcClass -> {
+            try {
+                testFunctionObservableMap.put(funcClass.getSimpleName(), funcClass.newInstance());
+            } catch (InstantiationException | IllegalAccessException e) {
+                DialogUtils.errorDialog(e.getClass().getSimpleName() + ": " + e.getMessage());
+            }
+        });
     }
 
     private void addValueChangeListenerToTextFields() {
@@ -383,8 +383,11 @@ public class ParametersController {
         mainController.getCenterChart().drawBees(results.getAllFoodSources()[maxIter]);
     }
 
-    public void initResults(ABCResults results) {
+    public void initResults(ABCResults results) throws IOException {
         AbstractTestFunction func = testFunctionObservableMap.get(results.getTestFunctionName());
+        if (func == null) {
+            throw new IOException("Unknown function: " + results.getTestFunctionName());
+        }
         funcComboBox.getSelectionModel().select(func);
 
         func.getLowerBoundaries()[0] = results.getLowerBoundaries()[0];
@@ -394,6 +397,8 @@ public class ParametersController {
         func.setMinValue(results.getMinValue());
         func.setMinValuePos(results.getMinValuePos());
         setRangeTextFields();
+        handleXRange(xRangeFromTextField);
+        handleYRange(yRangeFromTextField);
 
         mainController.getResultsController().showResults(results.getMaxIter());
 
