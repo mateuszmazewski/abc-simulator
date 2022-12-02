@@ -305,7 +305,7 @@ public class ParametersController {
     private void onActionFuncComboBox() {
         if (funcComboBoxChangeListenerActive) {
             if (mainController != null) {
-                mainController.getCenterChart().clearBees();
+                mainController.getCenterChart().clearFoodSources();
                 iterSlider.setDisable(true);
                 mainController.getResultsController().showFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
                 mainController.getResultsController().setResultsVisible(false);
@@ -374,13 +374,13 @@ public class ParametersController {
         }
         sliderValueChangeListener = (observable, oldValue, newValue) -> {
             int iterNumber = newValue.intValue();
-            mainController.getCenterChart().drawBees(results.getAllFoodSources()[iterNumber]);
+            mainController.getCenterChart().drawFoodSources(results.getAllFoodSources()[iterNumber]);
             mainController.getResultsController().showResults(iterNumber);
         };
 
         iterSlider.valueProperty().addListener(sliderValueChangeListener);
         iterSlider.setValue(maxIter);
-        mainController.getCenterChart().drawBees(results.getAllFoodSources()[maxIter]);
+        mainController.getCenterChart().drawFoodSources(results.getAllFoodSources()[maxIter]);
     }
 
     public void initResults(ABCResults results) throws IOException {

@@ -125,13 +125,13 @@ public class ArtificialBeeColony {
         int partner;
         double x, xp, fi, xNew;
 
-        // Partner bee must be different from current bee
+        // Partner food source must be different from the current food source
         do {
             partner = rng.nextInt(foodSourcesCount);
         } while (partner == i);
 
-        x = foodSources[i][varToChange]; // current bee's x_i
-        xp = foodSources[partner][varToChange]; // partner's x_i
+        x = foodSources[i][varToChange]; // current food source's x_i
+        xp = foodSources[partner][varToChange]; // partner food source's x_i
         fi = 2 * rng.nextDouble() - 1.0;
         xNew = x + fi * (x - xp);
         xNew = checkBoundaries(varToChange, xNew);

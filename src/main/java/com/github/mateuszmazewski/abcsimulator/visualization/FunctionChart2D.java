@@ -18,18 +18,18 @@ import java.util.stream.IntStream;
 
 public class FunctionChart2D extends GridPane {
 
-    private static final double BEE_SIZE = 10.0;
+    private static final double FOOD_SOURCE_SIZE = 10.0;
     private static final double MINIMUM_MARK_SIZE = 12.0;
 
     private final Canvas chartCanvas = new Canvas();
-    private final Canvas beesCanvas = new Canvas();
+    private final Canvas foodSourcesCanvas = new Canvas();
     private final FunctionChartScale functionChartScale;
     private final FunctionChartAxes functionChartAxes;
     private final Canvas xAxisCanvas, yAxisCanvas, scaleCanvas, scaleAxisCanvas;
     private double chartCanvasWidth, chartCanvasHeight;
 
-    // -------------------------------BEES-------------------------------
-    private double[][] currentIterBees;
+    // ---------------------------FOOD SOURCES---------------------------
+    private double[][] currentIterFoodSources;
 
     // -----------------------------FUNCTION-----------------------------
     private AbstractTestFunction testFunction;
@@ -63,11 +63,11 @@ public class FunctionChart2D extends GridPane {
     }
 
     private void initGridPane() {
-        getChildren().addAll(chartCanvas, beesCanvas, xAxisCanvas, yAxisCanvas, scaleCanvas, scaleAxisCanvas);
+        getChildren().addAll(chartCanvas, foodSourcesCanvas, xAxisCanvas, yAxisCanvas, scaleCanvas, scaleAxisCanvas);
         GridPane.setHalignment(xAxisCanvas, HPos.RIGHT);
         GridPane.setValignment(yAxisCanvas, VPos.TOP);
         GridPane.setConstraints(chartCanvas, 1, 0, 1, 1);
-        GridPane.setConstraints(beesCanvas, 1, 0, 1, 1);
+        GridPane.setConstraints(foodSourcesCanvas, 1, 0, 1, 1);
         GridPane.setConstraints(xAxisCanvas, 0, 1, 2, 1);
         GridPane.setConstraints(yAxisCanvas, 0, 0, 1, 2);
         GridPane.setConstraints(scaleCanvas, 2, 0, 1, 1);
@@ -79,8 +79,8 @@ public class FunctionChart2D extends GridPane {
     private void initCanvases() {
         chartCanvas.widthProperty().bind(chartCanvas.heightProperty()); // chartCanvas is square
         chartCanvas.heightProperty().bind(heightProperty().multiply(0.95));
-        beesCanvas.widthProperty().bind(chartCanvas.widthProperty());
-        beesCanvas.heightProperty().bind(chartCanvas.heightProperty());
+        foodSourcesCanvas.widthProperty().bind(chartCanvas.widthProperty());
+        foodSourcesCanvas.heightProperty().bind(chartCanvas.heightProperty());
         chartCanvasWidth = chartCanvas.getWidth();
         chartCanvasHeight = chartCanvas.getHeight();
     }
@@ -100,17 +100,17 @@ public class FunctionChart2D extends GridPane {
         }
     }
 
-    public void drawBees(double[][] foodSources) {
-        currentIterBees = foodSources; // In case user resizes the window, we need to draw bees again
+    public void drawFoodSources(double[][] foodSources) {
+        currentIterFoodSources = foodSources; // In case user resizes the window, we need to draw food sources again
         double[] canvasXY;
-        double offset = BEE_SIZE / 2.0; // Bee's position is the circle's center (not upper-left vertex)
-        GraphicsContext beesGraphics = beesCanvas.getGraphicsContext2D();
-        beesGraphics.setFill(Color.WHITE);
-        beesCanvas.getGraphicsContext2D().clearRect(0, 0, beesCanvas.getWidth(), beesCanvas.getHeight());
+        double offset = FOOD_SOURCE_SIZE / 2.0; // Food source's position is the circle's center (not upper-left vertex)
+        GraphicsContext foodSourcesGraphics = foodSourcesCanvas.getGraphicsContext2D();
+        foodSourcesGraphics.setFill(Color.WHITE);
+        foodSourcesCanvas.getGraphicsContext2D().clearRect(0, 0, foodSourcesCanvas.getWidth(), foodSourcesCanvas.getHeight());
 
         for (double[] foodSource : foodSources) {
             canvasXY = getCanvasXY(foodSource);
-            beesGraphics.fillOval(canvasXY[0] - offset, canvasXY[1] - offset, BEE_SIZE, BEE_SIZE);
+            foodSourcesGraphics.fillOval(canvasXY[0] - offset, canvasXY[1] - offset, FOOD_SOURCE_SIZE, FOOD_SOURCE_SIZE);
         }
     }
 
@@ -126,9 +126,9 @@ public class FunctionChart2D extends GridPane {
         funcGraphics.strokeLine(canvasXY[0] + offset, canvasXY[1] - offset, canvasXY[0] - offset, canvasXY[1] + offset);
     }
 
-    public void clearBees() {
-        currentIterBees = null;
-        beesCanvas.getGraphicsContext2D().clearRect(0, 0, beesCanvas.getWidth(), beesCanvas.getHeight());
+    public void clearFoodSources() {
+        currentIterFoodSources = null;
+        foodSourcesCanvas.getGraphicsContext2D().clearRect(0, 0, foodSourcesCanvas.getWidth(), foodSourcesCanvas.getHeight());
     }
 
     private void updateFuncValues() {
@@ -229,8 +229,8 @@ public class FunctionChart2D extends GridPane {
         functionChartAxes.drawAxes(x1, x2, y1, y2);
         functionChartScale.drawScale(funcMinValue, funcMaxValue);
         functionChartScale.drawScaleAxis(funcMinValue, funcMaxValue, testFunction.isChartInLogScale());
-        if (currentIterBees != null) {
-            drawBees(currentIterBees);
+        if (currentIterFoodSources != null) {
+            drawFoodSources(currentIterFoodSources);
         }
     }
 }

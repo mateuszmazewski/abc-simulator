@@ -85,13 +85,13 @@ public class ABCResultsIO {
         }
 
         writer.write("\n# All solutions in each iteration");
-        writer.write("\niteration\tbee_number\tposition_x\tposition_y\tvalue\n");
+        writer.write("\niteration\tfood_source_number\tposition_x\tposition_y\tvalue\n");
 
-        double[] beePos;
+        double[] foodSourcePos;
         for (int iter = 0; iter <= maxIter; iter++) {
-            for (int bee = 0; bee < foodSourcesCount; bee++) {
-                beePos = allFoodSources[iter][bee];
-                writer.write(iter + "\t" + bee + "\t" + beePos[0] + "\t" + beePos[1] + "\t" + allFx[iter][bee] + "\n");
+            for (int foodSource = 0; foodSource < foodSourcesCount; foodSource++) {
+                foodSourcePos = allFoodSources[iter][foodSource];
+                writer.write(iter + "\t" + foodSource + "\t" + foodSourcePos[0] + "\t" + foodSourcePos[1] + "\t" + allFx[iter][foodSource] + "\n");
             }
         }
 
@@ -230,7 +230,7 @@ public class ABCResultsIO {
         results.setAllFoodSources(new double[results.getMaxIter() + 1][results.getFoodSourcesCount()][2]);
         results.setBestFx(new double[results.getMaxIter() + 1]);
         results.setAllFx(new double[results.getMaxIter() + 1][results.getFoodSourcesCount()]);
-        int iter, bee;
+        int iter, foodSource;
 
         while ((line = reader.readLine()) != null) {
             lineNumber++;
@@ -252,11 +252,11 @@ public class ABCResultsIO {
                 results.getBestFx()[iter] = Double.parseDouble(splitLine[3]);
             } else if (splitLineLength == 5) {
                 iter = Integer.parseInt(splitLine[0]);
-                bee = Integer.parseInt(splitLine[1]);
+                foodSource = Integer.parseInt(splitLine[1]);
 
-                results.getAllFoodSources()[iter][bee][0] = Double.parseDouble(splitLine[2]);
-                results.getAllFoodSources()[iter][bee][1] = Double.parseDouble(splitLine[3]);
-                results.getAllFx()[iter][bee] = Double.parseDouble(splitLine[4]);
+                results.getAllFoodSources()[iter][foodSource][0] = Double.parseDouble(splitLine[2]);
+                results.getAllFoodSources()[iter][foodSource][1] = Double.parseDouble(splitLine[3]);
+                results.getAllFx()[iter][foodSource] = Double.parseDouble(splitLine[4]);
             } else {
                 throw new IOException("Wrong line format: line " + lineNumber);
             }
