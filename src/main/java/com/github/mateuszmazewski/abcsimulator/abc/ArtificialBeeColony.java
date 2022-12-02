@@ -120,12 +120,12 @@ public class ArtificialBeeColony {
         }
     }
 
-    private void updateFoodSource(int i) {
+    private boolean updateFoodSource(int i) {
         int varToChange = rng.nextInt(dim);
         double xNew = updateSelectedVariable(i, varToChange);
         double[] newPos = foodSources[i].clone();
         newPos[varToChange] = xNew;
-        greedySelection(i, newPos);
+        return greedySelection(i, newPos);
     }
 
     private double updateSelectedVariable(int i, int varToChange) {
@@ -145,7 +145,7 @@ public class ArtificialBeeColony {
         return xNew;
     }
 
-    private void greedySelection(int i, double[] newPos) {
+    private boolean greedySelection(int i, double[] newPos) {
         double newFx = func.getValue(newPos);
         double newFitness = calculateFitness(newFx);
 
@@ -154,12 +154,39 @@ public class ArtificialBeeColony {
             fx[i] = newFx;
             fitness[i] = newFitness;
             trials[i] = 0;
+            return true;
         } else {
             trials[i]++;
+            return false;
         }
     }
 
     private void onlookerBeePhase() {
+        double[] probs = getProbabilities();
+        boolean updated;
+        double rand, cumulativeProb;
+        int foodSource;
+
+
+        for (int i = 0; i < onlookerBeesCount; i++) {
+            rand = rng.nextDouble();
+            foodSource = 0;
+            cumulativeProb = probs[foodSource];
+
+            // roulette
+            while (rand > cumulativeProb) {
+                foodSource++;
+                cumulativeProb += probs[foodSource];
+            }
+
+            updated = updateFoodSource(foodSource);
+            if (updated) {
+                probs = getProbabilities();
+            }
+        }
+    }
+
+    private double[] getProbabilities() {
         double fitnessSum = Arrays.stream(fitness).sum();
         double[] probs = new double[foodSourcesCount];
 
@@ -167,19 +194,7 @@ public class ArtificialBeeColony {
             probs[i] = fitness[i] / fitnessSum;
         }
 
-
-        for (int i = 0; i < onlookerBeesCount; i++) {
-            double rand = rng.nextDouble();
-            int fs = 0;
-            double cumulativeProb = probs[fs];
-
-            while (rand > cumulativeProb) {
-                fs++;
-                cumulativeProb += probs[fs];
-            }
-
-            updateFoodSource(fs);
-        }
+        return probs;
     }
 
     private void rememberFoodSources(int iter) {
