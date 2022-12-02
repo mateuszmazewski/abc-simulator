@@ -21,7 +21,6 @@ public class ABCResultsIO {
     public static final String Y_RANGE_PARAM = "y_range";
     public static final String ITERATIONS_PARAM = "iterations";
     public static final String FOOD_SOURCES_COUNT_PARAM = "food_sources_count";
-    public static final String ONLOOKER_BEES_COUNT_PARAM = "onlooker_bees_count";
     public static final String TRIALS_LIMIT_PARAM = "trials_limit";
     public static final String MIN_POSSIBLE_VALUE_PARAM = "min_possible_value";
     public static final String MIN_POSSIBLE_VALUE_POSITION_PARAM = "min_possible_value_position";
@@ -66,7 +65,6 @@ public class ABCResultsIO {
         writer.write("\n" + Y_RANGE_PARAM + " = " + results.getLowerBoundaries()[1] + " " + results.getUpperBoundaries()[1]);
         writer.write("\n" + ITERATIONS_PARAM + " = " + maxIter);
         writer.write("\n" + FOOD_SOURCES_COUNT_PARAM + " = " + foodSourcesCount);
-        writer.write("\n" + ONLOOKER_BEES_COUNT_PARAM + " = " + results.getOnlookerBeesCount());
         writer.write("\n" + TRIALS_LIMIT_PARAM + " = " + results.getTrialsLimit());
 
         writer.write("\n\n# Best possible solution");
@@ -177,10 +175,6 @@ public class ABCResultsIO {
                     results.setFoodSourcesCount(Integer.parseInt(splitLine[2]));
                     foundParametersInFileMap.put(FOOD_SOURCES_COUNT_PARAM, true);
                     break;
-                case ONLOOKER_BEES_COUNT_PARAM:
-                    results.setOnlookerBeesCount(Integer.parseInt(splitLine[2]));
-                    foundParametersInFileMap.put(ONLOOKER_BEES_COUNT_PARAM, true);
-                    break;
                 case TRIALS_LIMIT_PARAM:
                     results.setTrialsLimit(Integer.parseInt(splitLine[2]));
                     foundParametersInFileMap.put(TRIALS_LIMIT_PARAM, true);
@@ -225,10 +219,6 @@ public class ABCResultsIO {
         if (results.getFoodSourcesCount() < ArtificialBeeColony.MIN_FOOD_SOURCES_COUNT || results.getFoodSourcesCount() > ArtificialBeeColony.MAX_FOOD_SOURCES_COUNT) {
             throw new IOException("Parameter " + FOOD_SOURCES_COUNT_PARAM + " must be in range" +
                     " <" + ArtificialBeeColony.MIN_FOOD_SOURCES_COUNT + ", " + ArtificialBeeColony.MAX_FOOD_SOURCES_COUNT + ">");
-        }
-        if (results.getOnlookerBeesCount() < ArtificialBeeColony.MIN_ONLOOKER_BEES_COUNT || results.getOnlookerBeesCount() > ArtificialBeeColony.MAX_ONLOOKER_BEES_COUNT) {
-            throw new IOException("Parameter " + ONLOOKER_BEES_COUNT_PARAM + " must be in range" +
-                    " <" + ArtificialBeeColony.MIN_ONLOOKER_BEES_COUNT + ", " + ArtificialBeeColony.MAX_ONLOOKER_BEES_COUNT + ">");
         }
         if (results.getTrialsLimit() < ArtificialBeeColony.MIN_TRIALS_LIMIT || results.getTrialsLimit() > ArtificialBeeColony.MAX_TRIALS_LIMIT) {
             throw new IOException("Parameter " + TRIALS_LIMIT_PARAM + " must be in range" +
@@ -283,7 +273,6 @@ public class ABCResultsIO {
                 Y_RANGE_PARAM,
                 ITERATIONS_PARAM,
                 FOOD_SOURCES_COUNT_PARAM,
-                ONLOOKER_BEES_COUNT_PARAM,
                 TRIALS_LIMIT_PARAM,
                 MIN_POSSIBLE_VALUE_PARAM,
                 MIN_POSSIBLE_VALUE_POSITION_PARAM,

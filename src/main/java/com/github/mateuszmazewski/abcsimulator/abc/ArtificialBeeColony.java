@@ -9,8 +9,6 @@ public class ArtificialBeeColony {
 
     public static final int MIN_FOOD_SOURCES_COUNT = 2;
     public static final int MAX_FOOD_SOURCES_COUNT = 1000000;
-    public static final int MIN_ONLOOKER_BEES_COUNT = 0;
-    public static final int MAX_ONLOOKER_BEES_COUNT = 1000000;
     public static final int MAX_ITER_LOWER_LIMIT = 1;
     public static final int MAX_ITER_UPPER_LIMIT = 1000000;
     public static final int MIN_TRIALS_LIMIT = 0;
@@ -18,7 +16,6 @@ public class ArtificialBeeColony {
 
     // -------------------------INPUT PARAMETERS-------------------------
     private final int foodSourcesCount;
-    private final int onlookerBeesCount;
     private final int maxIter;
     private final int trialsLimit; // Max number of trials to improve the solution
     private final AbstractTestFunction func;
@@ -43,9 +40,8 @@ public class ArtificialBeeColony {
 
     private final Random rng = new Random();
 
-    public ArtificialBeeColony(int foodSourcesCount, int onlookerBeesCount, int maxIter, AbstractTestFunction func, int trialsLimit) {
+    public ArtificialBeeColony(int foodSourcesCount, int maxIter, AbstractTestFunction func, int trialsLimit) {
         this.foodSourcesCount = foodSourcesCount;
-        this.onlookerBeesCount = onlookerBeesCount;
         this.maxIter = maxIter;
         this.func = func;
         this.trialsLimit = trialsLimit;
@@ -56,9 +52,6 @@ public class ArtificialBeeColony {
     private void validateArgs() {
         if (foodSourcesCount < MIN_FOOD_SOURCES_COUNT || foodSourcesCount > MAX_FOOD_SOURCES_COUNT) {
             throw new IllegalArgumentException("number of food sources must be in range <" + MIN_FOOD_SOURCES_COUNT + ", " + MAX_FOOD_SOURCES_COUNT + ">");
-        }
-        if (onlookerBeesCount < MIN_ONLOOKER_BEES_COUNT) {
-            throw new IllegalArgumentException("number of onlooker bees must be in range <" + MIN_ONLOOKER_BEES_COUNT + ", " + MAX_ONLOOKER_BEES_COUNT + ">");
         }
         if (maxIter < MAX_ITER_LOWER_LIMIT || maxIter > MAX_ITER_UPPER_LIMIT) {
             throw new IllegalArgumentException("number of iterations must be in range <" + MAX_ITER_LOWER_LIMIT + ", " + MAX_ITER_UPPER_LIMIT + ">");
@@ -167,8 +160,7 @@ public class ArtificialBeeColony {
         double rand, cumulativeProb;
         int foodSource;
 
-
-        for (int i = 0; i < onlookerBeesCount; i++) {
+        for (int i = 0; i < foodSourcesCount; i++) {
             rand = rng.nextDouble();
             foodSource = 0;
             cumulativeProb = probs[foodSource];
@@ -248,10 +240,6 @@ public class ArtificialBeeColony {
 
     public int getFoodSourcesCount() {
         return foodSourcesCount;
-    }
-
-    public int getOnlookerBeesCount() {
-        return onlookerBeesCount;
     }
 
     public int getMaxIter() {

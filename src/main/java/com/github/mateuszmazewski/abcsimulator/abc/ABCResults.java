@@ -8,7 +8,7 @@ public class ABCResults {
     private double[] minValuePos, foundMinValuePos;
     private double minValue, foundMinValue;
     private double[] lowerBoundaries, upperBoundaries;
-    private int maxIter, foodSourcesCount, onlookerBeesCount, trialsLimit;
+    private int maxIter, foodSourcesCount, trialsLimit;
     private double[][][] allFoodSources;
     private double[][] bestFoodSources;
     private double[] bestFx;
@@ -34,7 +34,6 @@ public class ABCResults {
         upperBoundaries = func.getUpperBoundaries();
         maxIter = abc.getMaxIter();
         foodSourcesCount = abc.getFoodSourcesCount();
-        onlookerBeesCount = abc.getOnlookerBeesCount();
         trialsLimit = abc.getTrialsLimit();
         allFoodSources = abc.getAllFoodSources();
         bestFoodSources = abc.getBestFoodSources();
@@ -114,14 +113,6 @@ public class ABCResults {
 
     public void setFoodSourcesCount(int foodSourcesCount) {
         this.foodSourcesCount = foodSourcesCount;
-    }
-
-    public int getOnlookerBeesCount() {
-        return onlookerBeesCount;
-    }
-
-    public void setOnlookerBeesCount(int onlookerBeesCount) {
-        this.onlookerBeesCount = onlookerBeesCount;
     }
 
     public int getTrialsLimit() {
