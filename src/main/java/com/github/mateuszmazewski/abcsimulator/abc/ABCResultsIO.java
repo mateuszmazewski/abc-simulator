@@ -20,7 +20,7 @@ public class ABCResultsIO {
     public static final String X_RANGE_PARAM = "x_range";
     public static final String Y_RANGE_PARAM = "y_range";
     public static final String ITERATIONS_PARAM = "iterations";
-    public static final String SWARM_SIZE_PARAM = "swarm_size";
+    public static final String FOOD_SOURCES_COUNT_PARAM = "food_sources_count";
     public static final String TRIALS_LIMIT_PARAM = "trials_limit";
     public static final String MIN_POSSIBLE_VALUE_PARAM = "min_possible_value";
     public static final String MIN_POSSIBLE_VALUE_POSITION_PARAM = "min_possible_value_position";
@@ -56,7 +56,7 @@ public class ABCResultsIO {
         double[] bestFx = results.getBestFx();
         double[][] allFx = results.getAllFx();
         int maxIter = results.getMaxIter();
-        int swarmSize = results.getSwarmSize();
+        int foodSourcesCount = results.getFoodSourcesCount();
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 
@@ -64,7 +64,7 @@ public class ABCResultsIO {
         writer.write("\n" + X_RANGE_PARAM + " = " + results.getLowerBoundaries()[0] + " " + results.getUpperBoundaries()[0]);
         writer.write("\n" + Y_RANGE_PARAM + " = " + results.getLowerBoundaries()[1] + " " + results.getUpperBoundaries()[1]);
         writer.write("\n" + ITERATIONS_PARAM + " = " + maxIter);
-        writer.write("\n" + SWARM_SIZE_PARAM + " = " + swarmSize);
+        writer.write("\n" + FOOD_SOURCES_COUNT_PARAM + " = " + foodSourcesCount);
         writer.write("\n" + TRIALS_LIMIT_PARAM + " = " + results.getTrialsLimit());
 
         writer.write("\n\n# Best possible solution");
@@ -89,7 +89,7 @@ public class ABCResultsIO {
 
         double[] beePos;
         for (int iter = 0; iter <= maxIter; iter++) {
-            for (int bee = 0; bee < swarmSize; bee++) {
+            for (int bee = 0; bee < foodSourcesCount; bee++) {
                 beePos = allFoodSources[iter][bee];
                 writer.write(iter + "\t" + bee + "\t" + beePos[0] + "\t" + beePos[1] + "\t" + allFx[iter][bee] + "\n");
             }
@@ -171,9 +171,9 @@ public class ABCResultsIO {
                     results.setMaxIter(Integer.parseInt(splitLine[2]));
                     foundParametersInFileMap.put(ITERATIONS_PARAM, true);
                     break;
-                case SWARM_SIZE_PARAM:
-                    results.setSwarmSize(Integer.parseInt(splitLine[2]));
-                    foundParametersInFileMap.put(SWARM_SIZE_PARAM, true);
+                case FOOD_SOURCES_COUNT_PARAM:
+                    results.setFoodSourcesCount(Integer.parseInt(splitLine[2]));
+                    foundParametersInFileMap.put(FOOD_SOURCES_COUNT_PARAM, true);
                     break;
                 case TRIALS_LIMIT_PARAM:
                     results.setTrialsLimit(Integer.parseInt(splitLine[2]));
@@ -216,9 +216,9 @@ public class ABCResultsIO {
             throw new IOException("Parameter " + ITERATIONS_PARAM + " must be in range" +
                     " <" + ArtificialBeeColony.MAX_ITER_LOWER_LIMIT + ", " + ArtificialBeeColony.MAX_ITER_UPPER_LIMIT + ">");
         }
-        if (results.getSwarmSize() < ArtificialBeeColony.MIN_SWARM_SIZE || results.getSwarmSize() > ArtificialBeeColony.MAX_SWARM_SIZE) {
-            throw new IOException("Parameter " + SWARM_SIZE_PARAM + " must be in range" +
-                    " <" + ArtificialBeeColony.MIN_SWARM_SIZE + ", " + ArtificialBeeColony.MAX_SWARM_SIZE + ">");
+        if (results.getFoodSourcesCount() < ArtificialBeeColony.MIN_FOOD_SOURCES_COUNT || results.getFoodSourcesCount() > ArtificialBeeColony.MAX_FOOD_SOURCES_COUNT) {
+            throw new IOException("Parameter " + FOOD_SOURCES_COUNT_PARAM + " must be in range" +
+                    " <" + ArtificialBeeColony.MIN_FOOD_SOURCES_COUNT + ", " + ArtificialBeeColony.MAX_FOOD_SOURCES_COUNT + ">");
         }
         if (results.getTrialsLimit() < ArtificialBeeColony.MIN_TRIALS_LIMIT || results.getTrialsLimit() > ArtificialBeeColony.MAX_TRIALS_LIMIT) {
             throw new IOException("Parameter " + TRIALS_LIMIT_PARAM + " must be in range" +
@@ -227,9 +227,9 @@ public class ABCResultsIO {
 
 
         results.setBestFoodSources(new double[results.getMaxIter() + 1][2]);
-        results.setAllFoodSources(new double[results.getMaxIter() + 1][results.getSwarmSize()][2]);
+        results.setAllFoodSources(new double[results.getMaxIter() + 1][results.getFoodSourcesCount()][2]);
         results.setBestFx(new double[results.getMaxIter() + 1]);
-        results.setAllFx(new double[results.getMaxIter() + 1][results.getSwarmSize()]);
+        results.setAllFx(new double[results.getMaxIter() + 1][results.getFoodSourcesCount()]);
         int iter, bee;
 
         while ((line = reader.readLine()) != null) {
@@ -272,7 +272,7 @@ public class ABCResultsIO {
                 X_RANGE_PARAM,
                 Y_RANGE_PARAM,
                 ITERATIONS_PARAM,
-                SWARM_SIZE_PARAM,
+                FOOD_SOURCES_COUNT_PARAM,
                 TRIALS_LIMIT_PARAM,
                 MIN_POSSIBLE_VALUE_PARAM,
                 MIN_POSSIBLE_VALUE_POSITION_PARAM,

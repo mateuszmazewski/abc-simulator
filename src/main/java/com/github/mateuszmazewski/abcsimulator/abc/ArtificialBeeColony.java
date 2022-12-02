@@ -7,15 +7,15 @@ import java.util.Random;
 
 public class ArtificialBeeColony {
 
-    public static final int MIN_SWARM_SIZE = 2;
-    public static final int MAX_SWARM_SIZE = 1000000;
+    public static final int MIN_FOOD_SOURCES_COUNT = 1;
+    public static final int MAX_FOOD_SOURCES_COUNT = 1000000;
     public static final int MAX_ITER_LOWER_LIMIT = 1;
     public static final int MAX_ITER_UPPER_LIMIT = 1000000;
     public static final int MIN_TRIALS_LIMIT = 0;
     public static final int MAX_TRIALS_LIMIT = 1000000;
 
     // -------------------------INPUT PARAMETERS-------------------------
-    private final int swarmSize;
+    private final int foodSourcesCount;
     private final int maxIter;
     private final int trialsLimit; // Max number of trials to improve the solution
     private final AbstractTestFunction func;
@@ -40,18 +40,18 @@ public class ArtificialBeeColony {
 
     private final Random rng = new Random();
 
-    public ArtificialBeeColony(int swarmSize, int maxIter, AbstractTestFunction func, int trialsLimit) {
-        validateArgs(swarmSize, maxIter, func, trialsLimit);
+    public ArtificialBeeColony(int foodSourcesCount, int maxIter, AbstractTestFunction func, int trialsLimit) {
+        validateArgs(foodSourcesCount, maxIter, func, trialsLimit);
 
-        this.swarmSize = swarmSize;
+        this.foodSourcesCount = foodSourcesCount;
         this.maxIter = maxIter;
         this.func = func;
         this.trialsLimit = trialsLimit;
     }
 
-    private void validateArgs(int swarmSize, int maxIter, AbstractTestFunction func, int limit) {
-        if (swarmSize < MIN_SWARM_SIZE) {
-            throw new IllegalArgumentException("swarm must contain at least " + MIN_SWARM_SIZE + " bees");
+    private void validateArgs(int foodSourcesCount, int maxIter, AbstractTestFunction func, int limit) {
+        if (foodSourcesCount < MIN_FOOD_SOURCES_COUNT) {
+            throw new IllegalArgumentException("number of food sources must be positive");
         }
         if (maxIter < MAX_ITER_LOWER_LIMIT) {
             throw new IllegalArgumentException("number of iterations must be positive");
@@ -81,19 +81,19 @@ public class ArtificialBeeColony {
         lb = func.getLowerBoundaries();
         ub = func.getUpperBoundaries();
 
-        foodSources = new double[swarmSize][dim];
-        fx = new double[swarmSize];
-        fitness = new double[swarmSize];
-        trials = new int[swarmSize];
+        foodSources = new double[foodSourcesCount][dim];
+        fx = new double[foodSourcesCount];
+        fitness = new double[foodSourcesCount];
+        trials = new int[foodSourcesCount];
         Arrays.fill(trials, 0);
 
         // maxIter + 1 because we also save initial random solutions
-        allFoodSources = new double[maxIter + 1][swarmSize][dim];
-        allFx = new double[maxIter + 1][swarmSize];
+        allFoodSources = new double[maxIter + 1][foodSourcesCount][dim];
+        allFx = new double[maxIter + 1][foodSourcesCount];
         bestFoodSources = new double[maxIter + 1][dim];
         bestFx = new double[maxIter + 1];
 
-        for (int i = 0; i < swarmSize; i++) {
+        for (int i = 0; i < foodSourcesCount; i++) {
             generateRandomFoodSource(i);
         }
     }
@@ -108,7 +108,7 @@ public class ArtificialBeeColony {
     }
 
     private void employedBeePhase() {
-        for (int i = 0; i < swarmSize; i++) {
+        for (int i = 0; i < foodSourcesCount; i++) {
             updateFoodSource(i);
         }
     }
@@ -127,7 +127,7 @@ public class ArtificialBeeColony {
 
         // Partner bee must be different from current bee
         do {
-            partner = rng.nextInt(swarmSize);
+            partner = rng.nextInt(foodSourcesCount);
         } while (partner == i);
 
         x = foodSources[i][varToChange]; // current bee's x_i
@@ -156,7 +156,7 @@ public class ArtificialBeeColony {
         double fitnessSum = Arrays.stream(fitness).sum();
         double prob;
 
-        for (int i = 0; i < swarmSize; i++) {
+        for (int i = 0; i < foodSourcesCount; i++) {
             prob = fitness[i] / fitnessSum;
 
             if (rng.nextDouble() < prob) {
@@ -168,7 +168,7 @@ public class ArtificialBeeColony {
     private void rememberFoodSources(int iter) {
         double bestFitness = Double.MIN_VALUE;
 
-        for (int i = 0; i < swarmSize; i++) {
+        for (int i = 0; i < foodSourcesCount; i++) {
             allFoodSources[iter][i] = foodSources[i].clone();
             allFx[iter][i] = fx[i];
 
@@ -181,7 +181,7 @@ public class ArtificialBeeColony {
     }
 
     private void scoutBeePhase() {
-        for (int i = 0; i < swarmSize; i++) {
+        for (int i = 0; i < foodSourcesCount; i++) {
             if (trials[i] > trialsLimit) {
                 generateRandomFoodSource(i);
             }
@@ -214,8 +214,8 @@ public class ArtificialBeeColony {
         return bestFx;
     }
 
-    public int getSwarmSize() {
-        return swarmSize;
+    public int getFoodSourcesCount() {
+        return foodSourcesCount;
     }
 
     public int getMaxIter() {

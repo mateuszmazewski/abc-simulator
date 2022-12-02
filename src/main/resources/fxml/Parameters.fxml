@@ -32,13 +32,13 @@
          </tooltip></Label>
       <ComboBox fx:id="funcComboBox" maxWidth="1.7976931348623157E308" onAction="#onActionFuncComboBox" GridPane.columnIndex="1" />
       <Label text="%parameters.xRange" GridPane.rowIndex="1" fx:id="xRangeLabel" />
-      <Label fx:id="swarmSizeLabel" text="%parameters.swarmSize" GridPane.rowIndex="3">
+      <Label fx:id="foodSourcesCountLabel" text="%parameters.foodSourcesCount" GridPane.rowIndex="3">
          <tooltip>
-            <Tooltip fx:id="swarmSizeLabelTooltip" text="%tooltip.swarmSizeLabel" wrapText="true" />
+            <Tooltip fx:id="foodSourcesCountLabelTooltip" text="%tooltip.foodSourcesCountLabel" wrapText="true" />
          </tooltip></Label>
-      <TextField fx:id="swarmSizeTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <TextField fx:id="foodSourcesCountTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <tooltip>
-            <Tooltip fx:id="swarmSizeTextFieldTooltip" text="%tooltip.swarmSizeTextField" wrapText="true" />
+            <Tooltip fx:id="foodSourcesCountTextFieldTooltip" text="%tooltip.foodSourcesCountTextField" wrapText="true" />
          </tooltip></TextField>
       <TextField fx:id="maxIterTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <tooltip>

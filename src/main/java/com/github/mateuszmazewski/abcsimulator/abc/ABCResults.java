@@ -8,7 +8,7 @@ public class ABCResults {
     private double[] minValuePos, foundMinValuePos;
     private double minValue, foundMinValue;
     private double[] lowerBoundaries, upperBoundaries;
-    private int maxIter, swarmSize, trialsLimit;
+    private int maxIter, foodSourcesCount, trialsLimit;
     private double[][][] allFoodSources;
     private double[][] bestFoodSources;
     private double[] bestFx;
@@ -33,7 +33,7 @@ public class ABCResults {
         lowerBoundaries = func.getLowerBoundaries();
         upperBoundaries = func.getUpperBoundaries();
         maxIter = abc.getMaxIter();
-        swarmSize = abc.getSwarmSize();
+        foodSourcesCount = abc.getFoodSourcesCount();
         trialsLimit = abc.getTrialsLimit();
         allFoodSources = abc.getAllFoodSources();
         bestFoodSources = abc.getBestFoodSources();
@@ -107,12 +107,12 @@ public class ABCResults {
         this.maxIter = maxIter;
     }
 
-    public int getSwarmSize() {
-        return swarmSize;
+    public int getFoodSourcesCount() {
+        return foodSourcesCount;
     }
 
-    public void setSwarmSize(int swarmSize) {
-        this.swarmSize = swarmSize;
+    public void setFoodSourcesCount(int foodSourcesCount) {
+        this.foodSourcesCount = foodSourcesCount;
     }
 
     public int getTrialsLimit() {

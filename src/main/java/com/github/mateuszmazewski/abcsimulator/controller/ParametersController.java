@@ -25,7 +25,7 @@ public class ParametersController {
 
     private static final int SLIDER_MAJOR_TICKS_COUNT = 20;
     private static final int SLIDER_BY_ONE_TICKS_LIMIT = 30;
-    public static final int INITIAL_SWARM_SIZE = 50;
+    public static final int INITIAL_FOOD_SOURCES_COUNT = 50;
     public static final int INITIAL_MAX_ITER = 100;
     public static final int INITIAL_TRIALS_LIMIT = 50;
 
@@ -45,7 +45,7 @@ public class ParametersController {
     private TextField yRangeToTextField;
 
     @FXML
-    private TextField swarmSizeTextField;
+    private TextField foodSourcesCountTextField;
 
     @FXML
     private TextField maxIterTextField;
@@ -67,7 +67,7 @@ public class ParametersController {
     private Label yRangeLabel;
 
     @FXML
-    private Label swarmSizeLabel;
+    private Label foodSourcesCountLabel;
 
     @FXML
     private Label maxIterLabel;
@@ -79,10 +79,10 @@ public class ParametersController {
     private Tooltip functionLabelTooltip;
 
     @FXML
-    private Tooltip swarmSizeLabelTooltip;
+    private Tooltip foodSourcesCountLabelTooltip;
 
     @FXML
-    private Tooltip swarmSizeTextFieldTooltip;
+    private Tooltip foodSourcesCountTextFieldTooltip;
 
     @FXML
     private Tooltip maxIterTextFieldTooltip;
@@ -148,7 +148,7 @@ public class ParametersController {
 
         addValueChangeListenerToTextFields();
 
-        swarmSizeTextField.setText(String.valueOf(INITIAL_SWARM_SIZE));
+        foodSourcesCountTextField.setText(String.valueOf(INITIAL_FOOD_SOURCES_COUNT));
         maxIterTextField.setText(String.valueOf(INITIAL_MAX_ITER));
         trialsLimitTextField.setText(String.valueOf(INITIAL_TRIALS_LIMIT));
     }
@@ -157,14 +157,14 @@ public class ParametersController {
         funcLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.function"));
         xRangeLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.xRange"));
         yRangeLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.yRange"));
-        swarmSizeLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.swarmSize"));
+        foodSourcesCountLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.foodSourcesCount"));
         maxIterLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.maxIter"));
         trialsLimitLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.trialsLimit"));
         startButton.textProperty().bind(messagesFactory.getStringBinding("parameters.startButton"));
 
         functionLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.funcLabel"));
-        swarmSizeLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.swarmSizeLabel"));
-        swarmSizeTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.swarmSizeTextField"));
+        foodSourcesCountLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.foodSourcesCountLabel"));
+        foodSourcesCountTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.foodSourcesCountTextField"));
         maxIterTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.maxIterTextField"));
         trialsLimitLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.trialsLimitLabel"));
         trialsLimitTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.trialsLimitTextField"));
@@ -189,7 +189,7 @@ public class ParametersController {
         addRangeValueChangeListener(xRangeToTextField);
         addRangeValueChangeListener(yRangeFromTextField);
         addRangeValueChangeListener(yRangeToTextField);
-        addIntValueChangeListener(swarmSizeTextField);
+        addIntValueChangeListener(foodSourcesCountTextField);
         addIntValueChangeListener(maxIterTextField);
         addIntValueChangeListener(trialsLimitTextField);
     }
@@ -207,8 +207,8 @@ public class ParametersController {
                 return;
             }
 
-            if (textField == swarmSizeTextField) {
-                textFieldValueInRange(number, ArtificialBeeColony.MIN_SWARM_SIZE, ArtificialBeeColony.MAX_SWARM_SIZE, textField);
+            if (textField == foodSourcesCountTextField) {
+                textFieldValueInRange(number, ArtificialBeeColony.MIN_FOOD_SOURCES_COUNT, ArtificialBeeColony.MAX_FOOD_SOURCES_COUNT, textField);
             } else if (textField == maxIterTextField) {
                 textFieldValueInRange(number, ArtificialBeeColony.MAX_ITER_LOWER_LIMIT, ArtificialBeeColony.MAX_ITER_UPPER_LIMIT, textField);
             } else if (textField == trialsLimitTextField) {
@@ -296,7 +296,7 @@ public class ParametersController {
 
     private void validateTextFields() {
         boolean invalidTextFields = Stream.of(xRangeFromTextField, xRangeToTextField, yRangeFromTextField,
-                        yRangeToTextField, swarmSizeTextField, maxIterTextField, trialsLimitTextField)
+                        yRangeToTextField, foodSourcesCountTextField, maxIterTextField, trialsLimitTextField)
                 .anyMatch(textField -> textField.getStyle().equals(textFieldErrorStyle));
         wrongParameters.setValue(invalidTextFields);
     }
@@ -330,19 +330,19 @@ public class ParametersController {
 
     @FXML
     private void onActionStartButton() {
-        int swarmSize;
+        int foodSourcesCount;
         int maxIter;
         int trialsLimit;
 
         try {
-            swarmSize = Integer.parseInt(swarmSizeTextField.getText());
+            foodSourcesCount = Integer.parseInt(foodSourcesCountTextField.getText());
             maxIter = Integer.parseInt(maxIterTextField.getText());
             trialsLimit = Integer.parseInt(trialsLimitTextField.getText());
         } catch (NumberFormatException e) {
             return;
         }
 
-        ArtificialBeeColony abc = new ArtificialBeeColony(swarmSize, maxIter, func.getValue(), trialsLimit);
+        ArtificialBeeColony abc = new ArtificialBeeColony(foodSourcesCount, maxIter, func.getValue(), trialsLimit);
         abc.run();
         ABCResults results = new ABCResults(abc);
         mainController.getResultsController().setResults(results);
@@ -403,7 +403,7 @@ public class ParametersController {
         mainController.getResultsController().showResults(results.getMaxIter());
 
         maxIterTextField.setText(String.valueOf(results.getMaxIter()));
-        swarmSizeTextField.setText(String.valueOf(results.getSwarmSize()));
+        foodSourcesCountTextField.setText(String.valueOf(results.getFoodSourcesCount()));
         trialsLimitTextField.setText(String.valueOf(results.getTrialsLimit()));
 
         initIterSlider(results);
