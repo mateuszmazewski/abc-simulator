@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class ArtificialBeeColony {
 
-    public static final int MIN_FOOD_SOURCES_COUNT = 1;
+    public static final int MIN_FOOD_SOURCES_COUNT = 2;
     public static final int MAX_FOOD_SOURCES_COUNT = 1000000;
     public static final int MIN_ONLOOKER_BEES_COUNT = 0;
     public static final int MAX_ONLOOKER_BEES_COUNT = 1000000;
