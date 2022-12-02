@@ -26,6 +26,7 @@ public class ParametersController {
     private static final int SLIDER_MAJOR_TICKS_COUNT = 20;
     private static final int SLIDER_BY_ONE_TICKS_LIMIT = 30;
     public static final int INITIAL_FOOD_SOURCES_COUNT = 50;
+    public static final int INITIAL_ONLOOKER_BEES_COUNT = 50;
     public static final int INITIAL_MAX_ITER = 100;
     public static final int INITIAL_TRIALS_LIMIT = 50;
 
@@ -46,6 +47,9 @@ public class ParametersController {
 
     @FXML
     private TextField foodSourcesCountTextField;
+
+    @FXML
+    private TextField onlookerBeesCountTextField;
 
     @FXML
     private TextField maxIterTextField;
@@ -70,6 +74,12 @@ public class ParametersController {
     private Label foodSourcesCountLabel;
 
     @FXML
+    private Label employedBeesCountLabel;
+
+    @FXML
+    private Label onlookerBeesCountLabel;
+
+    @FXML
     private Label maxIterLabel;
 
     @FXML
@@ -82,7 +92,16 @@ public class ParametersController {
     private Tooltip foodSourcesCountLabelTooltip;
 
     @FXML
+    private Tooltip employedBeesCountLabelTooltip;
+
+    @FXML
+    private Tooltip onlookerBeesCountLabelTooltip;
+
+    @FXML
     private Tooltip foodSourcesCountTextFieldTooltip;
+
+    @FXML
+    private Tooltip onlookerBeesCountTextFieldTooltip;
 
     @FXML
     private Tooltip maxIterTextFieldTooltip;
@@ -149,6 +168,7 @@ public class ParametersController {
         addValueChangeListenerToTextFields();
 
         foodSourcesCountTextField.setText(String.valueOf(INITIAL_FOOD_SOURCES_COUNT));
+        onlookerBeesCountTextField.setText(String.valueOf(INITIAL_ONLOOKER_BEES_COUNT));
         maxIterTextField.setText(String.valueOf(INITIAL_MAX_ITER));
         trialsLimitTextField.setText(String.valueOf(INITIAL_TRIALS_LIMIT));
     }
@@ -158,13 +178,18 @@ public class ParametersController {
         xRangeLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.xRange"));
         yRangeLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.yRange"));
         foodSourcesCountLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.foodSourcesCount"));
+        employedBeesCountLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.employedBeesCount"));
+        onlookerBeesCountLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.onlookerBeesCount"));
         maxIterLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.maxIter"));
         trialsLimitLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.trialsLimit"));
         startButton.textProperty().bind(messagesFactory.getStringBinding("parameters.startButton"));
 
         functionLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.funcLabel"));
         foodSourcesCountLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.foodSourcesCountLabel"));
+        employedBeesCountLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.employedBeesCountLabel"));
         foodSourcesCountTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.foodSourcesCountTextField"));
+        onlookerBeesCountLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.onlookerBeesCountLabel"));
+        onlookerBeesCountTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.onlookerBeesCountTextField"));
         maxIterTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.maxIterTextField"));
         trialsLimitLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.trialsLimitLabel"));
         trialsLimitTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.trialsLimitTextField"));
@@ -190,6 +215,7 @@ public class ParametersController {
         addRangeValueChangeListener(yRangeFromTextField);
         addRangeValueChangeListener(yRangeToTextField);
         addIntValueChangeListener(foodSourcesCountTextField);
+        addIntValueChangeListener(onlookerBeesCountTextField);
         addIntValueChangeListener(maxIterTextField);
         addIntValueChangeListener(trialsLimitTextField);
     }
@@ -209,6 +235,8 @@ public class ParametersController {
 
             if (textField == foodSourcesCountTextField) {
                 textFieldValueInRange(number, ArtificialBeeColony.MIN_FOOD_SOURCES_COUNT, ArtificialBeeColony.MAX_FOOD_SOURCES_COUNT, textField);
+            } else if (textField == onlookerBeesCountTextField) {
+                textFieldValueInRange(number, ArtificialBeeColony.MIN_ONLOOKER_BEES_COUNT, ArtificialBeeColony.MAX_ONLOOKER_BEES_COUNT, textField);
             } else if (textField == maxIterTextField) {
                 textFieldValueInRange(number, ArtificialBeeColony.MAX_ITER_LOWER_LIMIT, ArtificialBeeColony.MAX_ITER_UPPER_LIMIT, textField);
             } else if (textField == trialsLimitTextField) {
@@ -296,7 +324,7 @@ public class ParametersController {
 
     private void validateTextFields() {
         boolean invalidTextFields = Stream.of(xRangeFromTextField, xRangeToTextField, yRangeFromTextField,
-                        yRangeToTextField, foodSourcesCountTextField, maxIterTextField, trialsLimitTextField)
+                        yRangeToTextField, foodSourcesCountTextField, onlookerBeesCountTextField, maxIterTextField, trialsLimitTextField)
                 .anyMatch(textField -> textField.getStyle().equals(textFieldErrorStyle));
         wrongParameters.setValue(invalidTextFields);
     }
@@ -330,19 +358,18 @@ public class ParametersController {
 
     @FXML
     private void onActionStartButton() {
-        int foodSourcesCount;
-        int maxIter;
-        int trialsLimit;
+        int foodSourcesCount, onlookerBeesCount, maxIter, trialsLimit;
 
         try {
             foodSourcesCount = Integer.parseInt(foodSourcesCountTextField.getText());
+            onlookerBeesCount = Integer.parseInt(onlookerBeesCountTextField.getText());
             maxIter = Integer.parseInt(maxIterTextField.getText());
             trialsLimit = Integer.parseInt(trialsLimitTextField.getText());
         } catch (NumberFormatException e) {
             return;
         }
 
-        ArtificialBeeColony abc = new ArtificialBeeColony(foodSourcesCount, maxIter, func.getValue(), trialsLimit);
+        ArtificialBeeColony abc = new ArtificialBeeColony(foodSourcesCount, onlookerBeesCount, maxIter, func.getValue(), trialsLimit);
         abc.run();
         ABCResults results = new ABCResults(abc);
         mainController.getResultsController().setResults(results);
@@ -404,6 +431,7 @@ public class ParametersController {
 
         maxIterTextField.setText(String.valueOf(results.getMaxIter()));
         foodSourcesCountTextField.setText(String.valueOf(results.getFoodSourcesCount()));
+        onlookerBeesCountTextField.setText(String.valueOf(results.getOnlookerBeesCount()));
         trialsLimitTextField.setText(String.valueOf(results.getTrialsLimit()));
 
         initIterSlider(results);

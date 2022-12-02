@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <GridPane hgap="10.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.mateuszmazewski.abcsimulator.controller.ParametersController">
   <columnConstraints>
@@ -24,6 +25,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <Label fx:id="funcLabel" text="%parameters.function">
@@ -32,24 +34,34 @@
          </tooltip></Label>
       <ComboBox fx:id="funcComboBox" maxWidth="1.7976931348623157E308" onAction="#onActionFuncComboBox" GridPane.columnIndex="1" />
       <Label text="%parameters.xRange" GridPane.rowIndex="1" fx:id="xRangeLabel" />
-      <Label fx:id="foodSourcesCountLabel" text="%parameters.foodSourcesCount" GridPane.rowIndex="3">
-         <tooltip>
-            <Tooltip fx:id="foodSourcesCountLabelTooltip" text="%tooltip.foodSourcesCountLabel" wrapText="true" />
-         </tooltip></Label>
+      <VBox alignment="CENTER_RIGHT" GridPane.rowIndex="3">
+         <children>
+            <Label fx:id="foodSourcesCountLabel" text="%parameters.foodSourcesCount">
+               <tooltip>
+                  <Tooltip fx:id="foodSourcesCountLabelTooltip" text="%tooltip.foodSourcesCountLabel" wrapText="true" />
+               </tooltip>
+            </Label>
+            <Label fx:id="employedBeesCountLabel" text="%parameters.employedBeesCount">
+               <tooltip>
+                  <Tooltip fx:id="employedBeesCountLabelTooltip" text="%tooltip.employedBeesCountLabel" wrapText="true" />
+               </tooltip>
+            </Label>
+         </children>
+      </VBox>
       <TextField fx:id="foodSourcesCountTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <tooltip>
             <Tooltip fx:id="foodSourcesCountTextFieldTooltip" text="%tooltip.foodSourcesCountTextField" wrapText="true" />
          </tooltip></TextField>
-      <TextField fx:id="maxIterTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <TextField fx:id="maxIterTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <tooltip>
             <Tooltip fx:id="maxIterTextFieldTooltip" text="%tooltip.maxIterTextField" wrapText="true" />
          </tooltip></TextField>
-      <Label fx:id="maxIterLabel" text="%parameters.maxIter" GridPane.rowIndex="4" />
-      <Label fx:id="trialsLimitLabel" text="%parameters.trialsLimit" GridPane.rowIndex="5">
+      <Label fx:id="maxIterLabel" text="%parameters.maxIter" GridPane.rowIndex="5" />
+      <Label fx:id="trialsLimitLabel" text="%parameters.trialsLimit" GridPane.rowIndex="6">
          <tooltip>
             <Tooltip fx:id="trialsLimitLabelTooltip" text="%tooltip.trialsLimitLabel" wrapText="true" />
          </tooltip></Label>
-      <TextField fx:id="trialsLimitTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+      <TextField fx:id="trialsLimitTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
          <tooltip>
             <Tooltip fx:id="trialsLimitTextFieldTooltip" text="%tooltip.trialsLimitTextField" wrapText="true" />
          </tooltip></TextField>
@@ -80,7 +92,17 @@
                </tooltip></TextField>
          </children>
       </HBox>
-      <Button fx:id="startButton" mnemonicParsing="false" onAction="#onActionStartButton" text="%parameters.startButton" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <Button fx:id="startButton" mnemonicParsing="false" onAction="#onActionStartButton" text="%parameters.startButton" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <Label fx:id="onlookerBeesCountLabel" text="%parameters.onlookerBeesCount" GridPane.rowIndex="4">
+         <tooltip>
+            <Tooltip fx:id="onlookerBeesCountLabelTooltip" text="%tooltip.onlookerBeesCountLabel" />
+         </tooltip>
+      </Label>
+      <TextField fx:id="onlookerBeesCountTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <tooltip>
+            <Tooltip fx:id="onlookerBeesCountTextFieldTooltip" text="%tooltip.onlookerBeesCountTextField" />
+         </tooltip>
+      </TextField>
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
