@@ -113,12 +113,12 @@ public class ArtificialBeeColony {
         }
     }
 
-    private boolean updateFoodSource(int i) {
+    private void updateFoodSource(int i) {
         int varToChange = rng.nextInt(dim);
         double xNew = updateSelectedVariable(i, varToChange);
         double[] newPos = foodSources[i].clone();
         newPos[varToChange] = xNew;
-        return greedySelection(i, newPos);
+        greedySelection(i, newPos);
     }
 
     private double updateSelectedVariable(int i, int varToChange) {
@@ -138,7 +138,7 @@ public class ArtificialBeeColony {
         return xNew;
     }
 
-    private boolean greedySelection(int i, double[] newPos) {
+    private void greedySelection(int i, double[] newPos) {
         double newFx = func.getValue(newPos);
         double newFitness = calculateFitness(newFx);
 
@@ -147,16 +147,13 @@ public class ArtificialBeeColony {
             fx[i] = newFx;
             fitness[i] = newFitness;
             trials[i] = 0;
-            return true;
         } else {
             trials[i]++;
-            return false;
         }
     }
 
     private void onlookerBeePhase() {
         double[] probs = getProbabilities();
-        boolean updated;
         double rand, cumulativeProb;
         int foodSource;
 
@@ -171,10 +168,8 @@ public class ArtificialBeeColony {
                 cumulativeProb += probs[foodSource];
             }
 
-            updated = updateFoodSource(foodSource);
-            if (updated) {
-                probs = getProbabilities();
-            }
+            foodSource = Math.min(foodSource, foodSourcesCount - 1);
+            updateFoodSource(foodSource);
         }
     }
 
