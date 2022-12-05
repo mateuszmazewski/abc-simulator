@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToString;
+import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToStringDecimal4;
 
 public class ResultsController {
 
@@ -81,18 +81,18 @@ public class ResultsController {
     }
 
     public void showFuncBest(double[] globalMinPos, double globalMinValue) {
-        String x = doubleToString(globalMinPos[0]);
-        String y = doubleToString(globalMinPos[1]);
-        String fx = doubleToString(globalMinValue);
+        String x = doubleToStringDecimal4(globalMinPos[0]);
+        String y = doubleToStringDecimal4(globalMinPos[1]);
+        String fx = doubleToStringDecimal4(globalMinValue);
         minimumValueLabel.setText("f(" + x + ", " + y + ") = " + fx);
     }
 
     public void showResults(int iterNumber) {
         setResultsVisible(true);
         double[] bestFoodSource = results.getBestFoodSources()[iterNumber];
-        String x = doubleToString(bestFoodSource[0]);
-        String y = doubleToString(bestFoodSource[1]);
-        String fx = doubleToString(results.getBestFx()[iterNumber]);
+        String x = doubleToStringDecimal4(bestFoodSource[0]);
+        String y = doubleToStringDecimal4(bestFoodSource[1]);
+        String fx = doubleToStringDecimal4(results.getBestFx()[iterNumber]);
 
         foundMinimumValueLabel.setText("f(" + x + ", " + y + ") = " + fx);
         iterNumberLabelValue.setText(String.valueOf(iterNumber));

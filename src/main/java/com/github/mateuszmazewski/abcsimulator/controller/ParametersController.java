@@ -400,8 +400,7 @@ public class ParametersController {
         func.getLowerBoundaries()[1] = results.getLowerBoundaries()[1];
         func.getUpperBoundaries()[0] = results.getUpperBoundaries()[0];
         func.getUpperBoundaries()[1] = results.getUpperBoundaries()[1];
-        func.setMinValue(results.getMinValue());
-        func.setMinValuePos(results.getMinValuePos());
+        func.setMinimum(results.getMinValuePos(), results.getMinValue());
         setRangeTextFields();
         handleXRange(xRangeFromTextField);
         handleYRange(yRangeFromTextField);

@@ -11,7 +11,7 @@ import javafx.scene.text.TextAlignment;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.decimalFormat2;
+import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToStringDecimal2;
 import static com.github.mateuszmazewski.abcsimulator.visualization.FunctionChartAxes.*;
 
 public class FunctionChartScale {
@@ -87,7 +87,7 @@ public class FunctionChartScale {
                     continue;
                 }
             } else {
-                text = decimalFormat2.format(funcVal);
+                text = doubleToStringDecimal2(funcVal);
             }
 
             scaleAxisGraphics.setTextAlign(TextAlignment.LEFT);

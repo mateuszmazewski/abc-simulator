@@ -14,7 +14,9 @@ public abstract class AbstractTestFunction {
     private final int dim;
     private final double[] lowerBoundaries, upperBoundaries;
     private final double[] defaultLowerBoundaries, defaultUpperBoundaries;
+    private final double[] globalMinValuePos;
     private double[] minValuePos;
+    private final double globalMinValue;
     private double minValue;
     private final StringProperty name = new SimpleStringProperty();
     private final boolean chartInLogScale;
@@ -22,20 +24,22 @@ public abstract class AbstractTestFunction {
     public AbstractTestFunction(int dim,
                                 double[] defaultLowerBoundaries,
                                 double[] defaultUpperBoundaries,
-                                double[] minValuePos,
-                                double minValue,
+                                double[] globalMinValuePos,
+                                double globalMinValue,
                                 boolean chartInLogScale,
                                 String nameBindingKey) {
 
-        validateArgs(dim, defaultLowerBoundaries, defaultUpperBoundaries, minValuePos);
+        validateArgs(dim, defaultLowerBoundaries, defaultUpperBoundaries, globalMinValuePos);
 
         this.dim = dim;
         this.defaultLowerBoundaries = defaultLowerBoundaries;
         this.defaultUpperBoundaries = defaultUpperBoundaries;
         this.lowerBoundaries = defaultLowerBoundaries.clone();
         this.upperBoundaries = defaultUpperBoundaries.clone();
-        this.minValuePos = minValuePos;
-        this.minValue = minValue;
+        this.globalMinValuePos = globalMinValuePos;
+        this.minValuePos = globalMinValuePos.clone();
+        this.globalMinValue = globalMinValue;
+        this.minValue = globalMinValue;
         this.chartInLogScale = chartInLogScale;
 
         ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
@@ -103,6 +107,23 @@ public abstract class AbstractTestFunction {
         }
     }
 
+    public void setMinimum(double[] minValuePos, double minValue) {
+        if (isGlobalMinimumInCurrentRanges()) {
+            this.minValuePos = globalMinValuePos;
+            this.minValue = globalMinValue;
+        } else {
+            this.minValuePos = minValuePos;
+            this.minValue = minValue;
+        }
+
+    }
+
+    public boolean isGlobalMinimumInCurrentRanges() {
+        return globalMinValuePos[0] >= lowerBoundaries[0] && globalMinValuePos[0] <= upperBoundaries[0]
+                && globalMinValuePos[1] >= lowerBoundaries[1] && globalMinValuePos[1] <= upperBoundaries[1];
+    }
+
+
     @Override
     public String toString() {
         return name.getValue();
@@ -124,16 +145,8 @@ public abstract class AbstractTestFunction {
         return minValuePos;
     }
 
-    public void setMinValuePos(double[] minValuePos) {
-        this.minValuePos = minValuePos;
-    }
-
     public double getMinValue() {
         return minValue;
-    }
-
-    public void setMinValue(double minValue) {
-        this.minValue = minValue;
     }
 
     public String getName() {

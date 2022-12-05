@@ -157,27 +157,32 @@ public class FunctionChart2D extends GridPane {
             funcMinValuePos = getFuncXY(xMinCanvas, yMinCanvas);
             funcMaxValue = maybeMaxValue.getAsDouble();
 
-            double funcVal;
+            // If current ranges contain global minimum then the global minimum is exactly known
+            if (!testFunction.isGlobalMinimumInCurrentRanges()) {
+                double funcVal;
 
-            // Find more exact min value
-            for (double xCanvas = xMinCanvas - 2.0; xCanvas <= xMinCanvas + 2.0; xCanvas += 0.02) {
-                for (double yCanvas = yMinCanvas - 2.0; yCanvas <= yMinCanvas + 2.0; yCanvas += 0.02) {
-                    try {
-                        funcVal = getFuncVal(xCanvas, yCanvas); // Might be f(x, y) or log10(f(x, y))
-                    } catch (IllegalArgumentException e) {
-                        continue; // Coords are out of boundaries
-                    }
+                // Find more exact minimum
+                for (double xCanvas = xMinCanvas - 2.0; xCanvas <= xMinCanvas + 2.0; xCanvas += 0.02) {
+                    for (double yCanvas = yMinCanvas - 2.0; yCanvas <= yMinCanvas + 2.0; yCanvas += 0.02) {
+                        try {
+                            funcVal = getFuncVal(xCanvas, yCanvas); // Might be f(x, y) or log10(f(x, y))
+                        } catch (IllegalArgumentException e) {
+                            continue; // Coords are out of boundaries
+                        }
 
-                    if (funcVal < funcMinValue) {
-                        funcMinValue = funcVal;
-                        funcMinValuePos = getFuncXY(xCanvas, yCanvas);
+                        if (funcVal < funcMinValue) {
+                            funcMinValue = funcVal;
+                            funcMinValuePos = getFuncXY(xCanvas, yCanvas);
+                        }
                     }
                 }
             }
         }
 
-        testFunction.setMinValuePos(funcMinValuePos);
-        testFunction.setMinValue(testFunction.getValue(funcMinValuePos)); // Make sure it's f(x, y), not log10(f(x, y))
+        testFunction.setMinimum(funcMinValuePos, testFunction.getValue(funcMinValuePos)); // Make sure it's f(x, y), not log10(f(x, y))
+        if (!testFunction.isChartInLogScale()) {
+            funcMinValue = testFunction.getMinValue();
+        }
     }
 
     private double getFuncVal(double xCanvas, double yCanvas) {
