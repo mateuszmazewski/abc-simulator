@@ -27,6 +27,12 @@ public class ResultsController {
     private Label foundMinimumValueLabel;
 
     @FXML
+    private Label orderOfMagnitudeOfErrorLabel;
+
+    @FXML
+    private Label orderOfMagnitudeOfErrorValueLabel;
+
+    @FXML
     private Label iterNumberLabel;
 
     @FXML
@@ -42,6 +48,9 @@ public class ResultsController {
     // --------------------Injected by MainController--------------------
     private MainController mainController;
 
+    // ------------------------------------------------------------------
+    private double globalMinValue = 0.0;
+
     @FXML
     private void initialize() {
         initLanguageBindings();
@@ -50,6 +59,7 @@ public class ResultsController {
     private void initLanguageBindings() {
         minimumLabel.textProperty().bind(messagesFactory.getStringBinding("results.minimum"));
         foundMinimumLabel.textProperty().bind(messagesFactory.getStringBinding("results.foundMinimum"));
+        orderOfMagnitudeOfErrorLabel.textProperty().bind(messagesFactory.getStringBinding("results.orderOfMagnitudeOfError"));
         iterNumberLabel.textProperty().bind(messagesFactory.getStringBinding("results.iterNumber"));
         saveResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.saveButton"));
         readResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.readResultsButton"));
@@ -81,6 +91,7 @@ public class ResultsController {
     }
 
     public void showFuncBest(double[] globalMinPos, double globalMinValue) {
+        this.globalMinValue = globalMinValue;
         String x = doubleToStringDecimal4(globalMinPos[0]);
         String y = doubleToStringDecimal4(globalMinPos[1]);
         String fx = doubleToStringDecimal4(globalMinValue);
@@ -90,17 +101,36 @@ public class ResultsController {
     public void showResults(int iterNumber) {
         setResultsVisible(true);
         double[] bestFoodSource = results.getBestFoodSources()[iterNumber];
-        String x = doubleToStringDecimal4(bestFoodSource[0]);
-        String y = doubleToStringDecimal4(bestFoodSource[1]);
-        String fx = doubleToStringDecimal4(results.getBestFx()[iterNumber]);
+        double fx = results.getBestFx()[iterNumber];
 
-        foundMinimumValueLabel.setText("f(" + x + ", " + y + ") = " + fx);
+        String xString = doubleToStringDecimal4(bestFoodSource[0]);
+        String yString = doubleToStringDecimal4(bestFoodSource[1]);
+        String fxString = doubleToStringDecimal4(fx);
+
+        double error = Math.abs(globalMinValue - fx);
+        String orderOfMagnitudeOfErrorString = "";
+
+        if (error > 0.0) {
+            orderOfMagnitudeOfErrorValueLabel.textProperty().unbind();
+            int orderOfMagnitudeOfError = (int) Math.floor(Math.log10(error));
+            orderOfMagnitudeOfErrorString = "10^"
+                    + (orderOfMagnitudeOfError >= 0 ? orderOfMagnitudeOfError : "(" + orderOfMagnitudeOfError + ")");
+        } else {
+            orderOfMagnitudeOfErrorValueLabel.textProperty().bind(messagesFactory.getStringBinding("results.exactSolution"));
+        }
+
+        foundMinimumValueLabel.setText("f(" + xString + ", " + yString + ") = " + fxString);
+        if (error > 0.0) {
+            orderOfMagnitudeOfErrorValueLabel.setText(orderOfMagnitudeOfErrorString);
+        }
         iterNumberLabelValue.setText(String.valueOf(iterNumber));
     }
 
     public void setResultsVisible(boolean visible) {
         foundMinimumLabel.setVisible(visible);
         foundMinimumValueLabel.setVisible(visible);
+        orderOfMagnitudeOfErrorLabel.setVisible(visible);
+        orderOfMagnitudeOfErrorValueLabel.setVisible(visible);
         iterNumberLabel.setVisible(visible);
         iterNumberLabelValue.setVisible(visible);
         saveResultsButton.setVisible(visible);
