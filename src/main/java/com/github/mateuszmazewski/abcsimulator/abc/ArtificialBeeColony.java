@@ -36,8 +36,11 @@ public class ArtificialBeeColony {
     private double[][] allFx;
     private double[][] bestFoodSources;
     private double[] bestFx;
-    // -------------------------------------------------------------------
 
+    // -------------------------------------------------------------------
+    private double[] bestFoodSourceSoFar;
+    private double bestFxSoFar;
+    private double bestFitnessSoFar = -Double.MAX_VALUE;
     private final Random rng = new Random();
 
     public ArtificialBeeColony(int foodSourcesCount, int maxIter, AbstractTestFunction func, int trialsLimit) {
@@ -92,6 +95,10 @@ public class ArtificialBeeColony {
         allFx = new double[maxIter + 1][foodSourcesCount];
         bestFoodSources = new double[maxIter + 1][dim];
         bestFx = new double[maxIter + 1];
+
+        bestFoodSourceSoFar = new double[2];
+        bestFxSoFar = Double.MAX_VALUE;
+        bestFitnessSoFar = -Double.MAX_VALUE;
 
         for (int i = 0; i < foodSourcesCount; i++) {
             generateRandomFoodSource(i);
@@ -185,18 +192,25 @@ public class ArtificialBeeColony {
     }
 
     private void rememberFoodSources(int iter) {
-        double bestFitness = Double.MIN_VALUE;
+        int bestFoodSourceIdx = -1;
 
         for (int i = 0; i < foodSourcesCount; i++) {
             allFoodSources[iter][i] = foodSources[i].clone();
             allFx[iter][i] = fx[i];
 
-            if (fitness[i] > bestFitness) {
-                bestFitness = fitness[i];
-                bestFoodSources[iter] = foodSources[i].clone();
-                bestFx[iter] = fx[i];
+            if (fitness[i] > bestFitnessSoFar) {
+                bestFitnessSoFar = fitness[i];
+                bestFoodSourceIdx = i;
             }
         }
+
+        if (bestFoodSourceIdx >= 0) {
+            bestFoodSourceSoFar = foodSources[bestFoodSourceIdx].clone();
+            bestFxSoFar = fx[bestFoodSourceIdx];
+        }
+
+        bestFoodSources[iter] = bestFoodSourceSoFar.clone();
+        bestFx[iter] = bestFxSoFar;
     }
 
     private void scoutBeePhase() {
