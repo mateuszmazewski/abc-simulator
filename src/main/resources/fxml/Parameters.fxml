@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
 <GridPane hgap="10.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.mateuszmazewski.abcsimulator.controller.ParametersController">
   <columnConstraints>
@@ -33,20 +32,11 @@
          </tooltip></Label>
       <ComboBox fx:id="funcComboBox" maxWidth="1.7976931348623157E308" onAction="#onActionFuncComboBox" GridPane.columnIndex="1" />
       <Label text="%parameters.xRange" GridPane.rowIndex="1" fx:id="xRangeLabel" />
-      <VBox alignment="CENTER_RIGHT" GridPane.rowIndex="3">
-         <children>
-            <Label fx:id="foodSourcesCountLabel" text="%parameters.foodSourcesCount">
-               <tooltip>
-                  <Tooltip fx:id="foodSourcesCountLabelTooltip" text="%tooltip.foodSourcesCountLabel" wrapText="true" />
-               </tooltip>
-            </Label>
-            <Label fx:id="employedBeesCountLabel" text="%parameters.employedBeesCount">
-               <tooltip>
-                  <Tooltip fx:id="employedBeesCountLabelTooltip" text="%tooltip.employedBeesCountLabel" wrapText="true" />
-               </tooltip>
-            </Label>
-         </children>
-      </VBox>
+      <Label fx:id="foodSourcesCountLabel" text="%parameters.foodSourcesCount" GridPane.rowIndex="3">
+         <tooltip>
+            <Tooltip fx:id="foodSourcesCountLabelTooltip" text="%tooltip.foodSourcesCountLabel" wrapText="true" />
+         </tooltip>
+      </Label>
       <TextField fx:id="foodSourcesCountTextField" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <tooltip>
             <Tooltip fx:id="foodSourcesCountTextFieldTooltip" text="%tooltip.foodSourcesCountTextField" wrapText="true" />

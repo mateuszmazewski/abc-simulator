@@ -70,9 +70,6 @@ public class ParametersController {
     private Label foodSourcesCountLabel;
 
     @FXML
-    private Label employedBeesCountLabel;
-
-    @FXML
     private Label maxIterLabel;
 
     @FXML
@@ -83,9 +80,6 @@ public class ParametersController {
 
     @FXML
     private Tooltip foodSourcesCountLabelTooltip;
-
-    @FXML
-    private Tooltip employedBeesCountLabelTooltip;
 
     @FXML
     private Tooltip foodSourcesCountTextFieldTooltip;
@@ -164,14 +158,12 @@ public class ParametersController {
         xRangeLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.xRange"));
         yRangeLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.yRange"));
         foodSourcesCountLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.foodSourcesCount"));
-        employedBeesCountLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.employedBeesCount"));
         maxIterLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.maxIter"));
         trialsLimitLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.trialsLimit"));
         startButton.textProperty().bind(messagesFactory.getStringBinding("parameters.startButton"));
 
         functionLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.funcLabel"));
         foodSourcesCountLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.foodSourcesCountLabel"));
-        employedBeesCountLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.employedBeesCountLabel"));
         foodSourcesCountTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.foodSourcesCountTextField"));
         maxIterTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.maxIterTextField"));
         trialsLimitLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.trialsLimitLabel"));
