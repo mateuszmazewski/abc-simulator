@@ -147,7 +147,7 @@ public class ResultsController {
             orderOfMagnitudeOfErrorString = "10^"
                     + (orderOfMagnitudeOfError >= 0 ? orderOfMagnitudeOfError : "(" + orderOfMagnitudeOfError + ")");
         } else {
-            orderOfMagnitudeOfErrorValueLabel.textProperty().bind(messagesFactory.getStringBinding("results.exactSolution"));
+            orderOfMagnitudeOfErrorValueLabel.textProperty().bind(messagesFactory.getStringBinding("results.maxPrecision"));
         }
 
         foundMinimumValueLabel.setText("f(" + xString + ", " + yString + ") = " + fxString);
