@@ -18,8 +18,8 @@ import java.util.stream.IntStream;
 
 public class FunctionChart2D extends GridPane {
 
-    private static final double FOOD_SOURCE_SIZE = 10.0;
     private static final double MINIMUM_MARK_SIZE = 12.0;
+    public static final double INITIAL_FOOD_SOURCE_SIZE = 10.0;
 
     private final Canvas chartCanvas = new Canvas();
     private final Canvas foodSourcesCanvas = new Canvas();
@@ -27,6 +27,7 @@ public class FunctionChart2D extends GridPane {
     private final FunctionChartAxes functionChartAxes;
     private final Canvas xAxisCanvas, yAxisCanvas, scaleCanvas, scaleAxisCanvas;
     private double chartCanvasWidth, chartCanvasHeight;
+    private double foodSourceSize = INITIAL_FOOD_SOURCE_SIZE;
 
     // ---------------------------FOOD SOURCES---------------------------
     private double[][] currentIterFoodSources;
@@ -103,14 +104,22 @@ public class FunctionChart2D extends GridPane {
     public void drawFoodSources(double[][] foodSources) {
         currentIterFoodSources = foodSources; // In case user resizes the window, we need to draw food sources again
         double[] canvasXY;
-        double offset = FOOD_SOURCE_SIZE / 2.0; // Food source's position is the circle's center (not upper-left vertex)
+        double offset = foodSourceSize / 2.0; // Food source's position is the circle's center (not upper-left vertex)
         GraphicsContext foodSourcesGraphics = foodSourcesCanvas.getGraphicsContext2D();
         foodSourcesGraphics.setFill(Color.WHITE);
         foodSourcesCanvas.getGraphicsContext2D().clearRect(0, 0, foodSourcesCanvas.getWidth(), foodSourcesCanvas.getHeight());
 
         for (double[] foodSource : foodSources) {
             canvasXY = getCanvasXY(foodSource);
-            foodSourcesGraphics.fillOval(canvasXY[0] - offset, canvasXY[1] - offset, FOOD_SOURCE_SIZE, FOOD_SOURCE_SIZE);
+            foodSourcesGraphics.fillOval(canvasXY[0] - offset, canvasXY[1] - offset, foodSourceSize, foodSourceSize);
+        }
+    }
+
+    public void redrawFoodSources() throws IllegalStateException {
+        if (currentIterFoodSources != null) {
+            drawFoodSources(currentIterFoodSources);
+        } else {
+            throw new IllegalStateException("There are no food sources to redraw");
         }
     }
 
@@ -237,5 +246,9 @@ public class FunctionChart2D extends GridPane {
         if (currentIterFoodSources != null) {
             drawFoodSources(currentIterFoodSources);
         }
+    }
+
+    public void setFoodSourceSize(double foodSourceSize) {
+        this.foodSourceSize = foodSourceSize;
     }
 }

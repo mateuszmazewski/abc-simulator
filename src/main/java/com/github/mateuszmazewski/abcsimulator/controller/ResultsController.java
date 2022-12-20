@@ -4,13 +4,18 @@ import com.github.mateuszmazewski.abcsimulator.abc.ABCResults;
 import com.github.mateuszmazewski.abcsimulator.abc.ABCResultsIO;
 import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
+import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 
 import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToStringDecimal4;
 
 public class ResultsController {
+
+    private static final int MIN_FOOD_SOURCE_SIZE = 1;
+    private static final int MAX_FOOD_SOURCE_SIZE = 30;
 
     private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
 
@@ -43,6 +48,13 @@ public class ResultsController {
 
     @FXML
     private Button readResultsButton;
+
+    @FXML
+    private Slider foodSourceSizeSlider;
+
+    @FXML
+    private Label foodSourceSizeLabel;
+
     private ABCResults results;
 
     // --------------------Injected by MainController--------------------
@@ -54,6 +66,24 @@ public class ResultsController {
     @FXML
     private void initialize() {
         initLanguageBindings();
+        initFoodSourceSizeSlider();
+    }
+
+    private void initFoodSourceSizeSlider() {
+        foodSourceSizeLabel.setVisible(false);
+        foodSourceSizeSlider.setVisible(false);
+        foodSourceSizeSlider.setMin(MIN_FOOD_SOURCE_SIZE);
+        foodSourceSizeSlider.setMax(MAX_FOOD_SOURCE_SIZE);
+        foodSourceSizeSlider.setValue(FunctionChart2D.INITIAL_FOOD_SOURCE_SIZE);
+        foodSourceSizeSlider.setShowTickMarks(false);
+        foodSourceSizeSlider.setShowTickLabels(false);
+        foodSourceSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            mainController.getCenterChart().setFoodSourceSize(foodSourceSizeSlider.getValue());
+            try {
+                mainController.getCenterChart().redrawFoodSources();
+            } catch (IllegalStateException ignored) {
+            }
+        });
     }
 
     private void initLanguageBindings() {
@@ -63,6 +93,7 @@ public class ResultsController {
         iterNumberLabel.textProperty().bind(messagesFactory.getStringBinding("results.iterNumber"));
         saveResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.saveButton"));
         readResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.readResultsButton"));
+        foodSourceSizeLabel.textProperty().bind(messagesFactory.getStringBinding("results.foodSourceSizeLabel"));
     }
 
     @FXML
@@ -134,6 +165,8 @@ public class ResultsController {
         iterNumberLabel.setVisible(visible);
         iterNumberLabelValue.setVisible(visible);
         saveResultsButton.setVisible(visible);
+        foodSourceSizeSlider.setVisible(visible);
+        foodSourceSizeLabel.setVisible(visible);
     }
 
     public void setResults(ABCResults results) {
