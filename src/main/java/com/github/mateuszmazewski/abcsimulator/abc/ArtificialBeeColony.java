@@ -74,8 +74,8 @@ public class ArtificialBeeColony {
         for (int i = 1; i <= maxIter; i++) {
             employedBeePhase();
             onlookerBeePhase();
-            rememberFoodSources(i);
             scoutBeePhase();
+            rememberFoodSources(i);
         }
     }
 
