@@ -281,14 +281,12 @@ public class ParametersController {
     }
 
     private boolean textFieldValueInRange(double d, double minValue, double maxValue, TextField textField) {
-        if (d < minValue || d > maxValue) {
-            TextFieldUtils.setInvalid(textField);
-            wrongParameters.setValue(true);
-            return false;
-        } else {
-            TextFieldUtils.setValid(textField);
+        if (TextFieldUtils.textFieldValueInRange(d, minValue, maxValue, textField)) {
             validateTextFields();
             return true;
+        } else {
+            wrongParameters.setValue(true);
+            return false;
         }
     }
 
