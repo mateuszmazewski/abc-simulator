@@ -7,6 +7,7 @@ import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.RastriginFuncti
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.TestFunctionsList;
 import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
+import com.github.mateuszmazewski.abcsimulator.utils.TextFieldUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -19,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.io.IOException;
-import java.util.stream.Stream;
 
 public class ParametersController {
 
@@ -110,8 +110,6 @@ public class ParametersController {
     private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
     private final ObservableMap<String, AbstractTestFunction> testFunctionObservableMap = FXCollections.observableHashMap();
     private final ObjectProperty<AbstractTestFunction> func = new SimpleObjectProperty<>();
-    private final String textFieldDefaultStyle = new TextField().getStyle();
-    private final String textFieldErrorStyle = "-fx-background-color: lightcoral;";
     private final BooleanProperty wrongParameters = new SimpleBooleanProperty(false);
 
     // --------------------Injected by MainController--------------------
@@ -199,10 +197,10 @@ public class ParametersController {
             int number;
             try {
                 number = Integer.parseInt(newValue);
-                textField.setStyle(textFieldDefaultStyle);
+                TextFieldUtils.setValid(textField);
                 validateTextFields();
             } catch (NumberFormatException e) {
-                textField.setStyle(textFieldErrorStyle);
+                TextFieldUtils.setInvalid(textField);
                 wrongParameters.setValue(true);
                 return;
             }
@@ -242,7 +240,7 @@ public class ParametersController {
             lower = Double.parseDouble(xRangeFromTextField.getText());
             upper = Double.parseDouble(xRangeToTextField.getText());
         } catch (NumberFormatException e) {
-            currentTextField.setStyle(textFieldErrorStyle);
+            TextFieldUtils.setInvalid(currentTextField);
             wrongParameters.setValue(true);
             return;
         }
@@ -253,8 +251,8 @@ public class ParametersController {
         if (lowerInRange && upperInRange) {
             func.getValue().getLowerBoundaries()[0] = lower;
             func.getValue().getUpperBoundaries()[0] = upper;
-            xRangeFromTextField.setStyle(textFieldDefaultStyle);
-            xRangeToTextField.setStyle(textFieldDefaultStyle);
+            TextFieldUtils.setValid(xRangeFromTextField);
+            TextFieldUtils.setValid(xRangeToTextField);
         }
     }
 
@@ -266,7 +264,7 @@ public class ParametersController {
             lower = Double.parseDouble(yRangeFromTextField.getText());
             upper = Double.parseDouble(yRangeToTextField.getText());
         } catch (NumberFormatException e) {
-            currentTextField.setStyle(textFieldErrorStyle);
+            TextFieldUtils.setInvalid(currentTextField);
             wrongParameters.setValue(true);
             return;
         }
@@ -277,28 +275,28 @@ public class ParametersController {
         if (lowerInRange && upperInRange) {
             func.getValue().getLowerBoundaries()[1] = lower;
             func.getValue().getUpperBoundaries()[1] = upper;
-            yRangeFromTextField.setStyle(textFieldDefaultStyle);
-            yRangeToTextField.setStyle(textFieldDefaultStyle);
+            TextFieldUtils.setValid(yRangeFromTextField);
+            TextFieldUtils.setValid(yRangeToTextField);
         }
     }
 
     private boolean textFieldValueInRange(double d, double minValue, double maxValue, TextField textField) {
         if (d < minValue || d > maxValue) {
-            textField.setStyle(textFieldErrorStyle);
+            TextFieldUtils.setInvalid(textField);
             wrongParameters.setValue(true);
             return false;
         } else {
-            textField.setStyle(textFieldDefaultStyle);
+            TextFieldUtils.setValid(textField);
             validateTextFields();
             return true;
         }
     }
 
     private void validateTextFields() {
-        boolean invalidTextFields = Stream.of(xRangeFromTextField, xRangeToTextField, yRangeFromTextField,
-                        yRangeToTextField, foodSourcesCountTextField, maxIterTextField, trialsLimitTextField)
-                .anyMatch(textField -> textField.getStyle().equals(textFieldErrorStyle));
-        wrongParameters.setValue(invalidTextFields);
+        boolean textFieldsInvalid = TextFieldUtils.textFieldsInvalid(
+                xRangeFromTextField, xRangeToTextField, yRangeFromTextField,
+                yRangeToTextField, foodSourcesCountTextField, maxIterTextField, trialsLimitTextField);
+        wrongParameters.setValue(textFieldsInvalid);
     }
 
     @FXML
