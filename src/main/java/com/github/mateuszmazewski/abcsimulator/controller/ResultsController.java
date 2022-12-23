@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 
 import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToStringDecimal4;
 
@@ -55,6 +56,9 @@ public class ResultsController {
     @FXML
     private Label foodSourceSizeLabel;
 
+    @FXML
+    private Tooltip orderOfMagnitudeOfErrorLabelTooltip;
+
     private ABCResults results;
 
     // --------------------Injected by MainController--------------------
@@ -94,6 +98,7 @@ public class ResultsController {
         saveResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.saveButton"));
         readResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.readResultsButton"));
         foodSourceSizeLabel.textProperty().bind(messagesFactory.getStringBinding("results.foodSourceSizeLabel"));
+        orderOfMagnitudeOfErrorLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.orderOfMagnitudeOfErrorLabel"));
     }
 
     @FXML
