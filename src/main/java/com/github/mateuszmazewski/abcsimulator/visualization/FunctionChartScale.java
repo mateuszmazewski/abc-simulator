@@ -50,10 +50,10 @@ public class FunctionChartScale {
         }
     }
 
-    public Color getColorFromFuncValue(double funcVal, double funcMinValue, double funcMaxValue) {
+    public Color getColorFromFuncValue(double funcVal, double funcMinVal, double funcMaxVal) {
         // Scale func. values to [0, 240] ->  HSV color space
         // 0 deg. = red, 120 deg. = green, 240 deg. = blue
-        double funcValScaled = (funcVal - funcMinValue) / (funcMaxValue - funcMinValue) * 240;
+        double funcValScaled = (funcVal - funcMinVal) / (funcMaxVal - funcMinVal) * 240;
         return Color.hsb(240.0 - funcValScaled, 1.0, 1.0);
     }
 
