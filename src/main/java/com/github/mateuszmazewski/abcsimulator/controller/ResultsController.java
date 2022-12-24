@@ -19,6 +19,7 @@ public class ResultsController {
     private static final int MAX_FOOD_SOURCE_SIZE = 30;
 
     private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
+    private final IControllerMediator controllerMediator = ControllerMediator.getInstance();
 
     @FXML
     private Label minimumValueLabel;
@@ -59,12 +60,8 @@ public class ResultsController {
     @FXML
     private Tooltip orderOfMagnitudeOfErrorLabelTooltip;
 
-    private ABCResults results;
-
-    // --------------------Injected by MainController--------------------
-    private MainController mainController;
-
     // ------------------------------------------------------------------
+    private ABCResults results;
     private double globalMinValue = 0.0;
 
     @FXML
@@ -82,9 +79,9 @@ public class ResultsController {
         foodSourceSizeSlider.setShowTickMarks(false);
         foodSourceSizeSlider.setShowTickLabels(false);
         foodSourceSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            mainController.getCenterChart().setFoodSourceSize(foodSourceSizeSlider.getValue());
+            controllerMediator.mainControllerGetFunctionChart().setFoodSourceSize(foodSourceSizeSlider.getValue());
             try {
-                mainController.getCenterChart().redrawFoodSources();
+                controllerMediator.mainControllerGetFunctionChart().redrawFoodSources();
             } catch (IllegalStateException ignored) {
             }
         });
@@ -103,7 +100,7 @@ public class ResultsController {
 
     @FXML
     private void onActionSaveResultsButton() {
-        ABCResultsIO resultsIO = new ABCResultsIO(mainController.getStage());
+        ABCResultsIO resultsIO = new ABCResultsIO(controllerMediator.mainControllerGetStage());
         try {
             resultsIO.saveResults(results);
         } catch (Exception e) {
@@ -113,14 +110,14 @@ public class ResultsController {
 
     @FXML
     private void onActionReadButton() {
-        ABCResultsIO resultsIO = new ABCResultsIO(mainController.getStage());
+        ABCResultsIO resultsIO = new ABCResultsIO(controllerMediator.mainControllerGetStage());
         try {
             results = resultsIO.readResults();
             if (results == null) {
                 return;
             }
 
-            mainController.getParametersController().initResults(results);
+            controllerMediator.parameterControllerInitResults(results);
         } catch (Exception e) {
             DialogUtils.errorDialog(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
@@ -178,7 +175,4 @@ public class ResultsController {
         this.results = results;
     }
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
 }

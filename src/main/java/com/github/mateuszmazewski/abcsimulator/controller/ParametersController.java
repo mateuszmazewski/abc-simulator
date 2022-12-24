@@ -106,15 +106,11 @@ public class ParametersController {
     private Tooltip yRangeToTextFieldTooltip;
 
     // -----------------------------------------------------------------
-
     private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
+    private final IControllerMediator controllerMediator = ControllerMediator.getInstance();
     private final ObservableMap<String, AbstractTestFunction> testFunctionObservableMap = FXCollections.observableHashMap();
     private final ObjectProperty<AbstractTestFunction> func = new SimpleObjectProperty<>();
     private final BooleanProperty wrongParameters = new SimpleBooleanProperty(false);
-
-    // --------------------Injected by MainController--------------------
-    private MainController mainController;
-    private Slider iterSlider;
 
     // ------------------------------------------------------------------
     private ChangeListener<Number> sliderValueChangeListener;
@@ -224,10 +220,10 @@ public class ParametersController {
                     handleYRange(textField);
                 }
 
-                FunctionChart2D chart = mainController.getCenterChart();
+                FunctionChart2D chart = controllerMediator.mainControllerGetFunctionChart();
                 chart.setTestFunction(func.getValue());
                 chart.drawAll();
-                mainController.getResultsController().showFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
+                controllerMediator.resultsControllerShowFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
             }
         });
     }
@@ -300,11 +296,11 @@ public class ParametersController {
     @FXML
     private void onActionFuncComboBox() {
         if (funcComboBoxChangeListenerActive) {
-            if (mainController != null) {
-                mainController.getCenterChart().clearFoodSources();
-                iterSlider.setDisable(true);
-                mainController.getResultsController().showFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
-                mainController.getResultsController().setResultsVisible(false);
+            if (controllerMediator.isMainControllerRegistered()) {
+                controllerMediator.mainControllerGetFunctionChart().clearFoodSources();
+                controllerMediator.mainControllerGetIterSlider().setDisable(true);
+                controllerMediator.resultsControllerShowFuncBest(func.getValue().getMinValuePos(), func.getValue().getMinValue());
+                controllerMediator.resultsControllerSetResultsVisible(false);
             }
             func.getValue().restoreDefaultRanges();
             setRangeTextFields();
@@ -339,15 +335,17 @@ public class ParametersController {
         ArtificialBeeColony abc = new ArtificialBeeColony(foodSourcesCount, maxIter, func.getValue(), trialsLimit);
         abc.run();
         ABCResults results = new ABCResults(abc);
-        mainController.getResultsController().setResults(results);
+        controllerMediator.resultsControllerSetResults(results);
 
         initIterSlider(results);
-        mainController.getResultsController().setResultsVisible(true);
-        mainController.getResultsController().showResults(maxIter);
+        controllerMediator.resultsControllerSetResultsVisible(true);
+        controllerMediator.resultsControllerShowResults(maxIter);
     }
 
     private void initIterSlider(ABCResults results) {
         int maxIter = results.getMaxIter();
+        Slider iterSlider = controllerMediator.mainControllerGetIterSlider();
+
         iterSlider.setDisable(false);
         iterSlider.setShowTickMarks(true);
         iterSlider.setShowTickLabels(true);
@@ -368,13 +366,13 @@ public class ParametersController {
         }
         sliderValueChangeListener = (observable, oldValue, newValue) -> {
             int iterNumber = newValue.intValue();
-            mainController.getCenterChart().drawFoodSources(results.getAllFoodSources()[iterNumber]);
-            mainController.getResultsController().showResults(iterNumber);
+            controllerMediator.mainControllerGetFunctionChart().drawFoodSources(results.getAllFoodSources()[iterNumber]);
+            controllerMediator.resultsControllerShowResults(iterNumber);
         };
 
         iterSlider.valueProperty().addListener(sliderValueChangeListener);
         iterSlider.setValue(maxIter);
-        mainController.getCenterChart().drawFoodSources(results.getAllFoodSources()[maxIter]);
+        controllerMediator.mainControllerGetFunctionChart().drawFoodSources(results.getAllFoodSources()[maxIter]);
     }
 
     public void initResults(ABCResults results) throws IOException {
@@ -393,21 +391,13 @@ public class ParametersController {
         handleXRange(xRangeFromTextField);
         handleYRange(yRangeFromTextField);
 
-        mainController.getResultsController().showResults(results.getMaxIter());
+        controllerMediator.resultsControllerShowResults(results.getMaxIter());
 
         maxIterTextField.setText(String.valueOf(results.getMaxIter()));
         foodSourcesCountTextField.setText(String.valueOf(results.getFoodSourcesCount()));
         trialsLimitTextField.setText(String.valueOf(results.getTrialsLimit()));
 
         initIterSlider(results);
-    }
-
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
-    public void setIterSlider(Slider iterSlider) {
-        this.iterSlider = iterSlider;
     }
 
     public AbstractTestFunction getFunc() {

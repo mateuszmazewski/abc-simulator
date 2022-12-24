@@ -60,21 +60,22 @@ public class MainController {
 
     @FXML
     private void initialize() {
+        ControllerMediator.getInstance().registerMainController(this);
+        ControllerMediator.getInstance().registerParametersController(parametersController);
+        ControllerMediator.getInstance().registerResultsController(resultsController);
+
         messagesFactory.setResources(FxmlUtils.getResourceBundle(Locale.forLanguageTag("pl")));
         initLanguageBindings();
 
         FunctionChart2D functionChart2D = new FunctionChart2D(new RastriginFunction());
         BorderPane.setMargin(functionChart2D, new Insets(10, 10, 10, 10));
         borderPane.setCenter(functionChart2D);
-        parametersController.setMainController(this);
 
         iterSlider.setDisable(true);
         iterSlider.setMin(0);
         iterSlider.setMax(ParametersController.INITIAL_MAX_ITER);
-        parametersController.setIterSlider(iterSlider);
 
         AbstractTestFunction func = parametersController.getFunc();
-        resultsController.setMainController(this);
         resultsController.showFuncBest(func.getMinValuePos(), func.getMinValue());
         resultsController.setResultsVisible(false);
     }
@@ -121,19 +122,15 @@ public class MainController {
         DialogUtils.showAboutDialog();
     }
 
-    public ResultsController getResultsController() {
-        return resultsController;
-    }
-
-    public ParametersController getParametersController() {
-        return parametersController;
-    }
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
     public Stage getStage() {
         return stage;
+    }
+
+    public Slider getIterSlider() {
+        return iterSlider;
     }
 }
