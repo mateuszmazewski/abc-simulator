@@ -21,13 +21,20 @@ public class TextFieldUtils {
         textField.setStyle(textFieldDefaultStyle);
     }
 
-    public static boolean textFieldValueInRange(double d, double minValue, double maxValue, TextField textField) {
-        if (d < minValue || d > maxValue) {
-            setInvalid(textField);
-            return false;
+    public static boolean textFieldValueInRange(double d, double minValue, double maxValue, boolean strictInequalities, TextField textField) {
+        boolean valueValid;
+        if (strictInequalities) {
+            valueValid = d > minValue && d < maxValue;
         } else {
+            valueValid = d >= minValue && d <= maxValue;
+        }
+
+        if (valueValid) {
             setValid(textField);
             return true;
+        } else {
+            setInvalid(textField);
+            return false;
         }
     }
 

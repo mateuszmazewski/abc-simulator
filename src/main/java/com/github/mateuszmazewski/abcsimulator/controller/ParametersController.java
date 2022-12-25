@@ -202,11 +202,11 @@ public class ParametersController {
             }
 
             if (textField == foodSourcesCountTextField) {
-                textFieldValueInRange(number, ArtificialBeeColony.MIN_FOOD_SOURCES_COUNT, ArtificialBeeColony.MAX_FOOD_SOURCES_COUNT, textField);
+                textFieldValueInRange(number, ArtificialBeeColony.MIN_FOOD_SOURCES_COUNT, ArtificialBeeColony.MAX_FOOD_SOURCES_COUNT, false, textField);
             } else if (textField == maxIterTextField) {
-                textFieldValueInRange(number, ArtificialBeeColony.MAX_ITER_LOWER_LIMIT, ArtificialBeeColony.MAX_ITER_UPPER_LIMIT, textField);
+                textFieldValueInRange(number, ArtificialBeeColony.MAX_ITER_LOWER_LIMIT, ArtificialBeeColony.MAX_ITER_UPPER_LIMIT, false, textField);
             } else if (textField == trialsLimitTextField) {
-                textFieldValueInRange(number, ArtificialBeeColony.MIN_TRIALS_LIMIT, ArtificialBeeColony.MAX_TRIALS_LIMIT, textField);
+                textFieldValueInRange(number, ArtificialBeeColony.MIN_TRIALS_LIMIT, ArtificialBeeColony.MAX_TRIALS_LIMIT, false, textField);
             }
         });
     }
@@ -241,8 +241,8 @@ public class ParametersController {
             return;
         }
 
-        lowerInRange = textFieldValueInRange(lower, AbstractTestFunction.MIN_X, upper, xRangeFromTextField);
-        upperInRange = textFieldValueInRange(upper, lower, AbstractTestFunction.MAX_X, xRangeToTextField);
+        lowerInRange = textFieldValueInRange(lower, AbstractTestFunction.MIN_X, upper, true, xRangeFromTextField);
+        upperInRange = textFieldValueInRange(upper, lower, AbstractTestFunction.MAX_X, true, xRangeToTextField);
 
         if (lowerInRange && upperInRange) {
             func.getValue().getLowerBoundaries()[0] = lower;
@@ -265,8 +265,8 @@ public class ParametersController {
             return;
         }
 
-        lowerInRange = textFieldValueInRange(lower, AbstractTestFunction.MIN_Y, upper, yRangeFromTextField);
-        upperInRange = textFieldValueInRange(upper, lower, AbstractTestFunction.MAX_Y, yRangeToTextField);
+        lowerInRange = textFieldValueInRange(lower, AbstractTestFunction.MIN_Y, upper, true, yRangeFromTextField);
+        upperInRange = textFieldValueInRange(upper, lower, AbstractTestFunction.MAX_Y, true, yRangeToTextField);
 
         if (lowerInRange && upperInRange) {
             func.getValue().getLowerBoundaries()[1] = lower;
@@ -276,8 +276,8 @@ public class ParametersController {
         }
     }
 
-    private boolean textFieldValueInRange(double d, double minValue, double maxValue, TextField textField) {
-        if (TextFieldUtils.textFieldValueInRange(d, minValue, maxValue, textField)) {
+    private boolean textFieldValueInRange(double d, double minValue, double maxValue, boolean strictInequalities, TextField textField) {
+        if (TextFieldUtils.textFieldValueInRange(d, minValue, maxValue, strictInequalities, textField)) {
             validateTextFields();
             return true;
         } else {
