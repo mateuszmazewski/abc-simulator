@@ -8,9 +8,9 @@ import java.util.Random;
 public class ArtificialBeeColony {
 
     public static final int MIN_FOOD_SOURCES_COUNT = 2;
-    public static final int MAX_FOOD_SOURCES_COUNT = 1000000;
+    public static final int MAX_FOOD_SOURCES_COUNT = 1000;
     public static final int MAX_ITER_LOWER_LIMIT = 1;
-    public static final int MAX_ITER_UPPER_LIMIT = 1000000;
+    public static final int MAX_ITER_UPPER_LIMIT = 10000;
     public static final int MIN_TRIALS_LIMIT = 0;
     public static final int MAX_TRIALS_LIMIT = 1000000;
 
