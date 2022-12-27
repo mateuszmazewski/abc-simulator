@@ -6,7 +6,7 @@ import java.util.Locale;
 
 public class MathUtils {
 
-    public static final double EPS = 1e-16; // Double numbers precision
+    public static final double EPS = 1e-8;
     public static final DecimalFormat decimalFormat2 = new DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.US));
     public static final DecimalFormat decimalFormat4 = new DecimalFormat("0.0000", DecimalFormatSymbols.getInstance(Locale.US));
 

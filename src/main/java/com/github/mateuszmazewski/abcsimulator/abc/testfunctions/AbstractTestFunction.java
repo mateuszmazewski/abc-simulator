@@ -82,9 +82,9 @@ public abstract class AbstractTestFunction {
 
     public double getLog10Value(double[] pos) {
         double value = getValue(pos);
-        if (value >= 0.0 && value < MathUtils.EPS) {
+        if (value < 1e-16) {
             // In order to avoid log10(0) == -Infinity
-            // It could be much lower exponent, but it would mess up the scale of function values
+            // It could be much lower exponent, but sometimes it would mess up the scale of function values
             return MIN_EXPONENT;
         } else {
             return Math.log10(value);
