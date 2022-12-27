@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 
 public class TestFunctionUtils {
 
-    private static ObservableMap<String, AbstractTestFunction> testFunctionObservableMap;
-
     private static final List<Class<? extends AbstractTestFunction>> allTestFunctionClasses = Arrays.asList(
             AckleyFunction.class,
             BealeFunction.class,
@@ -28,13 +26,6 @@ public class TestFunctionUtils {
     public static final List<String> allTestFunctionNames = allTestFunctionClasses.stream()
             .map(Class::getSimpleName)
             .collect(Collectors.toList());
-
-    public static ObservableMap<String, AbstractTestFunction> getTestFunctionObservableMap() {
-        if (testFunctionObservableMap == null) {
-            testFunctionObservableMap = createTestFunctionObservableMap();
-        }
-        return testFunctionObservableMap;
-    }
 
     public static ObservableMap<String, AbstractTestFunction> createTestFunctionObservableMap() {
         ObservableMap<String, AbstractTestFunction> testFunctionObservableMap = FXCollections.observableHashMap();
