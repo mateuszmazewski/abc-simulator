@@ -41,7 +41,7 @@ public class FunctionChartScale {
         double funcVal;
 
         for (int yCanvas = 0; yCanvas < scaleCanvasHeight; yCanvas++) {
-            funcVal = funcMinValue + (scaleCanvasHeight - yCanvas) * funcValRange / (scaleCanvasHeight - 1);
+            funcVal = funcMinValue + ((scaleCanvasHeight - 1) - yCanvas) * funcValRange / (scaleCanvasHeight - 1);
 
             Color color = getColorFromFuncValue(funcVal, funcMinValue, funcMaxValue);
             for (int xCanvas = 0; xCanvas < scaleCanvasWidth; xCanvas++) {
