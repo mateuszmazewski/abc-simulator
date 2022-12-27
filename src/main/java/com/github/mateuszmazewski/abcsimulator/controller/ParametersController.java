@@ -4,8 +4,7 @@ import com.github.mateuszmazewski.abcsimulator.abc.ABCResults;
 import com.github.mateuszmazewski.abcsimulator.abc.ArtificialBeeColony;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.AbstractTestFunction;
 import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.RastriginFunction;
-import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.TestFunctionsList;
-import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.TestFunctionUtils;
 import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import com.github.mateuszmazewski.abcsimulator.utils.TextFieldUtils;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
@@ -114,7 +113,7 @@ public class ParametersController {
     // -----------------------------------------------------------------
     private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
     private final IControllerMediator controllerMediator = ControllerMediator.getInstance();
-    private final ObservableMap<String, AbstractTestFunction> testFunctionObservableMap = FXCollections.observableHashMap();
+    private final ObservableMap<String, AbstractTestFunction> testFunctionObservableMap = TestFunctionUtils.createTestFunctionObservableMap();
     private final ObjectProperty<AbstractTestFunction> func = new SimpleObjectProperty<>();
     private final BooleanProperty wrongParameters = new SimpleBooleanProperty(false);
 
@@ -126,7 +125,6 @@ public class ParametersController {
     @FXML
     private void initialize() {
         initLanguageBindings();
-        initTestFunctionObservableMap();
 
         funcComboBox.setItems(FXCollections.observableArrayList(testFunctionObservableMap.values()));
 
@@ -174,16 +172,6 @@ public class ParametersController {
         xRangeToTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.xRangeToTextField"));
         yRangeFromTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.yRangeFromTextField"));
         yRangeToTextFieldTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.yRangeToTextField"));
-    }
-
-    private void initTestFunctionObservableMap() {
-        TestFunctionsList.allTestFunctionClasses.forEach(funcClass -> {
-            try {
-                testFunctionObservableMap.put(funcClass.getSimpleName(), funcClass.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
-                DialogUtils.errorDialog(e.getClass().getSimpleName() + ": " + e.getMessage());
-            }
-        });
     }
 
     private void addValueChangeListenerToTextFields() {

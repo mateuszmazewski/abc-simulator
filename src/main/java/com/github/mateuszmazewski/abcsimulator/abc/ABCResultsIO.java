@@ -1,6 +1,6 @@
 package com.github.mateuszmazewski.abcsimulator.abc;
 
-import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.TestFunctionsList;
+import com.github.mateuszmazewski.abcsimulator.abc.testfunctions.TestFunctionUtils;
 import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -141,7 +141,7 @@ public class ABCResultsIO {
 
             switch (splitLine[0]) {
                 case FUNCTION_PARAM:
-                    if (!TestFunctionsList.allTestFunctionNames.contains(splitLine[2])) {
+                    if (!TestFunctionUtils.allTestFunctionNames.contains(splitLine[2])) {
                         throw new IOException("Unknown function: " + splitLine[2]);
                     }
                     results.setTestFunctionName(splitLine[2]);
