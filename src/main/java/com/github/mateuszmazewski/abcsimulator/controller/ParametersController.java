@@ -67,6 +67,12 @@ public class ParametersController {
     private Label yRangeLabel;
 
     @FXML
+    private Label xToLabel;
+
+    @FXML
+    private Label yToLabel;
+
+    @FXML
     private Label foodSourcesCountLabel;
 
     @FXML
@@ -151,6 +157,8 @@ public class ParametersController {
         funcLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.function"));
         xRangeLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.xRange"));
         yRangeLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.yRange"));
+        xToLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.rangeTo"));
+        yToLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.rangeTo"));
         foodSourcesCountLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.foodSourcesCount"));
         maxIterLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.maxIter"));
         trialsLimitLabel.textProperty().bind(messagesFactory.getStringBinding("parameters.trialsLimit"));

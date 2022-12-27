@@ -60,7 +60,7 @@
                <tooltip>
                   <Tooltip text="%tooltip.xRangeFromTextField" wrapText="true" fx:id="xRangeFromTextFieldTooltip" />
                </tooltip></TextField>
-            <Label text="-" />
+            <Label text="%parameters.rangeTo" fx:id="xToLabel" />
             <TextField maxWidth="100.0" fx:id="xRangeToTextField">
                <tooltip>
                   <Tooltip text="%tooltip.xRangeToTextField" wrapText="true" fx:id="xRangeToTextFieldTooltip" />
@@ -74,7 +74,7 @@
                <tooltip>
                   <Tooltip fx:id="yRangeFromTextFieldTooltip" text="%tooltip.yRangeFromTextField" wrapText="true" />
                </tooltip></TextField>
-            <Label text="-" />
+            <Label fx:id="yToLabel" text="%parameters.rangeTo" />
             <TextField fx:id="yRangeToTextField" maxWidth="100.0">
                <tooltip>
                   <Tooltip fx:id="yRangeToTextFieldTooltip" text="%tooltip.yRangeToTextField" wrapText="true" />
