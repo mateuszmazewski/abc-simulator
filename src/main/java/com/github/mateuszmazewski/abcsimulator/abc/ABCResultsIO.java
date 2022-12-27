@@ -41,7 +41,8 @@ public class ABCResultsIO {
         FileChooser fileChooser = new FileChooser();
         fileChooser.titleProperty().bind(messagesFactory.getStringBinding("fileChooser.save.title"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription"), "*.txt"));
+                new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription.textFile"), "*.txt"),
+                new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription.allFiles"), "*"));
         fileChooser.setInitialFileName(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd_HH.mm.ss")));
         File chosenFile = fileChooser.showSaveDialog(stage);
 
@@ -102,7 +103,8 @@ public class ABCResultsIO {
         FileChooser fileChooser = new FileChooser();
         fileChooser.titleProperty().bind(messagesFactory.getStringBinding("fileChooser.read.title"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription"), "*.txt"));
+                new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription.textFile"), "*.txt"),
+                new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription.allFiles"), "*"));
         File chosenFile = fileChooser.showOpenDialog(stage);
         ABCResults results = null;
 
