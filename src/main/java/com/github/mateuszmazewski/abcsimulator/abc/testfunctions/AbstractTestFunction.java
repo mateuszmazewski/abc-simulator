@@ -83,7 +83,7 @@ public abstract class AbstractTestFunction {
     public double getLog10Value(double[] pos) {
         double value = getValue(pos);
         if (value < 1e-16) {
-            // In order to avoid log10(0) == -Infinity
+            // In order to avoid log10(0) == -Infinity or log10(negative) == NaN
             return -16.0;
         } else {
             return Math.log10(value);
