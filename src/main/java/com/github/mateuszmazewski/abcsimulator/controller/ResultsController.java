@@ -4,12 +4,10 @@ import com.github.mateuszmazewski.abcsimulator.abc.ABCResults;
 import com.github.mateuszmazewski.abcsimulator.abc.ABCResultsIO;
 import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
+import com.github.mateuszmazewski.abcsimulator.visualization.ErrorChartModel;
 import com.github.mateuszmazewski.abcsimulator.visualization.FunctionChart2D;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 
 import static com.github.mateuszmazewski.abcsimulator.utils.MathUtils.doubleToStringDecimal4;
 
@@ -50,6 +48,9 @@ public class ResultsController {
 
     @FXML
     private Button readResultsButton;
+
+    @FXML
+    private Button errorChartButton;
 
     @FXML
     private Slider foodSourceSizeSlider;
@@ -94,6 +95,7 @@ public class ResultsController {
         iterNumberLabel.textProperty().bind(messagesFactory.getStringBinding("results.iterNumber"));
         saveResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.saveButton"));
         readResultsButton.textProperty().bind(messagesFactory.getStringBinding("results.readResultsButton"));
+        errorChartButton.textProperty().bind(messagesFactory.getStringBinding("results.errorChartButton"));
         foodSourceSizeLabel.textProperty().bind(messagesFactory.getStringBinding("results.foodSourceSizeLabel"));
         orderOfMagnitudeOfErrorLabelTooltip.textProperty().bind(messagesFactory.getStringBinding("tooltip.orderOfMagnitudeOfErrorLabel"));
     }
@@ -121,6 +123,15 @@ public class ResultsController {
         } catch (Exception e) {
             DialogUtils.errorDialog(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void onActionErrorChartButton() {
+        if (results == null) {
+            return;
+        }
+
+        new ErrorChartModel().createErrorChartDialog(results).showAndWait();
     }
 
     public void showFuncBest(double[] globalMinPos, double globalMinValue) {
@@ -167,6 +178,7 @@ public class ResultsController {
         iterNumberLabel.setVisible(visible);
         iterNumberLabelValue.setVisible(visible);
         saveResultsButton.setVisible(visible);
+        errorChartButton.setVisible(visible);
         foodSourceSizeSlider.setVisible(visible);
         foodSourceSizeLabel.setVisible(visible);
     }

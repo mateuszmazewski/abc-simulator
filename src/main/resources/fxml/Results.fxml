@@ -34,6 +34,7 @@
          <children>
             <Button fx:id="readResultsButton" mnemonicParsing="false" onAction="#onActionReadButton" text="%results.readResultsButton" />
             <Button fx:id="saveResultsButton" mnemonicParsing="false" onAction="#onActionSaveResultsButton" text="%results.saveButton" />
+            <Button fx:id="errorChartButton" mnemonicParsing="false" onAction="#onActionErrorChartButton" text="%results.errorChartButton" />
          </children>
       </HBox>
       <Label fx:id="orderOfMagnitudeOfErrorLabel" text="%results.orderOfMagnitudeOfError" GridPane.rowIndex="2">
