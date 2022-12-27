@@ -11,7 +11,7 @@ public abstract class AbstractTestFunction {
     public final static double MIN_Y = -10000.0;
     public final static double MAX_X = 10000.0;
     public final static double MAX_Y = 10000.0;
-    public static final double MIN_EXPONENT = -6.0; // When log10(0) == -Infinity, return this value instead
+
     private final int dim;
     private final double[] lowerBoundaries, upperBoundaries;
     private final double[] defaultLowerBoundaries, defaultUpperBoundaries;
@@ -84,8 +84,7 @@ public abstract class AbstractTestFunction {
         double value = getValue(pos);
         if (value < 1e-16) {
             // In order to avoid log10(0) == -Infinity
-            // It could be much lower exponent, but sometimes it would mess up the scale of function values
-            return MIN_EXPONENT;
+            return -16.0;
         } else {
             return Math.log10(value);
         }
