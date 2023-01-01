@@ -24,9 +24,9 @@ public class ParametersController {
 
     private static final int SLIDER_MAJOR_TICKS_COUNT = 20;
     private static final int SLIDER_BY_ONE_TICKS_LIMIT = 30;
-    public static final int INITIAL_FOOD_SOURCES_COUNT = 50;
-    public static final int INITIAL_MAX_ITER = 100;
-    public static final int INITIAL_TRIALS_LIMIT = 50;
+    public static final int INITIAL_FOOD_SOURCES_COUNT = 20;
+    public static final int INITIAL_MAX_ITER = 200;
+    public static final int INITIAL_TRIALS_LIMIT = 100;
 
     @FXML
     private ComboBox<AbstractTestFunction> funcComboBox;
