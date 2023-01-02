@@ -191,6 +191,7 @@ public class FunctionChart2D extends GridPane {
         testFunction.setMinimum(funcMinValuePos, testFunction.getValue(funcMinValuePos)); // Make sure it's f(x, y), not log10(f(x, y))
         if (!testFunction.isChartInLogScale()) {
             funcMinValue = testFunction.getMinValue();
+            funcMinValuePos = testFunction.getMinValuePos();
         }
     }
 
