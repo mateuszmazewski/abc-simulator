@@ -14,7 +14,6 @@ public class TestFunctionUtils {
             AckleyFunction.class,
             BealeFunction.class,
             BoothFunction.class,
-            EggholderFunction.class,
             GoldsteinPriceFunction.class,
             MatyasFunction.class,
             RastriginFunction.class,
