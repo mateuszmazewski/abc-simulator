@@ -2,6 +2,7 @@ package com.github.mateuszmazewski.abcsimulator.visualization;
 
 import com.github.mateuszmazewski.abcsimulator.abc.ABCResults;
 import com.github.mateuszmazewski.abcsimulator.controller.ControllerMediator;
+import com.github.mateuszmazewski.abcsimulator.utils.DialogUtils;
 import com.github.mateuszmazewski.abcsimulator.utils.ObservableResourceFactory;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
@@ -44,6 +45,7 @@ public class ErrorChartModel {
         }
 
         chartDialog.getDialogPane().setContent(vBox);
+        DialogUtils.centerDialogOnStage(ControllerMediator.getInstance().mainControllerGetStage(), chartDialog);
         return chartDialog;
     }
 
