@@ -114,11 +114,11 @@ public class ResultsController {
     private void onActionReadButton() {
         ABCResultsIO resultsIO = new ABCResultsIO(controllerMediator.mainControllerGetStage());
         try {
-            results = resultsIO.readResults();
-            if (results == null) {
+            ABCResults readResults = resultsIO.readResults();
+            if (readResults == null) {
                 return;
             }
-
+            results = readResults;
             controllerMediator.parameterControllerInitResults(results);
         } catch (Exception e) {
             DialogUtils.errorDialog(e.getClass().getSimpleName() + ": " + e.getMessage());
