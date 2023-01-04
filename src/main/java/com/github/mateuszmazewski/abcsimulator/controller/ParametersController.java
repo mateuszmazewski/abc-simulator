@@ -314,6 +314,8 @@ public class ParametersController {
         xRangeToTextField.textProperty().setValue(String.valueOf(func.getValue().getUpperBoundaries()[0]));
         rangeChangeListenersActive = true; // Draw chart only once
         yRangeToTextField.textProperty().setValue(String.valueOf(func.getValue().getUpperBoundaries()[1]));
+        handleXRange(xRangeFromTextField);
+        handleYRange(yRangeFromTextField);
     }
 
     @FXML
@@ -384,8 +386,6 @@ public class ParametersController {
         func.getUpperBoundaries()[1] = results.getUpperBoundaries()[1];
         func.setMinimum(results.getMinValuePos(), results.getMinValue());
         setRangeTextFields();
-        handleXRange(xRangeFromTextField);
-        handleYRange(yRangeFromTextField);
 
         controllerMediator.resultsControllerShowResults(results.getMaxIter());
 
