@@ -26,6 +26,7 @@ public class ABCResultsIO {
     public static final String MIN_POSSIBLE_VALUE_POSITION_PARAM = "min_possible_value_position";
     public static final String MIN_FOUND_VALUE_PARAM = "min_found_value";
     public static final String MIN_FOUND_VALUE_POSITION_PARAM = "min_found_value_position";
+    public static final String BEST_ITERATION_PARAM = "best_iteration";
     private final ObservableResourceFactory messagesFactory = ObservableResourceFactory.getInstance();
     private final Stage stage;
 
@@ -73,6 +74,7 @@ public class ABCResultsIO {
         writer.write("\n" + MIN_POSSIBLE_VALUE_POSITION_PARAM + " = " + results.getMinValuePos()[0] + " " + results.getMinValuePos()[1]);
 
         writer.write("\n\n# Best found solution");
+        writer.write("\n" + BEST_ITERATION_PARAM + " = " + results.getBestIter());
         writer.write("\n" + MIN_FOUND_VALUE_PARAM + " = " + results.getFoundMinValue());
         writer.write("\n" + MIN_FOUND_VALUE_POSITION_PARAM + " = " + results.getFoundMinValuePos()[0] + " " + results.getFoundMinValuePos()[1]);
 
@@ -190,6 +192,10 @@ public class ABCResultsIO {
                     results.getMinValuePos()[1] = Double.parseDouble(splitLine[3]);
                     foundParametersInFileMap.put(MIN_POSSIBLE_VALUE_POSITION_PARAM, true);
                     break;
+                case BEST_ITERATION_PARAM:
+                    results.setBestIter(Integer.parseInt(splitLine[2]));
+                    foundParametersInFileMap.put(BEST_ITERATION_PARAM, true);
+                    break;
                 case MIN_FOUND_VALUE_PARAM:
                     results.setFoundMinValue(Double.parseDouble(splitLine[2]));
                     foundParametersInFileMap.put(MIN_FOUND_VALUE_PARAM, true);
@@ -278,6 +284,7 @@ public class ABCResultsIO {
                 TRIALS_LIMIT_PARAM,
                 MIN_POSSIBLE_VALUE_PARAM,
                 MIN_POSSIBLE_VALUE_POSITION_PARAM,
+                BEST_ITERATION_PARAM,
                 MIN_FOUND_VALUE_PARAM,
                 MIN_FOUND_VALUE_POSITION_PARAM
         ).forEach(param -> map.put(param, false));

@@ -8,7 +8,7 @@ public class ABCResults {
     private double[] minValuePos, foundMinValuePos;
     private double minValue, foundMinValue;
     private double[] lowerBoundaries, upperBoundaries;
-    private int maxIter, foodSourcesCount, trialsLimit;
+    private int maxIter, foodSourcesCount, trialsLimit, bestIter;
     private double[][][] allFoodSources;
     private double[][] bestFoodSources;
     private double[] bestFx;
@@ -37,6 +37,7 @@ public class ABCResults {
         trialsLimit = abc.getTrialsLimit();
         allFoodSources = abc.getAllFoodSources();
         bestFoodSources = abc.getBestFoodSources();
+        bestIter = abc.getBestIter();
         bestFx = abc.getBestFx();
         allFx = abc.getAllFx();
         foundMinValue = abc.getBestFx()[maxIter];
@@ -153,5 +154,13 @@ public class ABCResults {
 
     public void setAllFx(double[][] allFx) {
         this.allFx = allFx;
+    }
+
+    public int getBestIter() {
+        return bestIter;
+    }
+
+    public void setBestIter(int bestIter) {
+        this.bestIter = bestIter;
     }
 }

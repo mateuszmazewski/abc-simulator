@@ -40,6 +40,7 @@ public class ArtificialBeeColony {
     // -------------------------------------------------------------------
     private double[] bestFoodSourceSoFar;
     private double bestFxSoFar;
+    private int bestIter;
     private double bestFitnessSoFar = -Double.MAX_VALUE;
     private final Random rng = new Random();
 
@@ -207,6 +208,7 @@ public class ArtificialBeeColony {
         if (bestFoodSourceIdx >= 0) {
             bestFoodSourceSoFar = foodSources[bestFoodSourceIdx].clone();
             bestFxSoFar = fx[bestFoodSourceIdx];
+            bestIter = iter;
         }
 
         bestFoodSources[iter] = bestFoodSourceSoFar.clone();
@@ -257,6 +259,10 @@ public class ArtificialBeeColony {
 
     public int getTrialsLimit() {
         return trialsLimit;
+    }
+
+    public int getBestIter() {
+        return bestIter;
     }
 
     public AbstractTestFunction getFunc() {
