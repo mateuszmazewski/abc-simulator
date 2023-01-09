@@ -39,12 +39,18 @@ public class ABCResultsIO {
             throw new IOException("Saving error - empty results.");
         }
 
+        String initialFileName = results.getTestFunctionName().replace("Function", "")
+                + "_fs" + results.getFoodSourcesCount()
+                + "_iter" + results.getMaxIter()
+                + "_limit" + results.getTrialsLimit()
+                + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd_HH.mm.ss"));
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.titleProperty().bind(messagesFactory.getStringBinding("fileChooser.save.title"));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription.textFile"), "*.txt"),
                 new FileChooser.ExtensionFilter(messagesFactory.getResources().getString("fileChooser.extensionDescription.allFiles"), "*"));
-        fileChooser.setInitialFileName(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd_HH.mm.ss")));
+        fileChooser.setInitialFileName(initialFileName);
         File chosenFile = fileChooser.showSaveDialog(stage);
 
         if (chosenFile != null) {
